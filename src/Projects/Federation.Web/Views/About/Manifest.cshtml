@@ -1,0 +1,87 @@
+﻿@using Federation.Web.ViewModels
+@model object
+@{
+    ViewBag.Title = "Манифест";
+}
+
+@Html.Partial("_MainMenu")
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">    
+    @if (!Request.IsAuthenticated)
+    {
+        <div class="signin">
+            @Html.Partial("_SignIn", new SignInViewModel())
+        </div>
+    }
+</div>
+<div class="layout_content">    
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <p>
+            <h2>Вторая демократия</h2>            
+        </p>
+        <p>
+            <span></span>
+        </p>
+        <p>
+            <span>Мы стоим на пороге нового мира.</span>
+        </p>
+        <p>
+            <span>Все известные формы совместного принятия решения – в прошлом.</span>
+        </p>
+        <p>
+            <span>В 21 веке смешно сводить принципы демократии к беготне с бумажками вокруг урн.</span>
+        </p>
+        <p>
+            <span>Демократия – это не идеология, это технология власти, осуществляемая множеством
+                людей через процедуру выборов.</span>
+        </p>
+        <p>
+            <span>Первая демократия – все, что было раньше.</span>
+        </p>
+        <p>
+            <span>Вторая демократия – это то, что начинается сейчас.</span>
+        </p>
+        <p>
+            <span>Наша облачная демократия – это новые горизонты для всех.</span>
+        </p>
+        <p>
+            <span>Никаких утомительных процедур, никаких бумаг и собраний.</span>
+        </p>
+        <p>
+            <span>Голосуй там и тогда когда тебе удобно.</span>
+        </p>
+        <p>
+            <span>Создавай группы, партии, движения – там и тогда, когда ты хочешь.</span>
+        </p>
+        <p>
+            <span>Объединяй вокруг себя единомышленников.</span>
+        </p>
+        <p>
+            <span>Выдвигай идеи.</span>
+        </p>
+        <p>
+            <span>Спорь, избирай и выбирайся.</span>
+        </p>
+        <p>
+            <span>Демократия для всех, демократия без ограничений и цензуры.</span>
+        </p>
+        <p>
+            <span>Сейчас – в интернете, в проекте ДЕМОКРАТИЯ 2.</span>
+        </p>
+        <p>
+            <span>Скоро </span><span>– в реальности, которую предстоит творить всем нам.</span>
+        </p>
+        <p>
+            <span>Присоединяйся сам и приглашай друзей!</span>
+        </p>        
+    </div>
+</div>

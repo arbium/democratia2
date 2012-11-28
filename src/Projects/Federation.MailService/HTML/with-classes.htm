@@ -1,0 +1,232 @@
+<body>
+<style>
+body {
+	font-family: Arial, sans-serif;	font-size: 13px; 
+	background: #F0f0f0;
+}
+.clear {
+	clear: both
+}
+
+.notifyletter_container { 
+	width: 800px;  
+	margin: 0 auto;
+}
+.notifyletter_design {
+	padding: 5px 40px;
+	background: #FFF;
+}
+h2 {
+	font-family: 'Times New Roman', times, serif;
+	font-weight: normal;
+	margin-bottom: 5px;
+}
+a, a:link, a:visited {
+	color: #0070C6;
+}
+h1 {
+	color: #003;
+	font-family: Arial, sans-serif;	
+	font-size: 30px;
+	margin-bottom: 5px;
+	line-height: 40px;
+}
+h2 {
+	font-size: 26px;
+	color: #446644;
+}
+h3 {
+	margin-bottom: 5px;
+	font-size: 22px;
+	font-weight: normal;
+	color: #F80
+}
+.topmenu {
+	float: right;
+}
+.bottomarea {
+	padding: 10px 20px;
+}
+
+.message {
+/*	width: 80%;*/
+	padding: 10px 20px;
+	background: #f0f0f8;
+/*	margin: 10px auto;*/
+	margin: 10px 0;
+}
+.message.system{
+	background: #f0f0f8;
+}
+.message.personal{
+	background: #e8f8e8;
+}
+.message.voting{
+	background: #FFf0e8;
+}
+.message .avatar {
+	float: left; 
+	margin-right: 10px;
+}
+.message .username {  
+	color: #888;
+}
+.message .time { 
+	color: #888; 
+	float: right;
+	font-size: 12px;
+}
+.message .body {
+	margin-left: 0px;
+}
+
+.message .response {
+	margin-left: 60px;
+}
+.message.personal .body {
+}
+
+</style>
+
+<div class="notifyletter_container">
+	<div class="notifyletter_design">
+		<div class="shapka">
+			<div class="topmenu" style="line-height: 40px;">
+				<a href="#" style="color: black">Справочный центр</a>
+			</div>
+			<div class="logo">
+				<a href="http://www.democratia2.ru" style="text-decoration: none;"><h1>Демократия II</h1></a>
+			</div>
+			<div class="menuafterlogo">
+				<a href="#">Перейти в Личные сообщения</a>
+				&nbsp;
+				&nbsp;
+				<a href="#">Перейти в свой аккаунт</a>
+			</div>
+
+			<h3>12 октября 2011</h3>
+			<div class="pretext">
+				<a href="#">Кондратий</a>, за прошедший день вам пришли следующие сообщения:
+			</div>
+
+
+			<h2>Голосования</h2>
+			<div class="messages_container">
+				<div class="message voting">
+					<div class="time">13:25</div>
+					<div class="body">
+						<div class="avatar"><img src="http://democratia2.ru/MediaContent/GroupLogos/_50x60_/3672d988-965e-4864-ab91-82dd602385a6.jpeg"></div>
+						<div class="username">
+							в группе <a href="#">Регионализм</a> - новое голосование:
+						</div>
+						<p><big>
+							<a href="#">После Уральской республики. Как не странно вопрос к Карелии.</a>
+						</big></p>
+						<div class="response">
+							<a href="#Response">&rarr; Принять участие в голосовании</a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+
+			<h2>Личные сообщения</h2>
+			<div class="messages_container">
+				<div class="pretext">
+					<a href="#">Кондратий</a>, за прошедший день вам пришли следующие сообщения:
+				</div>
+				<div class="message personal">
+					<div class="avatar"><img src="http://democratia2.ru/MediaContent/Avatars/_50x60_/981629b5-d3cb-4801-aecc-c170e1fc1784.jpeg"></div>
+					<div class="time">13:25</div>
+					<div class="username">
+						<a href="#">RapINFO</a> написал вам личное сообщение:
+					</div>
+					<div class="body">
+						<p>
+						Следователь главного следственного управления ГУ МВД РФ по Москве Нелли Дмитриева была задержана 5 октября по подозрению в получении крупной взятки.
+						</p>
+					</div>
+					<div class="response">
+						<a href="#Response">&rarr; Ответить</a>
+					</div>
+				</div>
+				<div class="message personal">
+					<div class="avatar"><img src="http://democratia2.ru/MediaContent/Avatars/_50x60_/981629b5-d3cb-4801-aecc-c170e1fc1784.jpeg"></div>
+					<div class="time">13:25</div>
+					<div class="username">
+						<a href="#">RapINFO</a> написал вам личное сообщение:
+					</div>
+					<div class="body">
+						<p>
+						Следователь главного следственного управления ГУ МВД РФ по Москве Нелли Дмитриева была задержана 5 октября по подозрению в получении крупной взятки.
+						</p>
+					</div>
+					<div class="response">
+						<a href="#Response">&rarr; Ответить</a>
+					</div>
+				</div>
+			</div>
+
+
+
+			<h2>Комментарии</h2>
+			<div class="messages_container">
+				<div class="pretext">
+					<a href="#">Кондратий</a>, за прошедший день вам пришли следующие сообщения:
+				</div>
+				<div class="message system">
+					<!--Блоки Аватар, username и Response для системных сообщений об ответах не пишем - они включаются в body-->
+					<div class="time">13:25</div>
+					<div class="body">
+						<div class="avatar"><img src="http://democratia2.ru/MediaContent/Avatars/_50x60_/981629b5-d3cb-4801-aecc-c170e1fc1784.jpeg"></div>
+						<div class="username">
+							<a href="#">RapINFO</a> ответил на ваш комментарий "<a href="#">Пресная ымперия</a>"
+						</div>
+						<p>
+							Следователь главного следственного управления ГУ МВД РФ по Москве Нелли Дмитриева была задержана 5 октября по подозрению в получении крупной взятки.
+						</p>
+						<div class="response">
+							<a href="#Response">&rarr; Ответить на комментарий</a>
+						</div>
+
+					</div>
+				</div>
+				<div class="message system">
+					<!--Блоки Аватар, username и Response для системных сообщений об ответах не пишем - они включаются в body-->
+					<div class="time">13:25</div>
+					<div class="body">
+						<div class="avatar"><img src="http://democratia2.ru/MediaContent/Avatars/_50x60_/981629b5-d3cb-4801-aecc-c170e1fc1784.jpeg"></div>
+						<div class="username">
+							<a href="#">RapINFO</a> ответил на ваше сообщение "<a href="#">Пресная ымперия</a>"
+						</div>
+						<p>
+							Следователь главного следственного управления ГУ МВД РФ по Москве Нелли Дмитриева была задержана 5 октября по подозрению в получении крупной взятки.
+						</p>
+						<div class="response">
+							<a href="#Response">&rarr; Ответить на комментарий</a>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+ 			<div style="margin: 15px 0 10px 0; text-align: right; ">
+				<strong>Демократия II</strong> &copy; 2011
+			</div>
+			
+			
+		</div>
+	</div>
+	<div class="bottomarea">
+		<div class="disclaimer" style="color: #888; font-size: 11px;">
+Если вы больше не хотите получать сообщения о упомянуть, вы можете <a href="#" style="color: #888;">отменить подписку</a>. 
+Чтобы возобновить подписку или изменить другие параметры почтовых уведомлений, <a href="#" style="color: #888;">перейдите к настройкам учётной записи</a>. 
+
+Пожалуйста, не отвечайте на данное сообщение; оно было выслано автоматически. 
+Это сообщение является служебным письмом, которое связано с <a href="#" style="color: #888;">вашей учётной записью</a> в <a href="#" style="color: #888;">Демократии-II</a>.
+		</div>
+
+	</div>
+</div>
+</body>

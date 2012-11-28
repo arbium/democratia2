@@ -1,0 +1,100 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model AlbumItemViewModel
+@{
+    switch (Model.Type)
+    {
+        case AlbumItemType.Image:
+            ViewBag.Title = "Изображение";            
+            break;
+            
+        case AlbumItemType.Video:
+            ViewBag.Title = "Видео";
+            break;
+    }    
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @if (Model.AlbumGroupId.HasValue)
+    {
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.AlbumGroupId.Value, NavigationBoxType.Group))
+    }
+    else if (Model.AlbumUserId.HasValue)
+    {
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.AlbumUserId.Value, NavigationBoxType.User))
+    }  
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        @if (Request.IsAuthenticated)
+        {
+            if (Model.AlbumGroupId.HasValue && UserContext.Current.IsUserModeratorInGroup(Model.AlbumGroupId.Value)
+                || Model.AlbumUserId.HasValue && UserContext.Current.Id == Model.AlbumUserId.Value)
+            {
+                <div class="jqueryslidemenu servicebuttonmenu">
+                    <ul>
+                        <li>
+                            @Html.ActionLink("Редактировать", "edititem", new { id = Model.Id })
+                        </li>
+                        <li class="servicemenu">
+                            <a href="#">
+                                <img src="@RoutesHelper.CurrentThemeFolder/images/buttcalc/button_setup.png" alt="меню" />
+                            </a>
+                            <ul>
+                                <li>
+                                    @Html.ActionLink("Переместить", "moveitem", new { id = Model.Id })
+                                </li>
+                                <li>
+                                    @Html.ConfirmActionLink("Удалить", "Вы действительно хотите безвозвратно удалить это?",
+                                        Url.Action("deleteitem", "album", new { id = Model.Id }))
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            }
+        }
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">
+                    @ViewBag.Title <i>@(Model.Title ?? string.Empty)</i>
+                </a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <div>
+            <a class="empty" href="@Url.Action("previousitem", new { id = Model.Id })">
+                <img src="../../Resources/themes/base/images/left_arrow_white.png" alt="←" style="vertical-align: top" />
+            </a>
+            @switch (Model.Type)
+            {
+                case AlbumItemType.Image:
+                    <a class="empty" href="@Model.Src" title="Открыть в оригинальном размере">
+                        <img src="@Model.Src&w=640&h=480" alt="@Model.Title" />
+                    </a>
+                    break;
+
+                case AlbumItemType.Video:
+                    <iframe src="@Model.Src" frameborder="0" width="640" height="390"></iframe>
+                    break;
+            }
+            <a class="empty" href="@Url.Action("nextitem", new { id = Model.Id })">
+                <img src="../../Resources/themes/base/images/right_arrow_gray.png" alt="→" style="vertical-align: top" />
+            </a>
+        </div>
+        <div class="grey">
+            Дата добавления: @Model.CreationDate.ToUserTime(UserContext.Current).ToString("d MMM yyyy")
+        </div>
+        <div>@Model.Description</div>
+        <div class="carma">
+            @Html.Partial("_Likes", new _LikesViewModel(Model.Id, UserContext.Current != null ? UserContext.Current.Id : (Guid?)null, WtfLikes.AlbumItem))
+        </div>
+        @Html.Partial("_SocialShare")
+    </div>
+</div>

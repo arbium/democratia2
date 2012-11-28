@@ -1,0 +1,478 @@
+﻿@using System.Globalization
+@using Federation.Web.ViewModels
+@model HomeGroupsHubViewModel
+@{
+    ViewBag.Title = "Хаб групп";
+    ViewBag.LayoutStyle = "layout_start";
+}
+
+@Html.Partial("_MainMenu")
+
+<style type="text/css">    
+    .gh-head {
+        margin-bottom: 33px;
+        margin-top: 44px;
+        overflow: auto;
+    }
+
+    .left-column {
+        float: left;
+        width: 73%;
+    }
+
+    .right-column {
+        float: right;
+        width: 24%;
+    }
+
+    .gh-head ul li {
+        margin-right: 13px;
+        float: left;
+        display: inline-block;
+    }
+
+    .group-ad {
+        background-color: #FFF;
+        border: 1px solid #CCD3DB;        
+        padding: 13px;
+        overflow: hidden;
+        width: 150px;
+        height: 200px;
+    }
+
+    .group-ad .rating-position, .group-ad .rating, .group-ad .button {
+        display: inline-block;
+        margin-top: 5px;
+        margin-right: 5px;
+    }
+
+    .group-ad .link > img {
+        margin-bottom: 10px;
+    }
+
+    .group-ad .text {
+        min-height: 106px;
+        font-size: 1.1em;
+    }
+
+    .categories {
+        display: inline-block;
+        padding: 4px 15px;
+        margin-bottom: 13px;
+        color: #000;
+    }
+
+    .categories > * {
+        margin-right: 13px;
+        color: #4D6582 !important;
+    }
+
+    .categories > .checked {
+        padding: 4px 15px;
+        background-color: #CCD3DB;
+        border-radius: 15px;
+        color: #000 !important;
+        text-decoration: none;
+    }
+
+    .novelty {
+        display: inline-block;
+        padding: 4px 15px;
+        margin-bottom: 13px;
+        background-color: #BDF0A7;
+        border-radius: 15px;
+        color: #000;
+    }
+
+    .group {
+        padding: 8px 0;
+        border-top: 1px solid #DCE1E6;
+        border-bottom: 1px solid #DCE1E6;
+        margin-top: -1px;
+        overflow: auto;
+    }
+
+    .no-border {
+        border: none;
+    }
+
+    .rating-position {
+        float: left;
+        margin-top: 5px;
+        margin-right: 11px;
+        color: #4D6582;
+        width: 42px;
+        height: 42px;
+        text-align: center;
+        border: 1px solid #CCD3DB;
+        border-radius: 42px;
+        display: inline-block;
+    }
+
+    .rating-position > * {
+        height: 14px;
+    }
+
+    .rating-position img {
+        margin: 2px;
+    }
+
+    .rating-position .number {
+        position: relative;
+        top: -1px;
+    }
+
+    .rating {        
+        text-align: right;
+        width: 125px;
+    }
+
+    .left-column .rating {
+        float: right;
+    }
+
+    .rating .squares {
+        height: 8px;
+        width: 48px;
+        margin-top: 3px;
+        margin-left: 7px;
+        background-image: url('@RoutesHelper.CurrentThemeFolder/images/rating-squares.png');
+        float: right;
+    }
+
+    .rating .squares[rating="0"] {
+        background-position: 0 0;
+    }
+    .rating .squares[rating="1"] {
+        background-position: 0 40px;
+    }
+    .rating .squares[rating="2"] {
+        background-position: 0 32px;
+    }
+    .rating .squares[rating="3"] {
+        background-position: 0 24px;
+    }
+    .rating .squares[rating="4"] {
+        background-position: 0 16px;
+    }
+    .rating .squares[rating="5"] {
+        background-position: 0 8px;
+    }
+
+    .rating > span {
+        font-size: 11px;
+        color: #4D6582;
+    }
+
+    .link {
+        text-decoration: none !important;        
+    }
+
+    .link > h2, .link > h3 {
+        color: #4D6582;
+        line-height: 1em;
+        margin-bottom: 5px;
+    }
+
+    .link > img {
+        float: left;
+        margin-right: 11px;
+    }
+
+    .button {
+        padding: 4px 18px;
+        display: inline-block;
+        border-radius: 15px;        
+        float: right;
+    }
+
+    .join.button {
+        border: 2px solid #4D6582;
+        color: #000;
+    }
+
+    .in-group.button {
+        border: 2px solid #CCD3DB;
+    }
+
+    .rating .button {
+        margin-top: 13px;
+        margin-bottom: 8px;
+    }
+
+    .floatTip {
+        position: absolute;
+        width: 220px;
+        display: none; 
+        border: 1px solid #DDE2E7;
+        padding: 8px;
+        border-radius: 10px;
+        font-family: sans-serif;
+        font-size: 9pt;
+        color: #333;
+        background: #F4F4F4;
+    }
+    .floatTip.visible {
+        display: block;
+    }
+
+    .floatTip p {
+        margin: 1px;
+    }
+</style>
+
+<script type="text/javascript" >
+    $(document).ready(function () {
+        var activeBlock = $(".group-ad:first");
+        var maxWidth = $(".gh-head").width() * 0.64;
+        var minWidth = $(".group-ad").width();
+
+        activeBlock.css("width", maxWidth + "px");
+
+        $(".group-ad").hover(function () {
+            $(activeBlock).animate({ width: minWidth + "px" }, { queue: false, duration: 400 });
+            $(this).animate({ width: maxWidth + "px" }, { queue: false, duration: 400 });
+            activeBlock = this;
+        });
+
+        $(".categories > *").mousemove(function (event) {
+            var no = $(this).attr("no");
+            $(".floatTip[no=" + no + "]").addClass("visible");
+            var x = event.pageX;
+            var y = event.pageY + 20;
+            $(".floatTip[no=" + no + "]").offset({ top: y, left: x });
+        });
+
+        $(".categories > *").mouseleave(function () {
+            var no = $(this).attr("no");
+            $(".floatTip[no=" + no + "]").removeClass("visible");
+        });
+    });
+</script>
+
+<div class="gh-head">
+    <ul>
+        @foreach (var group in Model.GroupAds)
+        {
+            <li>
+                <div class="group-ad">            
+                    <a class="link" href="@Url.Action("index", "group", new { id = group.Url })">
+                        <img src="@group.Logo&w=150&h=200" alt="@group.Name" />
+                    </a>            
+                    <a class="link" href="@Url.Action("index", "group", new { id = group.Url })">
+                        <h2>@group.Name</h2>
+                    </a>
+                    <p class="text">@group.AdText</p>
+                    <div class="rating-position">
+                        <div>
+                            @if (group.RatingPosition > group.OldPosition)
+                            {
+                                <img src="@RoutesHelper.CurrentThemeFolder/images/rating-up.png" alt="/\" />
+                            }
+                        </div>
+                        <div class="number">@group.RatingPosition</div>
+                        <div>
+                            @if (group.RatingPosition < group.OldPosition)
+                            {
+                                <img src="@RoutesHelper.CurrentThemeFolder/images/rating-down.png" alt="\/" />
+                            }
+                        </div>
+                    </div>
+                    <div class="rating">                
+                        <span>УЧАСТНИКИ</span><span class="squares" rating="@group.MembersRating"></span><br />
+                        <span>ЭКСПЕРТЫ</span><span class="squares" rating="@group.ExpertsRating"></span><br />
+                        <span>КОНТЕНТ</span><span class="squares" rating="@group.ContentRating"></span><br />                
+                    </div>
+                    @if (Request.IsAuthenticated)
+                    {
+                        if (UserContext.Current.IsUserInGroup(group.Id))
+                        {
+                            <div class="in-group button">в группе</div>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("join", "group", new { id = group.Url })">
+                                <div class="join button">вступить</div>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        var returnUrl = Request.Url == null ? null : Request.Url.ToString();                    
+                        <a href="@Url.Action("signin", "account", new SignInViewModel { ReturnUrl = returnUrl })">
+                            <div class="join button">вступить</div>
+                        </a>
+                    }
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+<div>
+    <div class="left-column">
+        <div class="categories">
+            @{
+                var filter = Context.Request.Params["filter"];
+
+                if (string.IsNullOrEmpty(Context.Request.Params["filter"]))
+                {
+                    for (var i = 0; i < Model.Categories.Count; i++)
+                    {
+                        filter += i.ToString(CultureInfo.InvariantCulture);
+                    }
+                }                
+
+                for (var i = 0; i < Model.Categories.Count; i++)
+                {
+                    var category = Model.Categories[i];
+                    var iStr = i.ToString(CultureInfo.InvariantCulture);                     
+                    var newFilter = filter.Contains(iStr) ? filter.Replace(iStr, string.Empty) : filter + iStr;
+                    
+                    if (filter == iStr)
+                    {
+                        <span no="@iStr" class="checked">@category.Title</span>
+                    }
+                    else
+                    {
+                        <a no="@iStr" href="@Url.Action("groupshub", new { filter = newFilter })" class="@(filter.Contains(iStr) ? "checked" : string.Empty)">@category.Title</a>
+                    }
+                    if (!string.IsNullOrEmpty(category.Description))
+                    {
+                        <div no="@iStr" class="floatTip">
+                            <p>@category.Description</p>
+                        </div>
+                    }
+                }
+            }
+        </div>
+        @foreach (var group in Model.TopFilteredGroups)
+        {
+            <div class="group">
+                <div class="rating-position">
+                    <div>
+                        @if (group.RatingPosition > group.OldPosition)
+                        {
+                            <img src="@RoutesHelper.CurrentThemeFolder/images/rating-up.png" alt="/\" />
+                        }
+                    </div>
+                    <div class="number">@group.RatingPosition</div>
+                    <div>
+                        @if (group.RatingPosition < group.OldPosition)
+                        {
+                            <img src="@RoutesHelper.CurrentThemeFolder/images/rating-down.png" alt="\/" />
+                        }
+                    </div>
+                </div>
+                <a class="link" href="@Url.Action("index", "group", new { id = group.Url })">
+                    <img src="@group.Logo&w=90&h=120" alt="@group.Name" />
+                </a>
+                <a class="link" href="@Url.Action("index", "group", new { id = group.Url })">
+                    <h2>@group.Name</h2>
+                </a>
+                <div class="rating">
+                    <span>УЧАСТНИКИ</span><span class="squares" rating="@group.MembersRating"></span><br />
+                    <span>ЭКСПЕРТЫ</span><span class="squares" rating="@group.ExpertsRating"></span><br />
+                    <span>КОНТЕНТ</span><span class="squares" rating="@group.ContentRating"></span><br />
+                    @if (Request.IsAuthenticated)
+                    {
+                        if (UserContext.Current.IsUserInGroup(group.Id))
+                        {
+                            <div class="in-group button">в группе</div>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("join", "group", new { id = group.Url })">
+                                <div class="join button">вступить</div>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        var returnUrl = Request.Url == null ? null : Request.Url.ToString();                    
+                        <a href="@Url.Action("signin", "account", new SignInViewModel { ReturnUrl = returnUrl })">
+                            <div class="join button">вступить</div>
+                        </a>
+                    }
+                </div>
+                <span>@group.Summary</span>                
+            </div>
+        }
+        @foreach (var group in Model.RndFilteredGroups)
+        {
+            <div class="group">
+                <div class="rating-position no-border">
+                    <div>
+                        @if (group.RatingPosition > group.OldPosition)
+                        {
+                            <img src="@RoutesHelper.CurrentThemeFolder/images/rating-up.png" alt="/\" />
+                        }
+                    </div>
+                    <div class="number">@group.RatingPosition</div>
+                    <div>
+                        @if (group.RatingPosition < group.OldPosition)
+                        {
+                            <img src="@RoutesHelper.CurrentThemeFolder/images/rating-down.png" alt="\/" />
+                        }
+                    </div>
+                </div>
+                <a class="link" href="@Url.Action("index", "group", new { id = group.Url })">
+                    <h2>@group.Name</h2>
+                </a>
+                @if (Request.IsAuthenticated)
+                {
+                    if (UserContext.Current.IsUserInGroup(group.Id))
+                    {
+                        <div class="in-group button">в группе</div>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("join", "group", new { id = group.Url })">
+                            <div class="join button">вступить</div>
+                        </a>
+                    }
+                }
+                else
+                {
+                    var returnUrl = Request.Url == null ? null : Request.Url.ToString();                    
+                    <a href="@Url.Action("signin", "account", new SignInViewModel { ReturnUrl = returnUrl })">
+                        <div class="join button">вступить</div>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+    <div class="right-column">
+        <div class="novelty">Новинки</div>
+        @foreach (var group in Model.NewGroups)
+        {
+            <div class="group">
+                <a class="link" href="@Url.Action("index", "group", new { id = group.Url })">
+                    <img src="@group.Logo&w=48&h=64" alt="@group.Name" />
+                </a>
+                <a class="link" href="@Url.Action("index", "group", new { id = group.Url })">
+                    <h3>@group.Name</h3>
+                </a>
+                @if (Request.IsAuthenticated)
+                {
+                    if (UserContext.Current.IsUserInGroup(group.Id))
+                    {
+                        <div class="in-group button">в группе</div>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("join", "group", new { id = group.Url })">
+                            <div class="join button">вступить</div>
+                        </a>
+                    }
+                }
+                else
+                {
+                    var returnUrl = Request.Url == null ? null : Request.Url.ToString();                    
+                    <a href="@Url.Action("signin", "account", new SignInViewModel { ReturnUrl = returnUrl })">
+                        <div class="join button">вступить</div>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</div>

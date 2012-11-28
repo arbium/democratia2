@@ -1,0 +1,40 @@
+﻿@using Federation.Web.ViewModels
+@model UserVotingsViewModel
+@{
+    ViewBag.Title = "Актуальные голосования";
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.UserId, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <div class="jqueryslidemenu servicebuttonmenu">
+            <ul>
+                <li>
+                    <a href="@Url.Action("delegation")">Настроить делегирование</a>
+                </li>
+            </ul>
+        </div>
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <div class="user_votings_right">
+            <h2>Прошедшие голосования</h2>
+            @Html.Partial("_PollStatus", Model.PreviosPolls)
+        </div>
+        <div class="user_votings_left">
+            <h2>Необходимо проголосовать</h2>
+            @Html.Partial("_Feed", Model.VotingsFeed)
+        </div>
+    </div>
+</div>

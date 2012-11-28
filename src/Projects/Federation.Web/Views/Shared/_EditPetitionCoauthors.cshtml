@@ -1,0 +1,49 @@
+﻿@using Federation.Web.ViewModels
+@model _EditPetitionCoauthorsViewModel
+
+<div class="content_helper_control">
+    <span>Пригласить к соавторству</span>
+</div>
+<div class="styled_form">
+    @if (!string.IsNullOrEmpty(ViewBag.ValidationExceptionText))
+    {
+        <div class="validation_block">
+            @ViewBag.ValidationExceptionText
+        </div>
+    }
+    @using (Html.BeginForm("invitepetitioncoauthor", "voting"))
+    {
+        @Html.HiddenFor(m => m.PetitionId)
+        <div class="form_block">
+            <div class="input_block">
+                <div class="title">
+                    @Html.LabelFor(m => m.UserNameForInvite)
+                </div>
+                @Html.TextBoxFor(m => m.UserNameForInvite)
+                @Html.ValidationMessageFor(m => m.UserNameForInvite)
+            </div>
+        </div>
+        <div class="submit_block">
+            <input type="submit" value="Пригласить" />
+        </div>
+    }
+</div>
+<div class="content_helper_control">
+    <span>Уже в соавторах</span>
+</div>
+@if (Model.Coauthors.Count > 0)
+{    
+    foreach (var coauthor in Model.Coauthors)
+    {
+        <div>
+            @Html.ActionLink(coauthor.Name, "index", "user", new { id = coauthor.UserId }, null)
+            <span class="grey">@coauthor.Status</span>
+            @Html.ConfirmActionLink("[Удалить]", "Вы действительно хотите удалить соавтора петиции?",
+                Url.Action("deletepetitioncoauthor", "voting", new { id = coauthor.Id }))
+        </div>
+    }
+}
+else
+{
+    <text>У этой петиции нет соавторов</text>
+}

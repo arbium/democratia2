@@ -1,0 +1,19 @@
+﻿@using Federation.Web.ViewModels
+@model ConfirmationViewModel
+@{
+    ViewBag.Title = "Подтверждение";
+}
+
+<div>
+    <h1>@Model.Message</h1>
+
+    @using (Html.BeginForm(Model.YesUrlAction, Model.YesUrlController, Model.RouteValues))
+    {
+        <input type="submit" value=" Да " class="f_button" style="float: left" />
+    }
+    @using (Html.BeginForm("no", "confirmation"))
+    {
+        @Html.HiddenFor(m => m.NoUrl)
+        <input type="submit" value=" Нет " class="f_button" />
+    }
+</div>

@@ -1,0 +1,392 @@
+﻿@using System.Globalization
+@using Federation.Core
+@using Federation.Web
+@using Federation.Web.ViewModels
+@model _CommentsViewModel
+           
+<style type="text/css">
+    .comments .carma {
+        margin-right: 11px;
+        font-size: 0.8em;
+    }
+
+    .comments .title {
+        font-size: 0.9em;
+        margin: 13px 0;
+    }
+
+    .comments .separator {
+        margin-top: 35px;
+        margin-bottom: 20px;
+        border-top: 1px solid #DDD;
+        border-bottom: 1px solid #FAFAFA;
+    }
+
+    div.hide.comment {
+        display: none;
+    }
+
+    div.expand {
+        padding: 5px;
+        color: gray;
+        display: none;
+        border-top: 1px solid whitesmoke;
+        border-bottom: 1px solid whitesmoke;
+    }
+    div.expand > a {
+        cursor: pointer;
+        text-decoration: none;
+        border-bottom: 1px dashed;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        var commentId = null;
+        if (window.location.hash != null && window.location.hash != "") {
+            commentId = window.location.hash;
+        }
+        
+        $(".child-comments-block").each(function () {
+            var matches = 0;
+            if (commentId != null) {
+                matches = $(this).find(".child-comments " + commentId).length;
+            }
+            if (matches == 0) {
+                $(this).children(".child-comments").css("display", "none");
+                $(this).children(".expander").each(function () {
+                    $(this).addClass("collapsed");
+                    //$(this).css("display", "block");
+                    //$(this).children("span").html("+");
+                    $(this).attr("collapsed", "true");
+                });
+            }
+            else {
+                $(this).children(".expander").each(function () {
+                    $(this).children(".child-comments").css("display", "block");
+                    $(this).addClass("expanded");
+                    //$(this).css("display", "block");
+                    //$(this).children("span").html("−");
+                    $(this).attr("collapsed", "false");
+                });
+            }
+        });
+
+        $(".expander").click(function () {
+            var parentId = $(this).attr("parentid");
+            //alert($(this).attr("collapsed"))
+            if ($(this).attr("collapsed") == "false") {
+                $(this).children("span").html("+");
+                $(this).removeClass("expanded").addClass("collapsed");
+                //$(".child-comments[parentid=" + parentId + "]").css("display", "none");
+                $(".child-comments[parentid=" + parentId + "]").slideUp();
+                $(this).attr("collapsed", "true");
+            }
+            else {
+                $(this).children("span").html("−");
+                $(this).removeClass("collapsed").addClass("expanded");
+                //$(".child-comments[parentid=" + parentId + "]").css("display", "block");
+                $(".child-comments[parentid=" + parentId + "]").slideDown();
+                $(this).attr("collapsed", "false");
+            }
+        });
+
+        $("div.expand").css("display", "block");
+
+        $("div.expand > a").click(function () {
+            $(this).parent().css("display", "none");
+            $("#" + $(this).attr("comment")).removeClass("hide");
+        });
+
+        if (commentId != null) {
+            location = commentId;
+        }
+    });
+</script>
+
+@helper RenderComment(_Comments_CommentViewModel comment)
+{
+    var isAuthor = Request.IsAuthenticated && comment.UserId == UserContext.Current.Id;
+    var isTopComment = Model.TopComments.Contains(comment);
+    
+    if (comment.IsHidden)
+    {
+        <div class="comment @(isAuthor ? "is-author" : string.Empty)" id="@(isTopComment ? "" : comment.Id.ToString())">
+            <div class="comment_body">
+                <span style="color: #888; font-size: 13px">Комментарий удален.</span>
+                @if (isAuthor)
+                {
+                    <a href="@Url.Action("unhide", "comment", new { id = comment.Id })" style="color: #777; font-size: 12px">Восстановить</a>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        var commentOpacity = comment.Rating < 0 ? Math.Max(0.2, 0.08 * comment.Rating + 1) : 1;
+        var hide = Model.ContentId.HasValue && !Model.UserId.HasValue && Request.IsAuthenticated && UserContext.Current.BlackList.Contains(comment.UserId);
+        
+        if (hide)
+        {
+            <div class="expand">
+                Автор комментария в черном списке.
+                <a comment="@comment.Id">показать</a>
+            </div>
+        }
+        <div class="comment @(hide ? "hide" : string.Empty) @(isAuthor ? "is-author" : string.Empty)" id="@(isTopComment ? "" : comment.Id.ToString())">
+            <div class="comment_body">
+                <div class="user_pic">
+                    <a href="@Url.Action("index", "user", new { id = comment.UserId })">
+                        <img alt="фото" src="@comment.UserAvatar&w=48&h=64" />
+                    </a>
+                </div>
+                <div class="user_info">
+                    @if (Model.ContentId.HasValue && !Model.UserId.HasValue)
+                    {
+                        <a href="@Url.Action("index", "user", new { id = comment.UserId })">@comment.UserSurname @comment.UserName</a>
+                        if (!string.IsNullOrWhiteSpace(comment.UserGeo))
+                        {
+                            <span class="user_info_city">(@comment.UserGeo)</span>
+                        }
+                    }
+                    else
+                    {
+                        const int maxLength = 90;
+                        var titleLength = comment.ContentTitle.Length;
+                        <a href="@comment.ContentUrl">
+                            @comment.ContentTitle.Substring(0, Math.Min(titleLength, maxLength)) @(titleLength > maxLength ? "…" : string.Empty)
+                        </a>
+                    }
+                    <div style="float: right">                                    
+                        <span class="time">                                    
+                            @(comment.DateTime.ToUserTime(UserContext.Current).ToString("d MMMM yyyy, HH:mm"))
+                            <a title="ссылка на этот комментарий" href="#@comment.Id">#</a>
+                        </span>
+                        <span class="carma">
+                            @Html.Partial("_Likes", new _LikesViewModel(comment.Id, UserContext.Current != null ? UserContext.Current.Id : (Guid?)null, WtfLikes.Comment))
+                        </span>
+                    </div>
+                </div>
+                <div class="comment_body_text" style="opacity: @commentOpacity.ToString(CultureInfo.InvariantCulture)">
+                    @if (comment.ReplyComment != null)
+                    {
+                        <a href="#@comment.ReplyComment.Id" style="text-decoration: none; margin: -4px">
+                            <span style="color: #555; border-bottom: 1px dashed #555; margin-left: 4px">@comment.ReplyComment.UserSurname @comment.ReplyComment.UserName</span>
+                        </a>
+                        <span>, </span>
+                    }
+                    @foreach (var line in comment.Text)
+                    {
+                        <text>@TextHelper.CleanTags(line, false, true)</text><br/>
+                    }
+                </div>
+                <div class="comment_controls" style="float: right">
+                    @if (Request.IsAuthenticated)
+                    {
+                        if(isTopComment)
+                        {
+                            <a href="@comment.ContentUrl" class="go_to_comment">Перейти</a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("replycomment", new { id = comment.Id })">Ответить</a>
+                        }
+                        if (comment.ChildComments.Count == 0 && comment.UserId == UserContext.Current.Id)
+                        {
+                            if (DateTime.Now - comment.DateTime < ConstHelper.CommentEditTimeSpan)
+                            {
+                                <a href="@Url.Action("editcomment", new { id = comment.Id })" style="color: #777; font-size: 12px">[Редактировать]</a>
+                            }
+                            @Html.ConfirmActionLink("[x]", "Вы действительно хотите скрыть комментарий?",
+                                Url.Action("hide", "comment", new { id = comment.Id }))
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@helper RenderChildComments(_Comments_CommentViewModel comment)
+    {
+        if (comment.VisibleChildComments > 0)
+        {
+        <div class="child-comments-block">                                
+            <div class="expander" parentid="@comment.Id" >
+                @DeclinationService.OfNumber(comment.VisibleChildComments, "ответ", "ответа", "ответов")
+                <span></span>
+            </div>
+            <div class="child-comments" parentid="@comment.Id">
+                @foreach (var child in comment.ChildComments)
+                {
+                    var isAuthor = Request.IsAuthenticated && child.UserId == UserContext.Current.Id;
+
+                    if (child.IsHidden)
+                    {                        
+                        <div class="child comment @(isAuthor ? "is-author" : string.Empty)" id="@child.Id">
+                            <div class="comment_body">
+                                <span style="color: #888; font-size: 13px">Комментарий удален.</span>
+                                @if (isAuthor)
+                                {
+                                    <a href="@Url.Action("unhide", "comment", new { id = child.Id })" style="color: #777; font-size: 12px">Восстановить</a>
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        var childOpacity = child.Rating < 0 ? Math.Max(0.2, 0.08 * child.Rating + 1) : 1;
+                        var hide = Model.ContentId.HasValue && !Model.UserId.HasValue && Request.IsAuthenticated && UserContext.Current.BlackList.Contains(child.UserId);
+
+                        if (hide)
+                        {
+                            <div class="expand">
+                                Автор комментария в черном списке.
+                                <a comment="@child.Id">показать</a>
+                            </div>
+                        }                        
+                        <div class="child comment @(hide ? "hide" : string.Empty) @(isAuthor ? "is-author" : string.Empty)" id="@child.Id">
+                            <div class="comment_body">
+                                <div class="user_pic">
+                                    <a href="@Url.Action("index", "user", new { id = child.UserId })">
+                                        <img alt="фото" src="@child.UserAvatar&w=48&h=64" />
+                                    </a>
+                                </div>
+                                <div class="user_info">
+                                    <a href="@Url.Action("index", "user", new { id = child.UserId })">@child.UserSurname @child.UserName</a>
+                                    @if (!string.IsNullOrWhiteSpace(child.UserGeo))
+                                    {
+                                        <span class="user_info_city">(@child.UserGeo)</span>
+                                    }
+                                    <div style="float: right">
+                                        <span class="carma">
+                                            @Html.Partial("_Likes", new _LikesViewModel(child.Id, UserContext.Current != null ? UserContext.Current.Id : (Guid?)null, WtfLikes.Comment))
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="comment_body_text" style="opacity: @childOpacity.ToString(CultureInfo.InvariantCulture)">
+                                    @if (child.ReplyComment != null)
+                                    {
+                                        <a href="#@child.ReplyComment.Id" style="text-decoration: none; margin-right: -4px">
+                                            <span style="color: #555; border-bottom: 1px dashed #555">&uarr; @child.ReplyComment.UserSurname @child.ReplyComment.UserName</span>
+                                        </a>
+                                        <span style="">, </span>
+                                    }
+                                    @foreach (var line in child.Text)
+                                    {
+                                        <text>@TextHelper.CleanTags(line, false, true)</text><br />
+                                    }
+                                </div>
+                                <div class="comment_controls">                                                        
+                                    <span class="time">                                    
+                                        @child.DateTime.ToUserTime(UserContext.Current).ToString("d MMMM yyyy, HH:mm")
+                                        <a title="ссылка на этот комментарий" href="#@child.Id">#</a>
+                                    </span>
+                                    @if (Request.IsAuthenticated)
+                                    {
+                                        if (child.UserId == UserContext.Current.Id)
+                                        {
+                                            if (!child.IsReplied)
+                                            {
+                                                if (DateTime.Now - child.DateTime < ConstHelper.CommentEditTimeSpan)
+                                                {
+                                                    <a href="@Url.Action("editcomment", new { id = child.Id })" style="color: #777; font-size: 12px">[Редактировать]</a>
+                                                }
+                                                @Html.ConfirmActionLink("[x]", "Вы действительно хотите скрыть комментарий?",
+                                                    Url.Action("hide", "comment", new { id = child.Id }))
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("replycomment", new { id = child.Id })">Ответить</a>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+}
+
+<div class="comments">
+    @if (Model.TopComments.Count != 0)
+    {
+        <div class="grey title">Лучшие комментарии</div>
+        <script type="text/javascript">
+            $(function () {
+                $(".go_to_comment").click(function () {
+                    var url = $(this).attr("href");
+                    var splited = url.split('#');
+
+                    if (splited.length > 1) {
+                        var commentId = splited[1];
+
+                        var comment = $(".child-comments-block .child-comments #" + commentId);
+                        if (comment) {
+                            var parentId = comment.parent().attr("parentid");
+                            var expander = $(".child-comments-block .expander[parentid=" + parentId + "]");
+
+                            expander.children("span").html("−");
+                            expander.removeClass("collapsed").addClass("expanded");
+                            $(".child-comments[parentid=" + parentId + "]").slideDown();
+                            expander.attr("collapsed", "false");
+                        }
+                    }
+                });
+            });
+        </script>
+        <div class="comments_feed">
+            @foreach (var comment in Model.TopComments)
+            {
+                @RenderComment(comment)
+            }
+        </div>
+        <div class="separator"></div>
+    }
+    @if (Model.Comments.Count != 0)
+    {
+        <div class="grey title">
+            Все комментарии&nbsp;
+            @Html.Paginator(Model.Comments)
+            <span style="float: right">
+                Сначала
+                @{
+                    var controller = ViewContext.RouteData.Values["controller"].ToString();
+                    var action = ViewContext.RouteData.Values["action"].ToString();
+                    var id = ViewContext.RouteData.Values["id"].ToString();
+
+                    if (Model.Invert.HasValue && Model.Invert.Value)
+                    {
+                        <a href="@Url.Action(action, controller, new { id })#comments">новые</a>
+                        <a href="@Url.Action(action, controller, new { id, invert = true })#comments"><b>старые</b></a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action(action, controller, new { id })#comments"><b>новые</b></a>
+                        <a href="@Url.Action(action, controller, new { id, invert = true })#comments">старые</a>
+                    }
+                }
+            </span>
+        </div>
+        <div class="comments_feed">
+            @foreach (var comment in Model.Comments)
+            {
+                @RenderComment(comment)
+                if (Model.ContentId.HasValue && !Model.UserId.HasValue)
+                {
+                    @RenderChildComments(comment)
+                }
+            }
+        </div>
+        <div style="margin-top: 11px">
+            @Html.Paginator(Model.Comments)
+        </div>
+    }
+    else
+    {
+        <text>Комментариев нет</text>
+    }
+</div>

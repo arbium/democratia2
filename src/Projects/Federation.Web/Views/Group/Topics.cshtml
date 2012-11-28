@@ -1,0 +1,107 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model GroupTopicsViewModel
+@{
+    ViewBag.Title = "Темы группы";
+    
+    var isApproved = false;
+    var isModer = false;
+
+    if (Request.IsAuthenticated)
+    {
+        isApproved = UserContext.Current.IsUserApprovedInGroup(Model.GroupId);
+        isModer = UserContext.Current.IsUserModeratorInGroup(Model.GroupId);
+    }
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    <div id="group-info">
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.GroupId, NavigationBoxType.Group))
+    </div>
+</div>    
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <div class="jqueryslidemenu servicebuttonmenu">
+            <ul>                
+                @if (isApproved && !isModer)
+                {
+                    <li>
+                        @Html.ActionLink("Предложить тему", "addtag", new { id = Model.GroupUrl })
+                    </li>
+                }
+                @if (isModer)
+                {
+                    <li>
+                        @Html.ActionLink("Добавить тему", "addtag", new { id = Model.GroupUrl })
+                    </li>
+                }
+            </ul>
+        </div>
+        <ul class="lighttabs">
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+            <li>
+                <a href="@Url.Action("experts")">Эксперты</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <div class="content_helper_control no_margin">
+            <span>Темы группы</span>
+        </div>
+        <div class="group_topics content_department">
+            @foreach (var topic in Model.Topics)
+            {
+                <div class="topic">
+                    <div class="topic_info">
+                        <div class="title">
+                            <h2><a href="@Url.Action("topicexperts", new { id = topic.Id })">@topic.Title</a></h2>
+                        </div>
+                        <div class="controls">
+                            @if (isModer)
+                            {
+                                <a href="@Url.Action("edittag", new { id = Model.GroupUrl, tagid = topic.Id })">редактировать</a>
+                                <a href="@Url.ConfirmAction("Вы уверены, что хотите удалить тему группы? Все эксперты и делегирование по этой теме будет снято!",Url.Action("moderatetag", new { id = Model.GroupUrl, tagid = topic.Id, approve = false }))">удалить</a>
+                            }
+                        </div>                        
+                        <div class="description">
+                            @topic.Description
+                        </div>
+                        <div class="stats">
+                            <a href="@Url.Action("experts", "group", new { tagId = topic.Id })">@DeclinationService.OfNumber(topic.ExpertCount, "эксперт", "эксперта", "экспертов")</a>
+                            <a href="@Url.Action("search", "group", new { id = Model.GroupUrl, tag = topic.Title })">@DeclinationService.OfNumber(topic.ContentCount, "публикация", "публикации", "публикаций")</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="content_helper_control">
+            <span>Темы, предложенные участниками группы</span>
+        </div>
+        <div class="group_topics content_department">
+            @foreach (var topic in Model.ProposedTopics)
+            {
+                <div class="topic">
+                    <div class="topic_info">
+                        <div class="title">
+                            <h2><a href="">@topic.Title</a></h2>
+                        </div>
+                        <div class="controls">
+                            @if (isModer)
+                            {
+                                <a href="@Url.Action("moderatetag", new { id = Model.GroupUrl, tagid = topic.Id, approve = true })">утвердить</a>
+                                <a href="@Url.Action("moderatetag", new { id = Model.GroupUrl, tagid = topic.Id, approve = false })">отклонить</a>
+                            }
+                        </div>
+                        <div class="description">
+                            @topic.Description
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

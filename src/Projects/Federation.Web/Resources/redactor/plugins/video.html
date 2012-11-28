@@ -1,0 +1,25 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $("#redactor_album_link").click(function () {
+            var src = $("#redactor_album_link").attr("href");
+            $("#redactor_album_link").attr("href", null);
+            $("#main").html("<iframe src='" + src + "' frameborder=0 style='width: 600px; height: 320px'></iframe>");
+        });
+    });
+</script>
+
+<div id="main">
+	<div id="redactor_tabs">
+		<a id="redactor_album_link">Загрузить/вставить из альбома</a>
+	</div>
+	<form id="redactorInsertVideoForm">
+		<label>%RLANG.video_html_code%</label>
+		<textarea id="redactor_insert_video_area" style="width: 99%; height: 160px;"></textarea>
+	</form>
+	<div id="redactor_modal_footer">
+		<span class="redactor_btns_box">
+			<input type="button" id="redactor_insert_video_btn" value="%RLANG.insert%" />
+			<a href="javascript:void(null);" id="redactor_btn_modal_close">%RLANG.cancel%</a>
+		</span>
+	</div>
+</div>

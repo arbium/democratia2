@@ -1,0 +1,40 @@
+﻿@using Federation.Web.ViewModels
+@model HomeIndexViewModel
+@{
+    ViewBag.Title = "Главная";
+    ViewBag.LayoutStyle = "layout_start";
+}
+@section Header
+{
+    <link rel="alternate" type="application/rss+xml" href="http://democratia2.ru/home/rss" title="Демократия 2. RSS" />
+    <script type="text/javascript">
+        $(function () {
+            $('dl.tabs_on_main dt').click(function () {
+                $(this)
+                    .siblings().removeClass('selected').end()
+                    .next('dd').andSelf().addClass('selected');
+            });
+        });
+    </script>
+}
+
+@Html.Partial("_MainMenu")
+
+<div class="clear" style="height: 45px"></div>
+<div id="home_index">
+    <div class="right_column home">
+        @if (!Request.IsAuthenticated)
+        {
+            @Html.Partial("_SignIn", new SignInViewModel())
+        }
+        @Html.Partial("_Popular", Model.Popular)
+    </div>
+    <div class="left_column home">
+        <div class="left_content fl_l" style="width: 100%">            
+            @Html.Partial("_PresentationTabs")        
+            <div class="clear" style="height: 30px"></div>
+            <h2>Голосования</h2>
+            @Html.Partial("_Feed", Model.Recent)
+        </div>
+    </div>
+</div>

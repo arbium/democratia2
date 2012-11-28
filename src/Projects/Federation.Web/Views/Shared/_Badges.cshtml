@@ -1,0 +1,60 @@
+﻿@using Federation.Web.ViewModels
+@model _BadgesViewModel
+           
+<script type="text/javascript" src="@RoutesHelper.ScriptFolder/tooltip.js"></script>
+           
+<style>
+    .badges .badge
+    {
+        height: 65px;
+    }
+    .badges .badge .number
+    {
+        position: relative;
+        top: -25px;
+        display: inline;
+        color: #777;
+        font-size: 1.4em;
+        font-weight: bold;
+    }
+
+    .floatTip
+    {
+        position: absolute;
+        width: 220px;
+        display: none; 
+        border: 1px solid #DDE2E7;
+        padding: 8px;
+        border-radius: 10px;
+        font-family: sans-serif;
+        font-size: 9pt;
+        color: #333;
+        background: #F4F4F4;
+    }
+    .floatTip.visible 
+    {
+        display: block;
+    }
+    .floatTip p
+    {
+        margin: 5px 0 0 0;
+    }
+</style>
+
+<div class="badges">
+    @foreach (var badge in Model.Badges)
+    {
+        <div class="badge">
+            <img key="@badge.Id" src="@badge.Image" alt="@badge.Title" style="margin: 1px" />
+            <span class="number">@(badge.Value > 1 ? "x" + badge.Value.ToString() : "")</span>
+            <div id="@badge.Id" class="floatTip">
+                <h4>@badge.Title</h4>
+                <p>@badge.Description</p>
+            </div>
+        </div>
+    }
+    @if (Model.Badges.Count == 0)
+    {
+        <text>Пока никаких наград нет</text>
+    }
+</div>

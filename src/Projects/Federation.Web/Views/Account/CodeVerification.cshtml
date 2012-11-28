@@ -1,0 +1,62 @@
+﻿@using Federation.Web.ViewModels
+@model AccountCodeVerificationViewModel
+@{
+    ViewBag.Title = "Регистрация";
+    ViewBag.LayoutStyle = "layout_start";
+}
+
+@Html.Partial("_MainMenu")
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    <div class="form_help">
+        <h3>Регистрация: <span class="grey">Шаг 2 из 2</span></h3>
+        <p>
+            На предыдущем шаге регистрации, на указанный вами телефон была выслана SMS с секретным кодом. 
+            Введите его, пожалуйста.
+        </p>
+    </div>
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <div class="styled_form">
+            @if (!string.IsNullOrEmpty(ViewBag.ValidationExceptionText))
+            {
+                <div class="validation_block">
+                    @ViewBag.ValidationExceptionText
+                </div>
+            }
+            @using (Html.BeginForm())
+            {
+                <div class="form_block">
+                    <div class="input_block">
+                        <div class="title">
+                            @Html.LabelFor(m => m.SecretCode)<span class="required">*</span>
+                        </div>
+                        @Html.TextBoxFor(m => m.SecretCode)
+                        @Html.ValidationMessageFor(m => m.SecretCode)
+                    </div>
+                </div>
+                <p>
+                    <small>
+                        Если вы не получили SMS, напишите пожалуйста письмо на 
+                        <a href="mailto:support@democratia2.ru?Subject=Проблема_при_регистрации">support@democratia2.ru</a>.
+                        <br />
+                        В письме укажите дату и время регистрации, и данные, которые вы вводили (ФИО, email и телефон).
+                    </small>
+                </p>
+                <div class="submit_block">
+                    <input type="submit" value="Зарегистрироваться" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

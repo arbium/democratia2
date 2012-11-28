@@ -1,0 +1,193 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model HomeTodayViewModel
+@{
+    ViewBag.Title = "Газета";
+    ViewBag.LayoutStyle = "layout_start";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $(".date_navigation").tooltip();
+    });
+</script>
+
+@Html.Partial("_MainMenu")
+
+<div id="democracy_today">
+    <div id="page_header">
+        <div class="title">
+            <h1>
+                &laquo;Демократия Сегодня&raquo; за <span class="black">@Model.Today.ToUserTime(UserContext.Current).ToString("d MMMM yy")</span>
+            </h1>
+                <div class="date_navigation">
+                    <a href="@Url.Action("today", new { id = Model.Today.AddDays(-1).ToString("dd-MM-yy") })">&larr;</a>
+                    <span id="date" style="cursor: pointer">от @Model.Today.ToUserTime(UserContext.Current).ToString("d MMMM yyyy")</span>
+                    @if(Model.Today.Date < DateTime.Now.Date) {
+                        <a href="@Url.Action("today", new { id = Model.Today.AddDays(1).ToString("dd-MM-yy") })">&rarr;</a>
+                    }
+                </div>
+                <div id="calendar" class="tooltip" style="display: none">
+                    @Html.Partial("_Calendar", new _CalendarViewModel(Model.Today))
+                </div>
+        </div><!--title-->
+    </div>
+    <!--page_header-->
+
+    @if(Model.Federation.Count > 0) { 
+        <div class="federation">
+	        <div class="items">
+                <h4>Сообщения из группы Федерация</h4>
+                @foreach(var record in Model.Federation) 
+                {
+                    <div class="record fed">
+		                <a href="@record.Url">
+			                <div class="author">			                    
+				                <img class="icon" src="@record.AuthorAvatar&w=90&h=120" alt="автор публикации" />
+			                </div>
+			                <div class="content">
+				                <h3 class="title">@record.Title</h3>
+				                <span class="summary">
+					                @Html.Raw(record.Summary)
+				                </span>
+			                </div>
+                        </a>
+                        <div class="controls">
+                            <div class="name">
+                                @record.AuthorSurname @record.AuthorName
+                            </div>
+                            <div class="comments">
+                                @if (record.CommentsCount > 0)
+                                {
+                                    <a href="@record.Url#comments" title="перейти к комментариям">@record.CommentsCount</a>
+                                }
+                                else
+                                { 
+                                    <a class="nocomments" href="@record.Url#comments" title="Добавить комментарий"><span></span></a>
+                                }                        
+                            </div>
+                        </div>
+		                <div class="clear">
+                            <span></span>
+                        </div>
+                    </div>
+                }
+	        </div>
+        </div>
+    }
+
+    @if(Model.ImportantGroups.Count > 0) {
+        <div class="important_groups">
+	        <div class="part_title">
+	            <h4>Сообщения из популярных групп</h4>
+	        </div>
+            <table class="table_3groups">
+                <tr>
+                    @{
+                        var cells = 0;
+
+                        foreach (var record in Model.ImportantGroups)
+                        {
+                            cells += 1;
+                            
+                            <td class="item">
+                                <div class="record col">
+		                            <a href="@record.Url">
+@*			                            <div class="fader">
+                                            <div class="fader_a">
+                                            </div>
+                                        </div>*@
+			                            <div class="content">
+				                            <h3 class="title">@record.Title</h3>
+				                            <span class="summary">@Html.Raw(record.Summary)</span>
+			                            </div>
+		                            </a>
+		                            <div class="author">
+			                            <img class="icon" src="@record.GroupLogo&w=30&h=40" alt="" />
+			                            <div class="name">
+                                            @record.GroupName
+                                        </div>
+		                            </div>
+		                            <div class="clear">
+                                        <span></span>
+                                    </div>
+                                </div>
+                            </td>
+                        
+                            if (cells < Model.ImportantGroups.Count)
+                            {
+                                <td class="inter"><span></span></td>
+                            }
+                        }
+                    }
+                </tr>
+            </table>
+        </div>
+    }
+    <div class="columns_container">
+	    <div class="column_right">
+		    <div class="common">
+			    <div class="part_title">
+			        <h4>Разное</h4>
+			    </div>
+                <div class="h10"><span></span></div>
+			    @foreach(var record in Model.All)
+                {
+				    <div class="record short">
+					    <h3 class="title">
+                            <a href="@record.Url">
+						        @record.Title
+					        </a>
+                        </h3>
+					    <div class="name">
+                            @record.AuthorName @record.AuthorSurname
+                        </div>
+				    </div>
+                }
+		    </div><!--common-->
+	    </div><!--column_right-->
+	    <div class="column_left">
+		    <div class="popular">
+			    <div class="part_title">
+			        <h4>Самое обсуждаемое и интересное</h4>
+			    </div>
+                @foreach (var record in Model.Popular)
+                {
+                    <div class="record wide">
+				        <a href="@record.Url">
+					        <div class="author">
+						        <img class="icon" src="@record.AuthorAvatar&w=90&h=120" alt="" />
+					        </div>
+					        <div class="content">
+						        <h3 class="title">@record.Title</h3>
+						        <span class="summary">@Html.Raw(record.Summary)</span>
+					        </div>
+                         </a>
+                        <div class="controls">                              
+						    <div class="name">
+                                @record.AuthorName @record.AuthorSurname
+                            </div>
+                            <div class="comments">
+                            @if (record.CommentsCount > 0)
+                            {
+                                <a href="@record.Url#comments" title="перейти к комментариям">@record.CommentsCount</a>
+                            }
+                            else
+                            { 
+                                <a class="nocomments" href="@record.Url#comments" title="Добавить комментарий"><span></span></a>
+                            }                        
+                            </div>  
+                        </div>
+					    <div class="clear">
+                            <span></span>
+                        </div>				        
+                    </div>
+                }
+		    </div><!--popular-->
+	    </div><!--column_left-->
+    </div><!--columns_container-->
+    <div class="clear">
+        <span></span>
+    </div>
+</div>
+

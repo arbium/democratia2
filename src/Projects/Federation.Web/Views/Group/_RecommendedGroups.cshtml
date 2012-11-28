@@ -1,0 +1,20 @@
+﻿@using Federation.Web.ViewModels
+@model Group_RecommendedGroupsViewModel
+
+@if (Model.Groups.Count > 0)
+{
+   <div class="recomended_content">
+        <div class="content_helper_control">
+            <span>Рекомендованные группы</span>
+        </div>
+        <div class="content_department">
+            @foreach (var group in Model.Groups)
+            {
+                <div class="recomended_item">
+                    <img src="@group.Logo&w=15&h=20" alt="" />
+                    <a href="@Url.Action("index", new { id = group.Url })">@group.Name</a>
+                </div>
+            }
+        </div>
+    </div>
+}

@@ -1,0 +1,23 @@
+﻿<style>
+    .mainmenu_start .menu 
+    {
+        padding-top: 17px;
+        float: right;
+    }
+    .mainmenu_start .menu a {
+        color: #222;
+        padding: 0px 6px;
+    }
+ </style>
+<div class="mainmenu_start">
+    <div class="menu">
+        <a href="@Url.Action("today", "home")" class="static menu-item">Газета &laquo;Демократия сегодня&raquo;</a>
+        <a href="@Url.Action("groups", "home", new { GroupStateFilter = 1, OrderByFilter = 0 })" class="static menu-item">Группы</a>
+        <a href="@Url.Action("index", "help")" class="static menu-item">Помощь</a>
+    </div>
+    <div class="logo_container">
+        <a href="/">
+            <span></span>
+        </a>
+    </div>
+</div>

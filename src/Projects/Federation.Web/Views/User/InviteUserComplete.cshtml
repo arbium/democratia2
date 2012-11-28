@@ -1,0 +1,19 @@
+﻿@using Federation.Web.ViewModels
+@model UserInviteUserViewModel
+@{
+    ViewBag.Title = "Приглашение пользователя";
+}
+
+@*ВНИМАНИЕ: выполнено в альфа-интерфейсе*@
+
+<div class="path">
+    <a href="@Url.Action("index", "home")">Главная</a>
+	/
+	<span>Приглашение нового пользователя</span>
+</div>
+<div class="main_info_space">
+    <div class="login_window p20">
+	    <h1>Вы успешно пригласили нового пользователя!</h1>
+        @Html.ActionLink("Перейти в свой профиль", "index")
+    </div>
+</div>

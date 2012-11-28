@@ -1,0 +1,155 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model AlbumsViewModel
+@{
+    ViewBag.Title = "Альбомы";
+}
+
+<style type="text/css">
+    .gray
+    {
+        color: gray;
+    }
+    
+    a.expander 
+    {
+        text-decoration: none;
+        border-bottom: dashed 1px;
+    }
+    
+    div.expander
+    {
+        padding: 7px;
+        background-color: #eee;
+        display: none;
+    }
+    
+    .validation-message
+    {
+        color: red;
+        display: none;
+    }
+    
+    table td
+    {
+        vertical-align: top;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        $("a.expander").click(function () {
+            $(this).css("font-weight", "bold");
+            $(this).parent().children("div.expander").css("display", "block");
+        });
+
+        $("input:submit").click(function () {
+            if (!$(this).parents("form").find("input[name=Title]").val()) {
+                $(this).parents("form").find(".validation-message").css("display", "inline");
+                return false;
+            }
+            return true;
+        });
+    });
+</script>
+
+<table>
+    <tr>
+        <td>
+            <b>Личные альбомы</b>
+            @if (Model.UserAlbums.Count == 0)
+            {
+                <div class="gray">Еще не создано ни одного альбома</div>
+            }
+            else
+            {
+                foreach (var album in Model.UserAlbums)
+                {
+                    <div style="margin: 7px">
+                        <a href="@Url.Action("foreditor", "album", new { id = album.Id })">
+                            <b>@album.Title</b>
+                        </a>
+                        <span class="gray">(@album.Items.Count)</span>
+                        <div>@album.Description</div>
+                        <span class="gray">
+                            Дата изменения: @album.ChangeDate.ToUserTime(UserContext.Current).ToString("d MMM yyyy")
+                        </span>
+                    </div>
+                }
+            }
+            <a href="#" class="expander">Создать новый альбом</a>
+            <div class="expander">
+                @using (Html.BeginForm("create", "album", FormMethod.Post, new { id = "create-user-album" }))
+                {
+                    <input type="hidden" value="@Model.CreateUserAlbum.UserId" name="UserId" />
+                    <div>
+                        <div>
+                            <label for="Title">Название *</label>
+                            <input type="text" name="Title" value="@Model.CreateUserAlbum.Title" />
+                            <label class="validation-message">Обязательное поле</label>
+                        </div>
+                        <div>
+                            <label for="Description">Описание</label>
+                            <textarea name="Description" rows="5" cols="22">@Model.CreateUserAlbum.Description</textarea>
+                        </div>
+                        <div>
+                            <input type="submit" value=" Ок " />
+                        </div>
+                    </div>
+                }
+            </div>
+        </td>
+        <td>
+            @if (Model.GroupId.HasValue)
+            {
+                <b>Альбомы группы</b>
+                if (Model.GroupAlbums.Count == 0)
+                {
+                    <div class="gray">Еще не создано ни одного альбома</div>
+                }
+                else
+                {
+                    foreach (var album in Model.GroupAlbums)
+                    {
+                        <div style="margin: 7px">
+                            <a href="@Url.Action("foreditor", "album", new { id = album.Id })">
+                                <b>@album.Title</b>
+                            </a>
+                            <span class="gray">(@album.Items.Count)</span>
+                            <div>@album.Description</div>
+                            <span class="gray">Дата изменения: @album.ChangeDate.ToUserTime(UserContext.Current).ToString("d MMM yyyy")</span>
+                        </div>
+                    }
+                }
+                if (UserContext.Current.IsUserModeratorInGroup(Model.GroupId.Value))
+                {
+                    <a href="#" class="expander">Создать новый альбом</a>
+                    <div class="expander">
+                        @using (Html.BeginForm("create", "album", FormMethod.Post, new { id = "create-group-album" }))
+                        {
+                            <input type="hidden" value="@Model.CreateGroupAlbum.GroupId" name="GroupId" />
+                            <div>
+                                <div>
+                                    <label for="Title">Название *</label>
+				                    <input type="text" name="Title" value="@Model.CreateGroupAlbum.Title" />
+                                    <label class="validation-message">Обязательное поле</label>
+			                    </div>
+                                <div>
+                                    <label for="Description">Описание</label>
+                                    <textarea name="Description" rows="5" cols="22">@Model.CreateGroupAlbum.Description</textarea>
+			                    </div>
+                                <div>
+                                    <label for="IsOpen">Члены группы могут добавлять контент</label>
+                                    <input type="checkbox" name="IsOpen" />
+			                    </div>
+                                <div>
+			                        <input type="submit" value=" Ок " />
+		                        </div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </td>
+    </tr>
+</table>

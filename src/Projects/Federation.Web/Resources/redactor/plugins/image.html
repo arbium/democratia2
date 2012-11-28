@@ -1,0 +1,36 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $("#redactor_album_link").click(function () {
+            var src = $("#redactor_album_link").attr("href");
+            $("#redactor_album_link").attr("href", null);
+            $("#main").html("<iframe src='" + src + "' frameborder=0 style='width: 600px; height: 320px'></iframe>");
+        });
+    });
+</script>
+
+<div id="main">
+	<div id="redactor_tabs">
+		<a id="redactor_album_link">Загрузить/вставить из альбома</a>
+		<a href="javascript:void(null);" class="redactor_tabs_act">%RLANG.upload%</a>
+		<a href="javascript:void(null);">%RLANG.choose%</a>
+		<a href="javascript:void(null);">%RLANG.link%</a>
+	</div>
+	<form id="redactorInsertImageForm" method="post" action="" enctype="multipart/form-data">
+		<div id="redactor_tab1" class="redactor_tab">
+			<input type="file" id="redactor_file" name="file" />
+		</div>
+		<div id="redactor_tab2" class="redactor_tab" style="display: none;">
+			<div id="redactor_image_box"></div>
+		</div>
+	</form>
+	<div id="redactor_tab3" class="redactor_tab" style="display: none;">
+		<label>%RLANG.image_web_link%</label>
+		<input name="redactor_file_link" id="redactor_file_link" class="redactor_input"  />
+	</div>
+	<div id="redactor_modal_footer">
+		<span class="redactor_btns_box">
+			<input type="button" name="upload" id="redactor_upload_btn" value="%RLANG.insert%" />
+			<a href="javascript:void(null);" id="redactor_btn_modal_close">%RLANG.cancel%</a>
+		</span>
+	</div>
+</div>

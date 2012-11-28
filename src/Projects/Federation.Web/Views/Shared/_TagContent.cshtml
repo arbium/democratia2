@@ -1,0 +1,20 @@
+﻿@using Federation.Web.ViewModels
+@model _TagContentViewModel
+
+@if (Model.TagContent.Count > 0)
+{
+    <div class="recomended_content tag">
+        <div class="content_helper_control">
+            <span>Публикации на эту тему</span>
+        </div>
+        <div class="content_department">
+            @foreach (var item in Model.TagContent)
+            {
+                <div class="recomended_item">
+                    <span>@item.ContentType:</span>
+                    <a href="@item.Url">@item.Title</a>
+                </div>
+            }
+        </div>
+    </div>
+}

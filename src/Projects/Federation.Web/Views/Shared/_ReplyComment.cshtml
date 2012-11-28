@@ -1,0 +1,38 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model _Comments_CommentViewModel
+
+<div class="comments_feed">
+    <div class="comment" id="@Model.Id">
+        <div class="comment_body">
+            <div class="user_pic">
+                <a href="@Url.Action("index", "user", new { id = Model.UserId })">
+                    <img alt="фото" src="@Model.UserAvatar&w=48&h=64" />
+                </a>
+            </div>
+            <div class="user_info">
+                <a href="@Url.Action("index", "user", new { id = Model.UserId })">@Model.UserSurname @Model.UserName</a>
+                @if (!string.IsNullOrWhiteSpace(Model.UserGeo))
+                {
+                    <span class="user_info_city">(@Model.UserGeo)</span>
+                }
+                <div class="time">
+                    @Model.DateTime.ToUserTime(UserContext.Current).ToString("d MMMM yyyy, HH:mm")
+                </div>
+            </div>
+            <div class="comment_body_text">
+                @if (Model.ReplyComment != null)
+                {
+                    <a href="#@Model.ReplyComment.Id" style="text-decoration: none; margin: -4px">
+                        <span style="color: #555; border-bottom: 1px dashed #555; margin-left: 4px">@Model.ReplyComment.UserSurname @Model.ReplyComment.UserName</span>
+                    </a>
+                    <span>, </span>
+                }
+                @foreach (var line in Model.Text)
+                {
+                    @line <br/>
+                }
+            </div>
+        </div>
+    </div>
+</div>

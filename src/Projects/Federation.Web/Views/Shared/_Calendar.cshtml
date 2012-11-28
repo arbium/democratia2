@@ -1,0 +1,242 @@
+﻿@using System.Globalization
+@using System.Text.RegularExpressions
+@using Federation.Web.ViewModels
+@model _CalendarViewModel
+
+<style type="text/css">
+    .calendar
+    {       
+        background: #f0f0f0;
+        border: #ccc 1px solid;
+    }
+    .calendar.archive
+    {
+        padding: 20px;
+    }
+    .calendar.magazin
+    {
+        padding: 10px;
+    }
+</style>
+
+@{    
+    var urlTail = string.Empty;
+    if (Request.Url != null)
+    {
+        urlTail = Regex.Replace(Request.Url.Query, @"(?<=\?*)((year|month|day)=[a-z0-9]*&?){1,}", string.Empty);
+        urlTail = Regex.Replace(urlTail, @"(^\?)|(\&\s*$)", string.Empty);
+    }
+    if (!string.IsNullOrWhiteSpace(urlTail))
+    {
+        urlTail = "&" + urlTail;
+    }
+
+    var calclass = string.Empty;
+    switch (Model.Type)
+    {
+        case CalednarType.Archive:
+            calclass = "archive";
+            break;
+
+        case CalednarType.Magazin:
+            calclass = "magazin";
+            break;
+    }
+}
+
+<div class="calendar @calclass">
+    @if (Model.Type == CalednarType.Archive)
+    {
+        <div style="float: right">
+            <a href="@Url.Action("archive", new { id = Model.Id })?@urlTail">x</a>
+        </div>
+    }
+    @if (Model.Type == CalednarType.Magazin || Model.Month.HasValue || Model.Day.HasValue)
+    {
+        var year = Model.Year.HasValue ? Model.Year.Value : DateTime.Now.Year;
+        var month = Model.Month.HasValue ? Model.Month.Value : DateTime.Now.Month;
+        var monthString = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month);
+        var firstDayOfWeek = (int)(new DateTime(year, month, 1).DayOfWeek);
+        if (firstDayOfWeek == 0)
+        {
+            firstDayOfWeek = 7;
+        }
+        var currMonthDaysCount = DateTime.DaysInMonth(year, month);
+        int prevMonthDaysCount;
+
+        if (month == 1)
+        {
+            prevMonthDaysCount = DateTime.DaysInMonth(year - 1, 12);
+        }
+        else
+        {
+            prevMonthDaysCount = DateTime.DaysInMonth(year, month - 1);
+        }
+
+        if (Model.Type == CalednarType.Archive)
+        {
+            <div>
+                <a href="@Url.Action("archive", new { id = Model.Id, year = year - 1, month = month })@urlTail">←</a>
+                <a href="@Url.Action("archive", new { id = Model.Id, year = year })@urlTail">@year.ToString()</a>
+                <a href="@Url.Action("archive", new { id = Model.Id, year = year + 1, month = month })@urlTail">→</a>
+            </div>
+            <div>
+                @if (month == 1)
+                {
+                    <a href="@Url.Action("archive", new { id = Model.Id, year = year - 1, month = 12 })@urlTail">←</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("archive", new { id = Model.Id, year = year, month = month - 1 })@urlTail">←</a>
+                }
+                <a href="@Url.Action("archive", new { id = Model.Id, year = year, month = month })@urlTail">@monthString</a>
+                @if (month == 12)
+                {
+                    <a href="@Url.Action("archive", new { id = Model.Id, year = year + 1, month = 1 })@urlTail">→</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("archive", new { id = Model.Id, year = year, month = month + 1 })@urlTail">→</a>
+                }
+            </div>
+        }
+        <table>
+            <tr>
+                <td>Пн-</td>
+                <td>Вт-</td>
+                <td>Ср-</td>
+                <td>Чт-</td>
+                <td>Пт-</td>
+                <td>Сб-</td>
+                <td>Вс</td>
+            </tr>
+            <tr>
+                @for (var i = 1; i <= 42; i++)
+                {
+                    var cssClass = string.Empty;
+                    int day;
+                    DateTime publishDate;
+
+                    if (i < firstDayOfWeek)
+                    {
+                        cssClass = "grey";
+                        day = prevMonthDaysCount - firstDayOfWeek + i + 1;
+
+                        if (month == 1)
+                        {
+                            publishDate = new DateTime(year - 1, 12, day);
+                        }
+                        else
+                        {
+                            publishDate = new DateTime(year, month - 1, day);
+                        }
+                    }
+                    else if (i >= firstDayOfWeek + currMonthDaysCount)
+                    {
+                        cssClass = "grey";
+                        day = i - firstDayOfWeek - currMonthDaysCount + 1;
+
+                        if (month == 12)
+                        {
+                            publishDate = new DateTime(year + 1, 1, day);
+                        }
+                        else
+                        {
+                            publishDate = new DateTime(year, month + 1, day);
+                        }
+                    }
+                    else
+                    {
+                        day = i - firstDayOfWeek + 1;
+                        publishDate = new DateTime(year, month, day);
+                    }
+
+                    if (i % 7 == 1)
+                    {
+                        @Html.Raw("<tr>")
+                    }
+
+                    <td>
+                        @{
+                            var dayString = day.ToString();
+
+                            if (Model.Day.HasValue)
+                            {
+                                if (day == Model.Day.Value && month == publishDate.Month)
+                                {
+                                    dayString = "<b>" + dayString + "</b>";
+                                }
+                            }
+
+                            if (Model.Type == CalednarType.Archive)
+                            {
+                                if (Model.ContentDates.Contains(publishDate))
+                                {
+                                    <a href="@Url.Action("archive", new { id = Model.Id, year = publishDate.Year, month = publishDate.Month, day = publishDate.Day })@urlTail">
+                                        @Html.Raw(dayString)
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="@cssClass">@Html.Raw(dayString)</span>
+                                }
+                            }
+                            else if (Model.Type == CalednarType.Magazin)
+                            {
+                                if (publishDate.Date <= DateTime.Now.Date)
+                                {
+                                    <a href="@Url.Action("today", "home", new { id = publishDate.ToString("dd-MM-yy") })@urlTail" class="@cssClass">
+                                        @Html.Raw(dayString)
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="@cssClass">@Html.Raw(dayString)</span>
+                                }
+                            }
+                        }
+                    </td>
+
+                    if (i % 7 == 0)
+                    {
+                        @Html.Raw("</tr>")
+                    }
+                }
+            </tr>
+        </table>
+    }
+    else
+    {
+        var year = Model.Year.HasValue ? Model.Year.Value : DateTime.Now.Year;
+
+        <div>
+            <a href="@Url.Action("archive", new { id = Model.Id, year = year - 1 })@urlTail">←</a>
+            <a href="@Url.Action("archive", new { id = Model.Id, year = year })@urlTail">@year.ToString()</a>
+            <a href="@Url.Action("archive", new { id = Model.Id, year = year + 1 })@urlTail">→</a>
+        </div>
+        <table>
+            <tr>
+                @for (var i = 1; i <= 12; i++)
+                {
+                    var month = i;
+
+                    if (i % 4 == 1)
+                    {
+                        @Html.Raw("<tr>")
+                    }
+
+                    var monthString = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(month);
+                            
+                    <td>
+                        <a href="@Url.Action("archive", new { id = Model.Id, year = year, month = month })@urlTail" style="margin: 1px">@monthString</a>
+                    </td>
+
+                    if (i % 4 == 0)
+                    {
+                        @Html.Raw("</tr>");
+                    }
+                }
+            </tr>
+        </table>
+    }
+</div>

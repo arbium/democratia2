@@ -1,0 +1,94 @@
+﻿@using Federation.Web.ViewModels
+@model UserGroupsViewModel
+@{
+    var isAnotherUser = true;
+    if (Request.IsAuthenticated)
+    {
+        isAnotherUser = Model.UserId != UserContext.Current.Id;
+    }
+
+    ViewBag.Title = isAnotherUser ? "Группы пользователя" : "Ваши группы";
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.UserId, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        @if (!isAnotherUser)
+        {
+            <div class="jqueryslidemenu servicebuttonmenu">
+                <ul>
+                    <li>
+                        <a href="@Url.Action("creategroup", "user")">Создать новую группу</a>
+                    </li>
+                </ul>
+            </div>
+        }
+        <ul class="lighttabs">
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body" id="user_groups">
+        <div class="groups">
+            @foreach (var group in Model.GMs)
+            {
+                <div class="group"> 
+		            <div class="icon">
+                        <img alt="@group.GroupName" src="@group.GroupLogo&w=90&h=120" />
+		            </div>
+                    <div class="description">
+                        <div class="closing_type">
+                            @if (group.IsModerator)
+                            {
+                                <img class="star icon" title="Модератор группы" alt="модератор" src="@RoutesHelper.CurrentThemeFolder/images/shortcuts/star.png"/>
+                            }
+                            @if (!group.IsApproved && !isAnotherUser)
+                            {
+                                <img class="clock icon" title="Ожидаете подтвреждение участия в этой группе" alt="подана заявка" src="@RoutesHelper.CurrentThemeFolder/images/shortcuts/clock.png"/>
+                            }
+                        </div>		       
+                        <h2 class="title">                            
+                            @if (group.GroupName.Length > 33)
+                            {
+                                <a href="@Url.Action("index", "group", new { id = group.GroupUrl })" title="@group.GroupName">
+                                    @group.GroupName.Substring(0, 30)…
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("index", "group", new { id = group.GroupUrl })">@group.GroupName</a>
+                            }                            
+                        </h2>
+                    </div>
+                    <div class="members_count">
+                        Количество участников: <b>@group.MembersCount</b>
+                    </div>
+                    <div class="tags">
+                        Темы:
+                        @if (group.Tags.Count == 0)
+                        {
+                            <span>не указано</span>
+                        }
+                        @foreach (var tag in group.Tags)
+                        {
+				            @Html.ActionLink(tag.Title, "tag", "search", new { id = tag.Title }, null)
+                            <text></text>
+                        }
+                    </div>
+				    <div class="actions">
+                        @if (!isAnotherUser)
+                        {
+                            @Html.ConfirmActionLink("Покинуть группу", "Вы действительно хотите покинуть группу?",
+                                Url.Action("leave", "group", new { id = group.GroupId }))
+                        }
+				    </div>			        
+	            </div>
+            }
+        </div>
+    </div>
+</div>

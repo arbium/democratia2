@@ -1,0 +1,49 @@
+﻿@using Federation.Web.ViewModels
+@model AccountRequestedInvitesViewModel
+@{
+    ViewBag.Title = "Список запрошенных заявок";
+    ViewBag.LayoutStyle = "layout_start";
+}
+@section Header{
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/table.css" />
+}
+
+@*ВНИМАНИЕ: выполнено в альфа-интерфейсе*@
+
+@Html.Partial("_MainMenu")
+
+<div class="path"> 
+	<a href="@Url.Action("index", "home")">Главная</a>
+	/
+	<span>Список запрошенных заявок</span>
+</div>
+<div class="infospace_container">
+    <h1>@ViewBag.Title</h1>
+
+    <div class="hor_infoblock p20">
+        <table class="data">
+            <thead>
+                <tr>
+                    <td>Полное имя</td>
+                    <td>Facebook</td>
+                    <td>LiveJournal</td>
+                </tr>
+            </thead>
+            @foreach (var invite in Model.Invites)
+            {
+                <tr>
+                    <td>@invite.FullName</td>
+                    <td><a href="@invite.FacebookUrl" target="_blank">@invite.FacebookUrl</a></td>
+                    <td><a href="@invite.LiveJournalUrl" target="_blank">@invite.LiveJournalUrl</a></td>
+                </tr>
+            }
+            <tfoot>
+                <tr>
+                    <td colspan="4">Итого:</td>
+                    <td>@Model.Invites.Count</td>
+                </tr>
+            </tfoot>
+        </table>
+        <div style="height: 10px;" class="clear"><span></span></div>
+    </div>
+</div>

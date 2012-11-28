@@ -1,0 +1,146 @@
+﻿@using Federation.Web.ViewModels
+@model UserProfileViewModel
+@{
+    ViewBag.Title = Model.FullName;
+
+    var isOwner = false;
+    if (Request.IsAuthenticated)
+    {
+        isOwner = UserContext.Current.Id == Model.UserId;
+    }
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.UserId, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    @if (isOwner)
+    {
+        <div class="lighttabs_container">
+            <ul class="lighttabs">
+                <li>
+                    <a class="selected">Профиль</a>
+                </li>
+            </ul>
+            <div class="lighttabs_border"></div>
+        </div>
+    }
+    else
+    {
+        <div class="lighttabs_container">
+            <ul class="lighttabs">
+                <li>
+                    <a class="selected">Профиль</a>
+                </li>
+            </ul>
+            <div class="lighttabs_border"></div>
+        </div>
+    }     
+    <div class="body" id="user_bio">
+        @if (isOwner)
+        {
+            <div class="content_helper_control" >
+                <span>Управление</span>
+            </div>
+            <div class="actions">                
+                <table class="bio_actionbuttons">
+                    <tr>
+                        @if (!Model.IsTicketVerified)
+                        {
+                            <td>
+                                <div class="actionbuttons_container">
+                                    <a href="@Url.Action("ticketverification", "account")" class="action-button">Подтвердить личность</a>
+                                </div>
+                            </td>
+                        }
+                        <td>
+                            <div class="actionbuttons_container">
+                                <a href="@Url.Action("editavatar")" class="action-button">Изменить аватар</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actionbuttons_container">
+                                <a href="@Url.Action("subscription")" class="action-button">Настроить рассылку</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actionbuttons_container">
+                                <a href="@Url.Action("changepassword", "account")" class="action-button">Сменить пароль</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>                
+            </div>
+        }
+        <div class="content_helper_control">
+            <span>Комментарии</span>
+        </div>
+        <div class="content_department">
+            <a href="@Url.Action("comments", new { id = Model.UserId })">
+                @(isOwner ? "Мои комментарии" : "Комментарии пользователя")
+            </a>
+            <span class="grey">(@Model.CommentsCount)</span>
+        </div>
+        <div class="content_helper_control">
+            <span>Награды</span>
+        </div>
+        <div class="content_department">
+            <div class="badges">
+                @Html.Partial("_Badges", Model.Badges)
+            </div>
+        </div>
+        <div class="content_helper_control">
+            <span>Основные данные</span>
+            @if (isOwner)
+            {
+                <a href="@Url.Action("editpersonal", new { id = Model.UserId })">Редактировать</a>
+            }
+        </div>
+        <div class="content_department">
+            <div class="name">
+                <h2>@Model.FullName</h2>
+            </div>
+            <div class="info">
+                @if (Model.BirthDate.HasValue)
+                {
+                    <p class="black">@Model.BirthDate.Value.ToString("d MMMM yyyy") (@Model.Age)</p>
+                }
+                @{
+                    var offsetSign = Model.UTCOffset > TimeSpan.Zero ? "+" : "-";
+                    var utcOffset = Model.UTCOffset.ToString(@"hh\:mm");
+                    var timeZone = "UTC" + offsetSign + utcOffset;
+                    <p>Часовой пояс: @timeZone</p>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.BirthCity))
+                {
+                    <p class="grey">Место рождения: @Model.BirthCity</p>
+                }
+            </div>
+        </div>
+        <div class="content_helper_control">
+            <span>Биография</span>
+            @if (isOwner)
+            {
+                <a href="@Url.Action("editbio", new { id = Model.UserId })">Редактировать</a>
+            }
+        </div>
+        <div class="content_department">
+            @Html.Raw(Model.Info)
+            @if (string.IsNullOrWhiteSpace(Model.Info))
+            {
+                <text>Личной информации еще не сообщено</text>
+            }
+        </div>
+        <div class="content_helper_control">
+            <span>Контактные данные</span>
+            @if (isOwner)
+            {
+                <a href="@Url.Action("editcontacts", new { id = Model.UserId })">Редактировать</a>
+            }
+        </div>
+        <div class="content_department">
+            @Html.Partial("_Contacts", Model.Contacts)
+        </div>
+    </div>
+</div>

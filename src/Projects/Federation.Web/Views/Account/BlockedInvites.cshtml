@@ -1,0 +1,59 @@
+﻿@using Federation.Web.ViewModels
+@model AccountBlockedInvitesViewModel
+@{
+    ViewBag.Title = "Список заблокированных заявок";
+    ViewBag.LayoutStyle = "layout_start";
+}
+@section Header {
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/table.css" />
+}
+
+@Html.Partial("_MainMenu")
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <table class="data">
+            <thead>
+                <tr>
+                    <td>Полное имя</td>
+                    <td>Facebook</td>
+                    <td>LiveJournal</td>
+                    <td>Причина блокировки</td>
+                </tr>
+            </thead>
+            @foreach (var invite in Model.Invites)
+            {
+                <tr>
+                    <td>@invite.FullName</td>
+                    <td>
+                        <a href="@invite.FacebookUrl" target="_blank">@invite.FacebookUrl</a>
+                    </td>
+                    <td>
+                        <a href="@invite.LiveJournalUrl" target="_blank">@invite.LiveJournalUrl</a>
+                    </td>
+                    <td>@invite.Comment</td>
+                </tr>
+            }
+            <tfoot>
+                <tr>
+                    <td colspan="4">Итого:</td>
+                    <td>@Model.Invites.Count</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

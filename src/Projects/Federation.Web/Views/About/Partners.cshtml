@@ -1,0 +1,46 @@
+﻿@using Federation.Web.ViewModels
+@model object
+@{
+    ViewBag.Title = "Партнерам";
+}
+
+@Html.Partial("_MainMenu")
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @if (!Request.IsAuthenticated)
+    {
+        <div class="signin">
+            @Html.Partial("_SignIn", new SignInViewModel())
+        </div>
+    }
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <h1>
+            Партнерам
+        </h1>
+        <p>
+            Система Демократия2 ищет информационных партнеров. Нашим партнером может стать
+            любое авторитетное СМИ, которое пожелает освещать на своих информационных ресурсах
+            события, происходящие в нашей системе. Мы гарантируем, что политическая жизнь в
+            системе Демократия2 окажется гораздо более настоящей и насыщенной событиями, чем
+            политическая жизнь в так называемой реальной России, и даст множество информационных
+            поводов для интересных статей. Со своей стороны мы готовы предоставлять на ежедневной,
+            еженедельной или ежемесячной основе самые интересные дайджесты того, что происходит
+            в системе: обсуждения, голосования и тд. Мы также готовы делать тематические информационные
+            подборки.
+        </p>
+    </div>
+</div>

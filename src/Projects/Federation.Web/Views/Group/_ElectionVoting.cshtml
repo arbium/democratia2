@@ -1,0 +1,152 @@
+﻿@using Federation.Web.ViewModels
+@using Federation.Core
+@model Group_ElectionVotingViewModel
+           
+<div class="candidates">
+    <div class="voting_progressbar">
+        <div class="timeline">
+            <div class="start date">
+                <span>Начало голосования:</span> @Model.AgitationEnds.ToUserTime(UserContext.Current).ToString("dd.MM.yyyy HH:mm")
+            </div>
+            <div class="finish date">
+                <span>Завершение голосования:</span> @Model.ElectionsEnds.ToUserTime(UserContext.Current).ToString("dd.MM.yyyy HH:mm")
+            </div>
+            <div class="remaining">
+                Осталось:<br/>@Model.TimeRemaining
+            </div>
+        </div>
+        <div class="progressbar">
+            <div style="width:@(Model.RelativeTimeRemaining)%" class="bar yes">
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <div class="info-container">
+        <div class="info">
+            <table>
+                <tr>
+                    <td class="header">Период действия полномочий:</td>
+                    <td class="value">@Model.ElectionFrequency</td>
+                </tr>
+                <tr>
+                    <td class="header">Количество модераторов:</td>
+                    <td class="value">@Model.ModeratorsCount</td>
+                </tr>
+                <tr>
+                    <td class="header">Проходной порог:</td>
+                    <td class="value">@Model.SignsMinimumLimit</td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td class="header">Начало выдвижения:</td>
+                    <td class="value">@Model.AgitationStart.ToString("d MMMM yyyy")</td>
+                </tr>
+                <tr>
+                    <td class="header">Начало голосования:</td>
+                    <td class="value">@Model.AgitationEnds.ToString("d MMMM yyyy")</td>
+                </tr>
+                <tr>
+                    <td class="header">Подведение итогов:</td>
+                    <td class="value">@Model.ElectionsEnds.ToString("d MMMM yyyy")</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <h2>Кандидаты:</h2>
+    <p>
+        Вы можете проголосовать за @Model.ModeratorsCount:<br/>
+        1. Отметьте галочками (в квадратиках справа от имени кандидата тех, за кого вы хотите проголосовать,<br/>
+        2. Затем нажмите кнопку "Отдать свои голоса" - она находится под списком кандидатов.
+    </p>
+    @if (Model.CurrentUserVoted)
+    {
+        <span>Вы проголосовали за:</span>
+        foreach (var candidate in Model.Candidates.Where(x => x.IsChecked))
+        {
+                <div class="expert">
+                    <a href="@Url.Action("index", "user", new { id = candidate.UserId })">
+                        <img alt="аватар" src="@candidate.Avatar&w=48&h=64" />
+                    </a>
+                    <div class="info">
+                        <p class="name">
+                            <a href="@Url.Action("index", "user", new { id = candidate.UserId })">@candidate.FullName</a>
+                        </p>
+                        <p class="weight">
+                            <a href="@Url.Action("petition", "group", new { id = candidate.PetitionId })">Петиция (@candidate.PetitonSigns)</a>
+                        </p>
+                    </div>
+                </div>
+        }
+        <br />
+        <span>Остальные кандидаты:</span>
+        foreach (var candidate in Model.Candidates.Where(x => !x.IsChecked))
+        {
+                <div class="expert">
+                    <a href="@Url.Action("index", "user", new { id = candidate.UserId })">
+                        <img alt="аватар" src="@candidate.Avatar&w=48&h=64" />
+                    </a>
+                    <div class="info">
+                        <p class="name">
+                            <a href="@Url.Action("index", "user", new { id = candidate.UserId })">@candidate.FullName</a>
+                        </p>
+                        <p class="weight">
+                            <a href="@Url.Action("petition", "group", new { id = candidate.PetitionId })">Петиция (@candidate.PetitonSigns)</a>
+                        </p>
+                    </div>
+                </div>
+        }
+    }
+    else if (Model.CurrentUserTakingPart)
+    {
+        using (Html.BeginForm("electionvote", "group"))
+        {
+            @Html.HiddenFor(x => x.Id)
+            for (var i = 0; i < Model.Candidates.Count; i++)
+            {
+                var candidate = Model.Candidates[i];
+                    @Html.HiddenFor(x => x.Candidates[i].Id)
+                    <div class="expert half">
+                        <div class="vote-box">
+                            @Html.CheckBoxFor(x => x.Candidates[i].IsChecked)
+                        </div>
+                        <a href="@Url.Action("index", "user", new { id = candidate.UserId })">
+                            <img alt="аватар" src="@candidate.Avatar&w=48&h=64" />
+                        </a>
+                        <div class="info">
+                            <p class="name">
+                                <a href="@Url.Action("index", "user", new { id = candidate.UserId })">@candidate.FullName</a>
+                            </p>
+                            <p class="weight">
+                                <a href="@Url.Action("petition", "group", new { id = candidate.PetitionId })">Петиция (@candidate.PetitonSigns)</a>
+                            </p>
+                        </div>
+                    </div>
+            }
+            <div class="submit-result">
+                <p>Будьте внимательны!<br />Вы не сможете изменить свое решение после голосования</p>
+                <input type="submit" value="Отдать свои голоса" class="sexy-button color-orange" />
+            </div>
+        }
+    }
+    else
+    {
+        <span>Кандидаты:</span>
+        foreach (var candidate in Model.Candidates)
+        {
+            <div class="expert">
+                <a href="@Url.Action("index", "user", new { id = candidate.UserId })">
+                    <img alt="аватар" src="@candidate.Avatar&w=48&h=64" />
+                </a>
+                <div class="info">
+                    <p class="name">
+                        <a href="@Url.Action("index", "user", new { id = candidate.UserId })">@candidate.FullName</a>
+                    </p>
+                    <p class="weight">
+                        <a href="@Url.Action("petition", "group", new { id = candidate.PetitionId })">Петиция (@candidate.PetitonSigns)</a>
+                    </p>
+                </div>
+            </div>
+        }
+    }
+</div>

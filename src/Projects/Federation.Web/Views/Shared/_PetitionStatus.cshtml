@@ -1,0 +1,55 @@
+﻿@using Federation.Web.ViewModels
+@model _PetitionStatusViewModel
+
+<div class="contentfeed common">
+    @foreach (var record in Model.Votings)
+    {
+        <div class="record short petition">
+            <div class="corner"><span></span></div>
+            <div class="main">
+                @if (record.GroupId.HasValue)
+                {
+                    <div class="group">
+                        <a class="groupname" href="@Url.Action("index", "group", new { id = record.GroupUrl })">@record.GroupName</a>&nbsp;&rarr;
+                    </div>
+                }
+		        <div class="content">
+			        <h3 class="title"><a href="@record.Url">@record.Title</a></h3>
+                    <div class="info">
+                        @if (record.IsFinished)
+                        {
+                            <div class="duration">завершилось <span>@record.FinishDate.ToString("d MMMM yyyy")</span></div>
+                        }
+                        else
+                        {
+                            <div class="duration">актуально до <span>@record.FinishDate.ToString("d MMMM yyyy")</span></div>
+                        }
+                        <div class="comments"><a href="@Url.Action("poll", "group", new { id = record.Id })">@record.CommentsCount</a></div>
+                        <div class="voted">Человек подписало <span>@record.SignaturesCount</span></div>
+                        @if (record.IsUserParticipant)
+                        {
+                            if (record.UserSigned)
+                            {
+                                <div class="uservote">Вы подписали данную петицию</div>
+                            }
+                            else
+                            {
+                                <div class="uservote">Вы не подписывали данну петицию</div>    
+                            }
+                        }
+                    </div>
+		        </div>
+		        <div class="author">
+                    <a class="usericon" href="@Url.Action("index", "user", new { id = record.AuthorId })">
+			            <img class="icon" src="@record.AuthorAvatar&w=30&h=40" alt="лого" />
+                    </a>
+                    <div class="name">
+                        <a class="username" href="@Url.Action("index", "user", new { id = record.AuthorId })">
+                            <b>@record.AuthorSurname</b> @record.AuthorName @record.AuthorPatronymic
+                        </a>
+                    </div>
+		        </div>
+            </div><!--main-->    
+        </div><!--record-->
+    }
+</div>

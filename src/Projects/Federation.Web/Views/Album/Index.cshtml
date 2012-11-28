@@ -1,0 +1,141 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model AlbumViewModel
+@{
+    ViewBag.Title = "Альбом";
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @if (Model.GroupId.HasValue)
+    {
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.GroupId.Value, NavigationBoxType.Group))
+    }
+    else if (Model.UserId.HasValue)
+    {
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.UserId.Value, NavigationBoxType.User))
+    }
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        @if (Request.IsAuthenticated)
+        {
+            <div class="jqueryslidemenu servicebuttonmenu">
+                <ul>
+                    @if (Model.GroupId.HasValue)
+                    {
+                        if (UserContext.Current.IsUserModeratorInGroup(Model.GroupId.Value))
+                        {
+                            <li>
+                                @Html.ActionLink("Добавить изображение", "addimage", new { id = Model.Id })
+                            </li>
+                            <li class="servicemenu">
+                                <a href="#">
+                                    <img src="@RoutesHelper.CurrentThemeFolder/images/buttcalc/button_setup.png" alt="меню" />
+                                </a>
+                                <ul>
+                                    <li>
+                                        @Html.ActionLink("Добавить видео", "addvideo", new { id = Model.Id })
+                                    </li>
+                                    <li class="separator"></li>
+                                    <li>
+                                        @Html.ActionLink("Редактировать альбом", "edit", new { id = Model.Id })
+                                    </li>
+                                    @if (Model.IsEmpty)
+                                    {
+                                        <li>
+                                            @Html.ConfirmActionLink("Удалить альбом", "Вы действительно хотите удалить альбом?", 
+                                                Url.Action("delete", new { id = Model.Id }))
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        else if (Model.IsOpen && UserContext.Current.IsUserApprovedInGroup(Model.GroupId.Value))
+                        {
+                            <li>
+                                @Html.ActionLink("Добавить изображение", "addimage", new { id = Model.Id })
+                            </li>
+                            <li class="servicemenu">
+                                <a href="#">
+                                    <img src="@RoutesHelper.CurrentThemeFolder/images/buttcalc/button_setup.png" alt="меню" />
+                                </a>
+                                <ul>
+                                    <li>
+                                        @Html.ActionLink("Добавить видео", "addvideo", new { id = Model.Id })
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                    }
+                    else if (Model.UserId.HasValue)
+                    {
+                        if (Model.UserId.Value == UserContext.Current.Id)
+                        {
+                            <li>
+                                @Html.ActionLink("Добавить изображение", "addimage", new { id = Model.Id })
+                            </li>
+                            <li class="servicemenu">
+                                <a href="#">
+                                    <img src="@RoutesHelper.CurrentThemeFolder/images/buttcalc/button_setup.png" alt="меню" />
+                                </a>
+                                <ul>
+                                    <li>
+                                        @Html.ActionLink("Добавить видео", "addvideo", new { id = Model.Id })
+                                    </li>
+                                    <li class="separator"></li>
+                                    <li>
+                                        @Html.ActionLink("Редактировать альбом", "edit", new { id = Model.Id })
+                                    </li>
+                                    @if (Model.IsEmpty)
+                                    {
+                                        <li>
+                                            @Html.ConfirmActionLink("Удалить альбом", "Вы действительно хотите удалить альбом?",
+                                                Url.Action("delete", new { id = Model.Id }))
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        }
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">
+                    @ViewBag.Title <i>@(Model.Title ?? string.Empty)</i>
+                </a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        @if (Model.Items.Count == 0)
+        {
+            <span class="grey">В альбом еще ничего не загружено</span>
+        }
+        else
+        {
+            foreach (var albumItem in Model.Items)
+            {
+                <a href="@Url.Action("item", new { id = albumItem.Id })">
+                    @switch (albumItem.Type)
+                    {
+                        case AlbumItemType.Image:
+                            <img src="@albumItem.Src&w=150&h=150" alt="@albumItem.Title" title="@albumItem.Title" />
+                                                                                           break;
+
+                        case AlbumItemType.Video:
+                            <img src="../../Resources/themes/base/images/video.png" alt="@albumItem.Title" />
+                            <span style="position: relative; left: -150px; top: -135px">@albumItem.Title</span>
+                                                                                   break;
+                    }
+                </a>
+            }
+        }        
+    </div>
+</div>

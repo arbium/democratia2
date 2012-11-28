@@ -1,0 +1,72 @@
+﻿@using Federation.Web.ViewModels
+@model AlbumCreateEditViewModel
+@{
+    ViewBag.Title = "Создание альбома";
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @if (Model.GroupId.HasValue)
+    {
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.GroupId.Value, NavigationBoxType.Group))
+    }
+    else if (Model.UserId.HasValue)
+    {
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.UserId.Value, NavigationBoxType.User))
+    }
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <div class="styled_form">
+            @if (!string.IsNullOrEmpty(ViewBag.ValidationExceptionText))
+            {
+                <div class="validation_block">
+                    @ViewBag.ValidationExceptionText
+                </div>
+            }
+            @using (Html.BeginForm())
+            {
+                <div class="form_block">
+                    @Html.HiddenFor(m => m.UserId)
+                    @Html.HiddenFor(m => m.GroupId)
+                    <div class="input_block">
+                        <div class="title">                    
+                            @Html.LabelFor(m => m.Title)<span class="required">*</span>
+                        </div>
+                        @Html.TextBoxFor(m => m.Title)
+                        @Html.ValidationMessageFor(m => m.Title)
+                    </div>
+                    <div class="input_block">
+                        <div class="title">
+                            @Html.LabelFor(m => m.Description)
+                        </div>                    
+                        @Html.TextAreaFor(m => m.Description)
+                    </div>
+                    @if (Model.GroupId.HasValue)
+                    {
+                        <div class="input_block separator">
+                            <div class="title">
+                                @Html.LabelFor(m => m.IsOpen)
+                            </div>
+                            @Html.CheckBoxFor(m => m.IsOpen)
+                        </div>
+                    }
+                </div>
+                <div class="submit_block">
+                    <input type="submit" value="Ок" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

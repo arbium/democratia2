@@ -1,0 +1,72 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model UserInvitesViewModel
+@{
+    ViewBag.Title = "Приглашения";
+}
+
+@*ВНИМАНИЕ: выполнено в альфа-интерфейсе*@
+
+<div id="page_header">
+    <div class="path">
+         <a href="@Url.Action("index", "home")">Главная</a> /
+         <a href="@Url.Action("index", new { id = UserContext.Current.Id })">@UserContext.Current.DisplayName</a> /
+         <span>@ViewBag.Title</span>
+    </div>
+    <div class="title" >
+        <h1>@ViewBag.Title</h1>
+        <span class="title_controls">
+            <a class="sexy-button color-orange" href="@Url.Action("inviteuser")">Пригласить знакомого</a>
+        </span>
+    </div>
+</div>
+
+<div id="user_invites">
+    @if (Model.Invites.Count == 0)
+    {
+        <h3>Вы не выдали еще ни одного приглашения</h3>
+    }
+    else
+    {
+        <table class="user_invites_table">
+            <tbody>
+                @foreach (var invite in Model.Invites)
+                {
+                    <tr>
+                        <td class="user">
+                            <div>
+                                @if (string.IsNullOrEmpty(invite.UserUrl)) {
+                                    <span class="usericon"></span>
+                                    <span class="username">@invite.FullName</span>
+                                } else {
+                                    <a class="usericon" href="@invite.UserUrl">
+                                        <img src="@invite.UserAvatar&w=30&h=40" alt="@invite.FullName" />
+                                    </a>
+                                    <a class="username" href="@invite.UserUrl">@invite.FullName</a>
+                                }
+                            </div>
+                        </td>
+                        <td class="email">
+                            <div>
+                                <a href="mailto:@invite.Email">@invite.Email</a>
+                            </div>
+                        </td>
+                        <td class="date">
+                            <div>@invite.CreationDate.ToUserTime(UserContext.Current)</div>
+                        </td>
+                        <td class="state">
+                                <div class="thestate">@invite.State</div>
+                                @if (invite.IsResendEnabled)
+                                {       
+                                    <div class="resend">
+                                    @Html.ConfirmActionLink("Выслать повторно", "Вы действительно хотите повторно выслать это приглашение?",
+                                        Url.Action("sendinvite", new { id = invite.Id }))
+                                    </div>
+                                }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

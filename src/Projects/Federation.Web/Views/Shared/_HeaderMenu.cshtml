@@ -1,0 +1,66 @@
+﻿<div class="content" style="overflow: hidden">
+    <div class="sitelist_container">
+        <a href="/" class="d2" title="На главную страницу"><span></span></a>
+        @if (Request.IsAuthenticated)
+        {
+            foreach (var group in UserContext.Current.Groups)
+            {
+                if (group.Id != ViewBag.CurrentGroup)
+                {
+                    <a href="@Url.Action("index", "group", new { id = group.Url })"><span>@group.Name</span></a>
+                }
+                else
+                {
+                    <a class="active" href="@Url.Action("index", "group", new { Id = group.Url })"><span>@group.Name</span></a>
+                }
+            }
+            <a href="@Url.Action("groups", "home", new { groupstatefilter = 1, orderbyfilter = 0 })"><span>Ещё группы &rarr;</span></a>
+            
+            <div class="site_userarea_container">
+                @{
+                    var isUserCurrentClass = (ViewBag.IsCurrentUser ?? false) ? "current" : "";
+                }
+                <div class="site_userarea @isUserCurrentClass">
+                    <a class="site_user" href="@Url.Action("index", "user")">@UserContext.Current.DisplayName</a>
+                    <a class="site_messages" href="@Url.Action("dialogs", "user")" title="Личные сообщения">
+                        @if (UserContext.Current.UnreadMessages > 0)
+                        {
+                            <span>
+                                <img src="@RoutesHelper.CurrentThemeFolder/images/message-open.png" hspace="0" alt="ЛС" />
+                            </span>
+                            <span class="unread">@UserContext.Current.UnreadMessages</span>
+                        }
+                        else
+                        {
+                            <span>
+                                <img src="@RoutesHelper.CurrentThemeFolder/images/message-closed.png" hspace="0" alt="нет" />
+                            </span>
+                        }
+                    </a>
+                    <a class="site_gazeta" href="@Url.Action("today", "home")" title="газета Демократия Сегодня">
+                        <img src="@RoutesHelper.CurrentThemeFolder/images/userpanel-gazeta.png" hspace="0" alt="газета" />
+                    </a>
+                    <a class="site_exit" href="@Url.Action("signout", "account")" title="Выйти из аккаунта">
+                        <img src="@RoutesHelper.CurrentThemeFolder/images/userpanel-exit.png" hspace="0" alt="x" />
+                    </a>
+                </div>
+            </div><!--site_userarea_container-->
+        }
+        else
+        {
+            <a href="@Url.Action("signup", "account")"><span>Создать аккаунт</span></a>
+@*            <a href="@Url.Action("today", "home")"><span>Газета &laquo;Демократия сегодня&raquo;</span></a>
+            <a href="@Url.Action("groups", "home", new { groupstatefilter = -1, orderbyfilter = 0 })"><span>Группы</span></a>
+            <a href="@Url.Action("members", "group", new { id = "federation" })"><span>Пользователи</span></a>
+            <a href="@Url.Action("index", "about")"><span>Манифест</span></a>
+            <a href="@Url.Action("index", "help")"><span>Помощь</span></a>*@
+            
+            <div class="site_userarea_container">
+                <div class="site_userarea">
+                    <a class="site_user" href="@Url.Action("signin", "account")">Войти</a>
+                    <a class="site_user" href="@Url.Action("signup", "account")">Зарегистрироваться</a>
+                </div>
+            </div>            
+        }
+    </div><!--sitelist_container-->
+</div><!--content-->

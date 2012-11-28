@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-type" />
+    <base target="_top" />
+    <meta content="INDEX,FOLLOW" name="robots" />
+    <meta content="3 days" name="revisit-after" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <title>@ViewBag.Title - Демократия 2</title>
+    <meta lang="ru" content="Демократия2. @ViewBag.Title" name="description" />
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/style.css" />
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/styles.css" />
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/controls.css" />
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/headermenu.css" />
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/jqueryslidemenu.css" />
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/news.css" />
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/s3slider.css" />
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/jquery.fancybox-1.3.4.css" />
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/path.css" />
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/content_layout.css" />
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/content.css" />
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/news.css" />
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/forms.css" />
+    <link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/jquery-ui-1.8.16.custom.css" />
+    <script type="text/javascript" src="@RoutesHelper.ScriptFolder/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="@RoutesHelper.ScriptFolder/jquery-ui-1.8.16.custom.min.js"></script>
+    <script type="text/javascript" src="@RoutesHelper.ScriptFolder/jquery.ui.core.min.js"></script>
+    <script type="text/javascript" src="@RoutesHelper.ScriptFolder/jquery.ui.tabs.min.js"></script>
+    <script type="text/javascript" src="@RoutesHelper.ScriptFolder/jquery.ui.widget.min.js"></script>
+    <script type="text/javascript" src="@RoutesHelper.ScriptFolder/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="@RoutesHelper.ScriptFolder/jquery.tools.min.js"></script>
+    <script type="text/javascript" src="@RoutesHelper.ScriptFolder/jqueryslidemenu.js"></script>
+    <script type="text/javascript" src="@RoutesHelper.ScriptFolder/jquery.fancybox-1.3.4.js"></script>
+    <script type="text/javascript" src="@RoutesHelper.ScriptFolder/s3Slider.js"></script>
+    <script type="text/javascript" src="@RoutesHelper.ScriptFolder/oneclickbuttons.js"></script>
+    <script type="text/javascript" src="@RoutesHelper.ScriptFolder/backtab.js"></script>
+    <script type="text/javascript" src="@RoutesHelper.ScriptFolder/likes.js"></script>
+
+    @RenderSection("Header", false)
+
+    <script type="text/javascript">
+        // build sliding menu
+        jqueryslidemenu.buildmenu(".jqueryslidemenu > ul", arrowimages);
+
+
+        jQuery(document).ready(function () {
+            //            $("a.fancy_iframe").each(
+            //		function () {
+            //		    $(this).fancybox({
+            //		        //'modal'	: 'true',
+            //		        'type': 'iframe',
+            //		        'width': 900,
+            //		        'height': '80%',
+            //		        'autoScale': true,
+            //		        //'autoDimensions': true,
+            //		        'transitionIn': 'none',
+            //		        'transitionOut': 'none'
+            //		    });
+            //		}
+            //	)
+
+            $("a.fancy_ajax").each(
+                function () {
+                    $(this).fancybox({
+                        //'modal'	: 'true',
+                        'type': 'ajax',
+                        'width': 900,
+                        'height': '80%',
+                        'autoScale': true,
+                        'autoDimensions': true,
+                        'transitionIn': 'none',
+                        'transitionOut': 'none'
+                    });
+                }
+            );
+
+            $("a").focus(function () { $(this).blur(); }); // removes focus borders on all links
+            // make rollover unfading search field
+            //            $(".searchbox").fadeTo(0.5, 0.5);
+            //            $(".searchboxid-replace").focus(function () { $(this).val(""); });
+            //            jQuery(".searchbox").bind("mouseover", function () { $(".searchbox").fadeTo(0.5, 1.0); $(".searchboxid-replace").focus(); });
+            //            jQuery(".searchboxid-replace").blur(function () { $(".searchbox").fadeTo(0.5, 0.5) });
+        });
+    </script>
+</head>
+<body class="@ViewBag.LayoutStyle">
+    @if (ViewBag.ExceptionText != null && ViewBag.ShowException != false)
+    {
+        <div id="error-box">
+            @Html.Raw(ViewBag.ExceptionText)
+        </div>
+    }
+
+    @Html.Partial("_Upward")
+
+    <div class="sitelist">
+        @Html.Partial("_HeaderMenu")
+    </div>
+    <div class="wrapper">
+        <div class="main_content">
+            <div class="content">
+                <div class="main_info_container">
+                    <div class="main_white">
+                        @RenderBody()
+                    </div>
+                    <!--main_white-->
+                    <div class="pseudofooter">
+                        <div class="left_bottom">
+                            <table class="left_bottom_table">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <h3>Система</h3>
+                                            <p>
+                                                <a href="@Url.Action("signup", "account")" ><span>Создать аккаунт</span></a>
+                                            </p>
+                                            <p>
+                                                <a href="@Url.Action("today", "home")" ><span>Газета &laquo;Демократия сегодня&raquo;</span></a>
+                                            </p>
+                                            <p>
+                                                <a href="@Url.Action("groups", "home", new { groupstatefilter = 1, orderbyfilter = 0 })" ><span>Группы</span></a>
+                                            </p>
+                                            <p>
+                                                <a href="@Url.Action("members", "group", new { id = "federation" })" ><span>Пользователи</span></a>
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <h3>Информация</h3>
+                                            <p>
+                                                <a href="@Url.Action("index", "about")">Манифест</a>
+                                            </p>
+                                            <p>
+                                                <a href="@Url.Action("features", "help")">Возможности</a>
+                                            </p>
+                                            <p>
+                                                <a href="@Url.Action("cases", "help")">Применение</a>
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <h3>Помощь</h3>
+                                            <p>
+                                                <a href="@Url.Action("index", "help")">Помощь</a>
+                                            </p>
+                                        </td>
+                                        <td class="ta_r">
+                                            <div class="searchbox">
+                                                @using (Html.BeginForm("index", "search", FormMethod.Get))
+                                                {
+                                                    <input name="id" class="searchboxid-replace" type="text" placeholder="Искать на этом сайте" />
+                                                    <input class="searchbuttonid-replace" type="image" src="@RoutesHelper.CurrentThemeFolder/images/searchbutton.png" />
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--left bottom-->
+                    </div>
+                    <!--pseudofooter-->
+                </div>
+                <!--main_info_container-->
+            </div>
+            <!--content-->
+        </div>
+        <!--main_content-->
+
+        <div class="footer">
+            <div class="content">
+                <div class="right50">
+                    @Html.Partial("_Counters")
+                </div>
+                <div class="left50">
+                    <p>
+                        <strong>Демократия 2</strong> &copy; 2011 - @DateTime.Today.Year
+                    </p>
+                </div>
+            </div>
+            <!--content-->
+        </div>
+        <!--footer-->
+    </div>
+    <!--wrapper-->
+    <script type="text/javascript">
+        var reformalOptions = {
+            project_id: 61999,
+            project_host: "democratia2.reformal.ru",
+            force_new_window: true,
+            tab_orientation: "left",
+            tab_indent: "50%",
+            tab_bg_color: "#4d6582",
+            tab_border_color: "#f5f5f5",
+            tab_image_url: "http://tab.reformal.ru/T9GC0LfRi9Cy0Ysg0Lgg0L%252FRgNC10LTQu9C%252B0LbQtdC90LjRjw==/f5f5f5/eb6e41463b0bf2d0e7e3dab5e6c3ee0b/left/0/tab.png",
+            tab_border_width: 0
+        };
+
+        (function () {
+            var script = document.createElement('script');
+            script.type = 'text/javascript'; script.async = true;
+            script.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'media.reformal.ru/widgets/v3/reformal.js';
+            document.getElementsByTagName('head')[0].appendChild(script);
+        })();
+    </script>
+</body>
+</html>

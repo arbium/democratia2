@@ -1,0 +1,488 @@
+﻿@using Federation.Core
+@using Federation.Web
+@using Federation.Web.ViewModels
+@model _ContentLayoutViewModel
+@{
+    ViewBag.Title = Model.Title;    
+}
+
+<style type="text/css">
+    .delegate-button {
+        margin-top: 3px;
+        padding: 3px 7px;
+        color: #666 !important;
+        text-shadow: #fff 1px 1px 1px;
+        text-decoration: none !important;
+        background-color: #efefef;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        display: inline-block;
+    }
+
+    .delegate-button:hover {
+        border-color: #aaa;
+        background-color: #f0f0f0;
+        color: #444 !important;
+    }
+</style>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @if (Model.GroupId.HasValue)
+    {
+        <div id="group-info">
+            @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.GroupId.Value, NavigationBoxType.Group))
+        </div>
+    }
+    else if (Model.AuthorId.HasValue)
+    {
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.AuthorId.Value, NavigationBoxType.User))
+    }
+        
+    @switch (Model.Type)
+    {
+        case ContentType.Poll:
+            var pollModel = Model.Body as Group_PollViewModel;
+            if (pollModel != null)
+            {
+                @Html.Partial("_PollExperts", pollModel.Experts)
+            }
+            break;
+
+        case ContentType.Election:
+            var electionModel = Model.Body as Group_ElectionViewModel;
+            if (electionModel != null)
+            {
+                @Html.Partial("_ElectionAbout", electionModel.About)
+            }
+            break;
+    }
+    @if (Model.AuthorId.HasValue && Model.GroupId.HasValue)
+    {
+        @Html.Partial("_AuthorContent", new _AuthorContentViewModel(Model.AuthorId.Value, Model.GroupId.Value, Model.Id))
+    }
+    else if (Model.AuthorId.HasValue && !Model.GroupId.HasValue)
+    {
+        @Html.Partial("_AuthorContent", new _AuthorContentViewModel(Model.AuthorId.Value, Model.Id))
+    }
+    
+    @Html.Partial("_TagContent", new _TagContentViewModel(Model.Id))
+</div>
+<div class="layout_content">
+    @if (Model.State == ContentState.Deleted && !(Model.IsAuthor || Model.GroupId.HasValue && Model.IsModerator))
+    {
+        <h3 class="red">Данный контент удален</h3>
+    }
+    else
+    {
+        <div class="lighttabs_container">
+            <div class="jqueryslidemenu servicebuttonmenu">
+                <ul>
+                    @if (Model.GroupId.HasValue)
+                    {
+                        if (Model.IsAuthor && Model.IsApprovedMember && Model.State != ContentState.Deleted)
+                        {
+                            if (Model.Type == ContentType.Post || Model.State == ContentState.Premoderated || Model.State == ContentState.Draft || Model.State == ContentState.Blocked)
+                            {
+                                <li>
+                                    @Html.ActionLink("Редактировать", "edit", "content", new { id = Model.Id }, null)
+                                </li>
+                            }
+                            if (Model.State == ContentState.Premoderated && (Model.IsModerator || (Model.IsAuthor && Model.IsApprovedMember && !Model.IsContentModerated)) && (Model.Type == ContentType.Poll || Model.Type == ContentType.Survey))
+                            {
+                                <li>
+                                    @Html.ConfirmActionLink("Запустить голосование", "Вы действительно хотите запустить голосование?",
+                                                          Url.Action("publish", "content", new { id = Model.Id }))
+                                </li>
+                            }
+                            if (Model.State == ContentState.Draft || (Model.State == ContentState.Premoderated && !Model.IsContentModerated && !Model.IsModerator))
+                            {
+                                <li>
+                                    @Html.ConfirmActionLink("Опубликовать", "Вы действительно хотите опубликовать данную запись?",
+                                                          Url.Action("publish", "content", new { id = Model.Id }))
+                                </li>
+                            }
+                        }
+                        <li class="servicemenu">
+                            <a href="#">
+                                <img src="@RoutesHelper.CurrentThemeFolder/images/buttcalc/button_setup.png" alt="Меню" />
+                            </a>
+                            <ul>
+                                @if (Model.State == ContentState.Premoderated && Model.IsModerator && (Model.Type == ContentType.Post || Model.Type == ContentType.Petition))
+                                {
+                                    <li>
+                                        @Html.ConfirmActionLink("Разрешить публикацию", "Вы действительно хотите разрешить эту публикацию?",
+                                                              Url.Action("publish", "content", new { id = Model.Id }))
+                                    </li>
+                                }
+                                @if (Model.IsModerator && Model.State != ContentState.Deleted)
+                                {
+                                    if (Model.State == ContentState.Blocked)
+                                    {
+                                        <li>
+                                            @Html.ConfirmActionLink("Восстановить", "Вы действительно хотите восстановить этот контент?",
+                                                                  Url.Action("toggleblock", "content", new { id = Model.Id, block = false }))
+                                        </li>
+                                    }
+                                    if (!Model.IsAuthor && Model.State != ContentState.Draft && Model.State != ContentState.Blocked)
+                                    {
+                                        <li>
+                                            @Html.ConfirmActionLink("Заблокировать", "Вы действительно хотите заблокировать этот контент?",
+                                                                  Url.Action("toggleblock", "content", new { id = Model.Id, block = true }))                        
+                                        </li>
+                                    }
+                                }
+                                @if (Model.IsAuthor && Model.IsApprovedMember)
+                                {
+                                    if (Model.State != ContentState.Draft && Model.State != ContentState.Blocked && Model.State != ContentState.Deleted && (Model.State != ContentState.Approved || Model.Type == ContentType.Post))
+                                    {
+                                        <li>
+                                            @Html.ConfirmActionLink("Переместить в черновики", "Вы действительно хотите переместить запись в черновики?",
+                                                                  Url.Action("unpublish", "content", new { id = Model.Id, state = ContentState.Draft }))
+                                        </li>
+                                    }
+                                }
+                                @if (Model.Type == ContentType.Petition && (Model.State == ContentState.Draft || (Model.State == ContentState.Premoderated && !Model.IsContentModerated)))
+                                {
+                                    <li>
+                                        @Html.ActionLink("Управление соавторами", "editpetitioncoauthors", "user", new { id = Model.Id }, null)
+                                    </li>
+                                }                                
+                                @if (((Model.IsAuthor && Model.IsApprovedMember) || Model.IsModerator) && Model.State != ContentState.Deleted)
+                                {
+                                    if (Model.IsDiscussionClosed)
+                                    {
+                                        <li>
+                                            @Html.ActionLink("Открыть обсуждение", "togglediscussion", "content", new { id = Model.Id, show = true }, null)
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            @Html.ActionLink("Закрыть обсуждение", "togglediscussion", "content", new { id = Model.Id, show = false }, null)
+                                        </li>
+                                    }
+                                }
+                                @if (Model.IsModerator && Model.State != ContentState.Deleted)
+                                {
+                                    if (Model.IsAttached)
+                                    {
+                                        <li>
+                                            @Html.ActionLink("Открепить", "detach", "content", new { id = Model.Id, target = (byte)AttachDetachTarget.Group }, null)
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            @Html.ActionLink("Закрепить", "attach", "content", new { id = Model.Id, target = (byte)AttachDetachTarget.Group }, null)
+                                        </li>
+                                    }
+                                }
+                                @if (Model.IsAuthor && Model.IsApprovedMember && Model.State != ContentState.Deleted)
+                                {
+                                    <li>
+                                        @Html.ConfirmActionLink("Удалить", "Удаление контента необратимо. Вы действительно хотите удалить данную запись?",
+                                                                  Url.Action("delete", "content", new {id = Model.Id}))
+                                    </li>
+                                }                                
+                                <li class="separator"></li>
+                                @if (!Model.IsAuthor)
+                                {
+                                    if (!Model.IsPMAllow)
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("dialog", "user", new { id = Model.AuthorId })#send-message">Написать автору</a>
+                                        </li>
+                                    }
+                                    if (Model.AuthorId.HasValue)
+                                    {
+                                        @Html.Partial("_SubscribeAndBlockMenu", Model.AuthorId.Value)
+                                    }
+                                }
+                            </ul>
+                        </li>
+                    }
+                    else if (Model.AuthorId.HasValue)
+                    {
+                        if (Model.IsAuthor && Model.State != ContentState.Deleted)
+                        {
+                            <li>
+                                @Html.ActionLink("Редактировать", "edit", "content", new { id = Model.Id }, null)
+                            </li>
+                            if (Model.State == ContentState.Draft)
+                            {
+                                <li>
+                                    @Html.ConfirmActionLink("Опубликовать", "Вы действительно хотите опубликовать контент?",
+                                                          Url.Action("publish", "content", new { id = Model.Id }))
+                                </li>
+                            }
+                        }
+                        if (!Model.IsAuthor && UserContext.Current != null && !UserContext.Current.SubscribedUsers.Contains(Model.AuthorId.Value))
+                        {
+                            <li>
+                                @Html.ActionLink("Подписаться на ленту", "subscribetouser", "subscription", new { id = Model.AuthorId }, null)
+                            </li>
+                        }
+                        <li class="servicemenu">
+                            <a href="#">
+                                <img src="@RoutesHelper.CurrentThemeFolder/images/buttcalc/button_setup.png" alt="Меню" />
+                            </a>
+                            <ul>
+                                @if (Model.IsAuthor && Model.State != ContentState.Deleted && Model.Type == ContentType.Post && Model.State != ContentState.Draft)
+                                {
+                                    <li>
+                                        @Html.ConfirmActionLink("Вернуть в черновики", "Вы действительно хотите вернуть пост в черновики?",
+                                                              Url.Action("unpublish", "content", new { id = Model.Id }))
+                                    </li>
+                                }
+                                @if (Model.IsAuthor && Model.State != ContentState.Deleted && Model.Type == ContentType.Petition && Model.State == ContentState.Draft)
+                                {
+                                    <li>
+                                        @Html.ActionLink("Управление соавторами", "editpetitioncoauthors", "user", new { id = Model.Id }, null)
+                                    </li>
+                                }
+                                @if (Model.IsAuthor && Model.State != ContentState.Deleted)
+                                {
+                                    if (Model.IsAttached)
+                                    {
+                                        <li>
+                                            @Html.ActionLink("Открепить", "detach", "content", new { id = Model.Id, target = (byte)AttachDetachTarget.User }, null)
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            @Html.ActionLink("Закрепить", "attach", "content", new { id = Model.Id, target = (byte)AttachDetachTarget.User }, null)
+                                        </li>
+                                    }
+                                }
+                                @if (Model.IsAuthor && Model.State != ContentState.Deleted)
+                                {
+                                    if (Model.IsDiscussionClosed)
+                                    {
+                                        <li>
+                                            @Html.ActionLink("Открыть обсуждение", "togglediscussion", "content", new { id = Model.Id, show = true }, null)
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            @Html.ActionLink("Закрыть обсуждение", "togglediscussion", "content", new { id = Model.Id, show = false }, null)
+                                        </li>
+                                    }
+                                }
+                                @if (Model.IsAuthor && Model.State != ContentState.Deleted)
+                                {
+                                    <li>
+                                        @Html.ConfirmActionLink("Удалить", "Удаление контента необратимо. Вы действительно хотите удалить данную запись?",
+                                                              Url.Action("delete", "content", new { id = Model.Id }))
+                                    </li>
+                                }
+                                @if (!Model.IsAuthor)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("dialog", "user", new { id = Model.AuthorId })#send-message">Написать автору</a>
+                                    </li>
+                                    @Html.Partial("_SubscribeAndBlockMenu", Model.AuthorId.Value)
+                                }
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </div><!--jqueryslidemenu-->
+            <ul class="lighttabs">
+                <li>
+                    <a class="back">◄</a>
+                </li>
+                <li>
+                    <a class="selected">@Model.TypeName</a>
+                </li>     
+            </ul>
+            <div class="lighttabs_border"></div>
+        </div>
+        <div class="body">
+            <div class="content_view">                  
+                <div class="content_info">
+                    @if (Model.GroupId.HasValue && Model.AuthorId.HasValue)
+                    {
+                        <div class="author">
+                            <span>Автор:</span> 
+                            @Html.ActionLink(Model.AuthorName, "blog", "user", new { Id = Model.AuthorId }, null)
+                        </div>
+                    }
+                    @if (Model.PublishDate.HasValue)
+                    {
+                        <div class="content_date">
+                            <span>Опубликовано:</span> @Model.PublishDate.Value.ToUserTime(UserContext.Current).ToString("d MMMM yyyy HH:mm")
+                        </div>
+                    }
+                </div>
+                <div class="title">
+                    <h1>@Model.Title</h1>
+                </div>        
+                @switch (Model.State)
+                {
+                    case ContentState.Draft:
+                        <div class="content_state">
+                            <span class="state orange">Данная публикация сохранена как черновик</span>
+                            <div class="actions">
+                                @if ((Model.IsAuthor && Model.IsApprovedMember) || Model.IsModerator)
+                                {
+                                    @Html.ConfirmActionLink("опубликовать", "Вы действительно хотите опубликовать этот контент?",
+                                                                  Url.Action("publish", "content", new { id = Model.Id }))
+                                }
+                            </div>
+                        </div>
+                                break;
+
+                    case ContentState.Premoderated:
+                                if (Model.Type == ContentType.Post || Model.Type == ContentType.Petition)
+                                {
+                                    if (Model.IsContentModerated)
+                                    {
+                                <div class="content_state">
+                                    <span class="state red">Данная публикация ожидает модерации</span>
+                                    <div class="actions">
+                                        @if (Model.IsModerator)
+                                        {
+                                            @Html.ConfirmActionLink("опубликовать", "Вы действительно хотите опубликовать этот контент?",
+                                                                          Url.Action("publish", "content", new { id = Model.Id }))
+                                        }
+                                    </div>
+                                </div>
+                                    }
+                                    else
+                                    {
+                                <div class="content_state">
+                                    <span class="state red">Данная публикация еще не опубликована</span>
+                                    <div class="actions">
+                                        @if (Model.IsAuthor && Model.IsApprovedMember)
+                                        {
+                                            @Html.ConfirmActionLink("опубликовать", "Вы действительно хотите опубликовать этот контент?",
+                                                                          Url.Action("publish", "content", new { id = Model.Id }))
+                                        }
+                                    </div>
+                                </div>
+                                    }
+                                }
+                                else if (Model.Type == ContentType.Poll || Model.Type == ContentType.Survey || Model.Type == ContentType.Election)
+                                {
+                                    if (Model.IsContentModerated)
+                                    {
+                                <div class="content_state">
+                                    <span class="state red">Еще не запущенно, ожидает модерации</span>
+                                    <div class="actions">
+                                        @if (Model.IsModerator)
+                                        {
+                                            @Html.ConfirmActionLink("опубликовать", "Вы действительно хотите опубликовать этот контент?",
+                                                                          Url.Action("publish", "content", new { id = Model.Id }))
+                                        }
+                                    </div>
+                                </div>
+                                    }
+                                    else
+                                    {
+                                <div class="content_state">
+                                    <span class="state red">Еще не запущенно</span>
+                                    <div class="actions">
+                                        @if (Model.IsModerator || (Model.IsAuthor && Model.IsApprovedMember))
+                                        {
+                                            @Html.ConfirmActionLink("опубликовать", "Вы действительно хотите опубликовать этот контент?",
+                                                                          Url.Action("publish", "content", new { id = Model.Id }))
+                                        }
+                                    </div>
+                                </div>
+                                    }
+                                }
+                                break;
+
+                    case ContentState.Deleted:
+                        <div class="content_state">
+                            <span class="state red">Данная публикация удалена</span>
+                        </div>
+                        break;
+                                
+                    case ContentState.Blocked:
+                        <div class="content_state">
+                            <span class="state red">Данная публикация заблокирована</span>
+                        </div>
+                        break;
+                }
+            </div>
+            @switch (Model.Type)
+            {
+                case ContentType.Post:
+                    @Html.Partial("_Post", Model.Body)
+               break;
+                case ContentType.Petition:
+                    @Html.Partial("_Petition", Model.Body)
+               break;
+                case ContentType.Poll:
+                    @Html.Partial("_Poll", Model.Body)
+               break;
+                case ContentType.Election:
+                    @Html.Partial("_Election", Model.Body)
+               break;
+                case ContentType.Survey:
+                    @Html.Partial("_Survey", Model.Body)
+               break;
+            }
+            <div class="labels">
+                @if (Model.Tags.Count > 0)
+                {
+                    foreach (var label in Model.Tags)
+                    {
+                        if (Model.GroupId.HasValue)
+                        {
+                            @Html.ActionLink(label.Title, "search", "group", new { id = Model.GroupUrl, tag = label.Title }, null)
+                        }
+                        else
+                        {
+                            @Html.ActionLink(label.Title, "tag", "search", new { id = label.Title }, null)
+                        }
+                    }
+                }
+            </div>
+            @if (Model.State != ContentState.Deleted)
+            {
+                <div class="controls">
+                    <div class="controls_design">
+                        <div class="carma">
+                            Рейтинг публикации:
+                            @Html.Partial("_Likes", new _LikesViewModel(Model.Id, UserContext.Current != null ? UserContext.Current.Id : (Guid?)null, WtfLikes.Content))
+                        </div>
+                        @if (Model.IsDelegateButtonEnabled && Model.Type == ContentType.Post)
+                        {                  
+                            <a class="delegate-button" href="@Url.Action("delegation", "user", new { id = Model.AuthorId.Value, groupUrl= Model.GroupUrl })">
+                                Делегировать голос автору
+                            </a>         
+                        }
+                        @Html.Partial("_SocialShare")
+                    </div>
+                </div>
+                @Html.Partial("_CommentsBlock", Model.Comments)
+            }
+        </div>
+    }
+</div>
+
+@*<div class="content_info">
+    @if (Model.PublishDate.HasValue)
+    {
+        <div class="publish_date">
+            Запись опубликована: @Model.PublishDate.Value.ToUserTime(UserContext.Current).ToString("d MMMM yyyy HH:mm")
+        </div> 
+    }
+    @if (Model.AuthorId.HasValue)
+    {
+        <div class="author">
+            <h2>Автор</h2>
+            <a href="@Url.Action("index", "user", new { id = Model.AuthorId.Value })" class="usericon">
+                <img alt="" src="@Model.AuthorAvatar&w=69&h=92" class="icon" />
+            </a>
+            <div class="name">
+                <a href="@Url.Action("index", "user", new { id = Model.AuthorId.Value })" class="username">@Model.AuthorName</a>
+            </div>
+        </div>
+    }
+</div>*@

@@ -1,0 +1,38 @@
+﻿@using Federation.Web.ViewModels
+@model Group_ModersViewModel
+
+@foreach (var moderator in Model.ModeratorList)
+{
+    <div class="user80">
+	    <span class="user_itemv80">
+		    <a href="@Url.Action("index", "user", new { moderator.Id })" class="user_itemv80_a">
+                <span class="useritem_icon">
+                    <img alt="фото" src="@moderator.Avatar&w=48&h=64" /><br />
+                </span>
+			    <span class="useritem_info">
+				    <span class="useritem_lastname">@moderator.Name</span><br/>
+				    <span class="useritem_name">@moderator.Surname</span><br/>
+				    <span class="useritem_city">@moderator.City</span>
+			    </span>
+			    <div class="clear"><span></span></div>
+		    </a>
+	    </span>
+    </div>
+}
+@for (int a = 0; a < Model.EmptySlots; a++)
+{
+    <div class="user80">
+	    <span class="user_itemv80">
+            <div class="nomoderator">
+                Модератор не назначен!
+                @if (Model.FreeSlots > 0 && Model.CanBeModerator)
+                {
+                    Model.FreeSlots -= 1;
+                    @Html.ConfirmActionLink("Стать модератором", "Вы уверены, что хотите стать модератором?",
+                        Url.Action("approvemember", "group", new { id = Model.MemberId }), new { Class = "nomoderator" })
+                }            
+			    <div class="clear"><span></span></div>
+            </div>
+	    </span>
+    </div>
+}

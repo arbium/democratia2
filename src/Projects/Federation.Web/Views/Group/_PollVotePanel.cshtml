@@ -1,0 +1,119 @@
+﻿@using Federation.Web.ViewModels
+@using Federation.Core
+@model Group_PollVotePanelViewModel
+
+@if(UserContext.Current != null)
+{
+    <div class="action_panel">
+        @if (Model.PollId == Guid.Empty || Model.PollId == null)
+        {
+            <p>
+                Вы еще не принимаете участие в данном голосовании, т.к. на вас еще не был напечатан бюллетень.<br/>
+                @Html.ActionLink("Принять участие в голосовании", "RequestBulletin", new { VotingId = Model.PollId, UserId = UserContext.Current.Id }, new { style = "color:#0078D9;" })
+            </p>
+            <p style="font-size:0.7em">
+                Печать бюллетеня занимает время. Если прошло длительное время и вы все еще не получили доступ к голосованию сообщите об этом в тех. поддержку <a href="mailto:suport@democratia2.ru">suport@democratia2.ru</a>
+            </p>
+        }
+        else
+        {
+            if (Model.HaveExpert)
+            {
+                if (Model.Experts.Count > 0)
+                {
+                    <div class="expert_recomendations">
+                        @if (Model.Experts.Count == 1)
+                        {
+                            <p>Ваш делегат:</p>
+                        }
+                        else
+                        {
+                            <p>Ваши делегаты:</p>
+                        }
+                        @foreach (var expert in Model.Experts)
+                        {
+                            <div class="expert">
+                                <a href="@Url.Action("index", "user", new { id = expert.Id })">
+                                    <img alt="аватар" src="@expert.Avatar&w=30&h=40" />
+                                </a>
+                                <div class="info">
+                                    <p class="name">
+                                        <a href="@Url.Action("index", "user", new { id = expert.Id })"><b>@expert.SurName</b> @expert.Name</a>
+                                    </p>
+                                    <p class="weight">@Html.Raw(expert.VoteResult)</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+            if (Model.AlreadyVoted)
+            {
+                if (Model.IsExpert)
+                {
+                    <p><b>@Model.TotalRecomends</b> человек, делегировавших вам голоса, рекомендуют <span class="vote yes">голосовать За - @Model.RecomendsVoteYes%,</span> <span class="vote no">голосовать Против - @Model.RecomendsVoteNo%,</span> <span class="vote forefit">Воздержаться - @Model.RecomendsVoteForefit%</span></p>
+                    <p>Вы уже проголосовали за себя и за <b>@Model.Represents</b> человек: @Html.Raw(Model.VoteResult)</p>
+                }
+                else
+                {
+                    if (Model.HaveExpert && Model.Experts.Count == 1)
+                    {
+                        <p>Вы рекомендовали своему делегату проголосовать: @Html.Raw(Model.VoteResult)</p>
+                    }
+                    else
+                    {
+                        <p>Вы уже проголосовали: @Html.Raw(Model.VoteResult)</p>
+                    }
+                }
+                <p>Вы можете изменить свое решение: @Html.ActionLink("Переголосовать", "votefor", new { id = Model.PollId, voteOption = (byte)VoteOption.NotVoted })</p>
+                
+            }
+            else
+            {
+                if (Model.IsExpert)
+                {
+                    <p>Вы голосуете за себя и еще за <b>@Model.Represents</b> человек:</p>
+                    <p><b>@Model.TotalRecomends</b> человек, делегировавших вам голоса, рекомендуют <span class="vote yes">голосовать За - @Model.RecomendsVoteYes%,</span> <span class="vote no">голосовать Против - @Model.RecomendsVoteNo%,</span> <span class="vote forefit">Воздержаться - @Model.RecomendsVoteForefit%</span></p>
+                    <div class="actions">
+                        @Html.ActionLink("Голосовать Против", "votefor", new { id = Model.PollId, voteOption = (byte)VoteOption.No }, new { Class = "sexy-button color-red" })
+                        @Html.ActionLink("Голосовать За", "votefor", new { id = Model.PollId, voteOption = (byte)VoteOption.Yes }, new { Class = "sexy-button color-green" })
+                        @Html.ActionLink("Воздержаться", "votefor", new { id = Model.PollId, voteOption = (byte)VoteOption.Refrained }, new { Class = "sexy-button color-sky" })
+                    </div>
+                }
+                else
+                {
+                    if (Model.HaveExpert)
+                    {
+                        if (Model.Experts.Count == 1)
+                        {
+                            <p>Рекомендовать эксперту проголосовать:</p>
+                            <div class="actions">
+                                @Html.ActionLink("Голосовать За", "votefor", new { id = Model.PollId, voteOption = (byte)VoteOption.Yes }, new { Class = "sexy-button color-green" })
+                                @Html.ActionLink("Голосовать Против", "votefor", new { id = Model.PollId, voteOption = (byte)VoteOption.No }, new { Class = "sexy-button color-red" })                            
+                                @Html.ActionLink("Воздержаться", "votefor", new { id = Model.PollId, voteOption = (byte)VoteOption.Refrained }, new { Class = "sexy-button color-sky" })
+                            </div>
+                        }
+                        else
+                        {
+                            <p>У вас более одного эксперта поэтому вы должны принять решение самостоятельно: </p>
+                            <div class="actions">
+                                @Html.ActionLink("Голосовать За", "votefor", new { id = Model.PollId, voteOption = (byte)VoteOption.Yes }, new { Class = "sexy-button color-green" })
+                                @Html.ActionLink("Голосовать Против", "votefor", new { id = Model.PollId, voteOption = (byte)VoteOption.No }, new { Class = "sexy-button color-red" })                            
+                                @Html.ActionLink("Воздержаться", "votefor", new { id = Model.PollId, voteOption = (byte)VoteOption.Refrained }, new { Class = "sexy-button color-sky" })
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>Проголосовать:</p>
+                        <div class="actions">
+                            @Html.ActionLink("Голосовать За", "votefor", new { id = Model.PollId, voteOption = (byte)VoteOption.Yes }, new { Class = "sexy-button color-green" })
+                            @Html.ActionLink("Голосовать Против", "votefor", new { id = Model.PollId, voteOption = (byte)VoteOption.No }, new { Class = "sexy-button color-red" })                        
+                            @Html.ActionLink("Воздержаться", "votefor", new { id = Model.PollId, voteOption = (byte)VoteOption.Refrained }, new { Class = "sexy-button color-sky" })
+                        </div>
+                    }
+                }
+            }
+        }
+    </div>
+}

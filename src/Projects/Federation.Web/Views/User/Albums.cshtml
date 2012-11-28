@@ -1,0 +1,57 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model AlbumsViewModel
+@{
+    ViewBag.Title = "Альбомы";
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @if (Model.UserId.HasValue)
+    {
+        @Html.Partial("_NavigationBox",  new _NavigationBoxViewModel(Model.UserId.Value, NavigationBoxType.User))
+    }
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        @if (Request.IsAuthenticated && Model.UserId == UserContext.Current.Id)
+        {
+            <div class="jqueryslidemenu servicebuttonmenu">
+                <ul>
+                    <li>
+                        <a href="@Url.Action("create", "album")">Создать новый альбом</a>
+                    </li>
+                </ul>
+            </div>
+        }
+        <ul class="lighttabs">
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    @if (Model.Albums.Count == 0)
+    {
+        <span class="grey">Еще не создано ни одного альбома</span>
+        <div>
+            @Html.ActionLink("Создать", "create", "album")
+        </div>
+    }
+    else
+    {
+        foreach (var album in Model.Albums)
+        {
+            <div style="margin: 7px">
+                <a href="@Url.Action("index", "album", new { id = album.Id })">
+                    <b>@album.Title</b>
+                </a>
+                <span class="grey">(@album.Items.Count)</span>
+                <div>@album.Description</div>
+                <span class="grey">
+                    Дата изменения: @album.ChangeDate.ToUserTime(UserContext.Current).ToString("d MMM yyyy")
+                </span>
+            </div>
+        }
+    }
+</div>

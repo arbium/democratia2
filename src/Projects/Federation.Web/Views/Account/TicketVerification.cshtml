@@ -1,0 +1,138 @@
+﻿@using Federation.Web.ViewModels
+@model AccountTicketVerificationViewModel
+@{
+    ViewBag.Title = "Верификация аккаунта";
+    ViewBag.LayoutStyle = "layout_start";
+}
+
+@Html.Partial("_MainMenu")
+
+<style type="text/css">
+    #sendpassforticket {
+        cursor: pointer;
+        border: 1px solid #D8D8D8;
+        border-radius: 3px;
+        padding: 4px 7px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        $("#TempPass").hide();
+
+        $("#sendpassforticket").click(function () {
+            var code = $("#TicketCode").val();
+            var phone = $("#PhoneNumber").val();
+
+            if (phone && code)
+                $.ajax({
+                    url: '@Url.Action("sendpassforticket")', 
+                    data: { code: code, phone: phone },
+                    success: function (response) {
+                        if (response)
+                            alert(response);
+                        else {
+                            $("#TempPass").show();
+                            $("#submitticket").removeAttr("disabled");
+                        }
+                    }
+                });
+            else
+                alert("Все поля обязательны для заполнения!");
+        });
+    });
+</script>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    <div class="form_help">
+        <h3>Подтверждение личности</h3>
+        <p>
+            Если вы подтверждали свою личность на выборах в Координационный Совет российской оппозиции,
+            укажите свой <b>номер телефона</b> и <b>идентификатор</b>, которые вы использовали на выборах.<br />
+            <b>ФИО</b> и <b>дата рождения</b> вашего аккаунта на Демократии2 должно быть реальным и совпадать с использованным на выборах КСО.
+        </p>
+        <small>Пока что можно указывать только российский номер телефона</small>
+    </div>
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        @if (Model.IsTicketVerified)
+        {
+            <p><b>Вы уже проходили эту процедуру. Не имеет смысла проходить ее снова.</b></p>
+        }
+        else
+        {
+            <div class="styled_form">
+                @if (!string.IsNullOrEmpty(ViewBag.ValidationExceptionText))
+                {
+                    <div class="validation_block">
+                        @ViewBag.ValidationExceptionText
+                    </div>
+                }
+                @using (Html.BeginForm())
+                {
+                    <div class="form_block">
+                        <div class="input_block">
+                            <div class="title">
+                                @Html.LabelFor(x => x.FullName)
+                            </div>
+                            @Html.DisplayFor(x => x.FullName)
+                            <a href="@Url.Action("profilechangerequest", "user")">изменить</a>
+                        </div>
+                        <div class="input_block">
+                            <div class="title">
+                                @Html.LabelFor(x => x.BirthDate)
+                            </div>
+                            @if (Model.BirthDate.HasValue)
+                            {
+                                @Model.BirthDate.Value.ToShortDateString()
+                                <a href="@Url.Action("editpersonal", "user")" target="_blank">изменить</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("editpersonal", "user")" target="_blank">указать</a>
+                            }
+                        </div>
+                        <div class="input_block separator">
+                            <div class="title">
+                                @Html.LabelFor(x => x.PhoneNumber)<br />
+                                <small>(+7-xxx-xxx-xx-xx)</small>
+                            </div>
+                            @Html.TextBoxFor(x => x.PhoneNumber)
+                            @Html.ValidationMessageFor(x => x.PhoneNumber)
+                        </div>
+                        <div class="input_block">
+                            <div class="title">
+                                @Html.LabelFor(x => x.TicketCode)<br />
+                                <small>(xxx-xxx)</small>
+                            </div>
+                            @Html.TextBoxFor(x => x.TicketCode)
+                            @Html.ValidationMessageFor(x => x.TicketCode)
+                        </div>
+                        <div class="input_block separator">
+                            <div class="title">@Html.LabelFor(x => x.TempPass)</div>
+                            <a id="sendpassforticket">Проверить данные и выслать пароль</a>
+                            @Html.TextBoxFor(x => x.TempPass)
+                            @Html.ValidationMessageFor(x => x.TempPass)
+                        </div>
+                    </div>
+                    <div class="submit_block">
+                        <input id="submitticket" type="submit" value="Отправить" disabled="disabled" />                  
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,58 @@
+﻿@using Federation.Web.ViewModels
+@model UserEditSubscriptionViewModel
+@{
+    ViewBag.Title = "Управление подпиской";
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(UserContext.Current.Id, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <table>
+            <tr>
+                <td class="infospace_container">
+                    <h2>Подписка на группы</h2>
+                    @foreach (var group in Model.Groups)
+                    {
+                        <div>
+                            <img src="@group.Logo&w=48&h=64" alt="Лого" />
+                            <b>@Html.ActionLink(group.Name, "index", "group", new { id = group.Url }, null)</b>
+                            @if (!group.UserIsMember)
+                            {
+                                @Html.ConfirmActionLink("[отписаться]", "Вы действительно хотите удалить группу из своей подписки?",
+                                                              Url.Action("unsubscribefromgroup", "subscription", new { id = group.Url }))
+                            }
+                        </div>
+                        <br />
+                    }
+                </td>
+                <td class="infospace_container">
+                    <h2>Подписка на пользователей</h2>
+                    @foreach (var user in Model.Users)
+                    {
+                        <div>
+                            <img src="@user.Avatar&w=48&h=64" alt="Фото" />
+                            <b>@Html.ActionLink(user.Name, "index", "user", new { id = user.Id }, null)</b>
+                            @Html.ConfirmActionLink("[отписаться]", "Вы действительно хотите удалить пользователя из своей подписки?",
+                                  Url.Action("unsubscribefromuser", "subscription", new { id = user.Id }))
+                        </div>
+                        <br />
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

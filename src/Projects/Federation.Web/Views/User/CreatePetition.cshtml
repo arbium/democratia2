@@ -1,0 +1,38 @@
+﻿@using Federation.Web.ViewModels
+@model _CreatePetitionViewModel
+@{
+    ViewBag.Title = "Создание петиции";
+    
+    var userId = UserContext.Current.Id;
+    var userName = UserContext.Current.DisplayName;
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    <div class="form_help">
+        <h3>
+            Создание петиции<br/>
+            @Html.ActionLink(userName, "index", "group", new { id = userId })
+        </h3>
+        <p><b>Петиция</b> - Это способ собрать сторонников вокруг определенного решения. Петиция позволяет собирать подписи как среди участников опредленных групп, так и среди всех желающих.</p>
+        <p>Любое изменение текста петиции возможно только до момента ее публикации (пока петиция находится в статусе черновика). После публикации изменить текст невозможно, поэтому следует дважды проверять написанное.</p>
+    </div>
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        @Html.Partial("_CreatePetition", Model)
+    </div>    
+</div>
+    
+    

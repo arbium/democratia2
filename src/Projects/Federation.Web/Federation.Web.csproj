@@ -1,0 +1,1209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1D08497C-2E59-40F4-AD1C-6EBE5CA28E29}</ProjectGuid>
+    <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Federation.Web</RootNamespace>
+    <AssemblyName>Federation.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ImageResizer, Version=3.1.5.463, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\Solutions\Main\packages\ImageResizer.3.1.5\lib\ImageResizer.dll</HintPath>
+    </Reference>
+    <Reference Include="ImageResizer.Mvc">
+      <HintPath>..\..\Solutions\Main\packages\ImageResizer.Mvc.3.1.5\lib\ImageResizer.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\Solutions\Main\packages\EnterpriseLibrary.Common.5.0.505.0\lib\NET35\Microsoft.Practices.EnterpriseLibrary.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Logging, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\Solutions\Main\packages\EnterpriseLibrary.Logging.5.0.505.1\lib\NET35\Microsoft.Practices.EnterpriseLibrary.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\Solutions\Main\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\Solutions\Main\packages\Unity.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\Solutions\Main\packages\Unity.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\Solutions\Main\packages\Unity.Interception.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.Interception.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception.Configuration, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\Solutions\Main\packages\Unity.Interception.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\Solutions\Main\packages\Newtonsoft.Json.4.5.10\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Constraints\IsNullConstraint.cs" />
+    <Compile Include="Constraints\NotConstraint.cs" />
+    <Compile Include="Controllers\AboutController.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CommunicationController.cs" />
+    <Compile Include="Controllers\ConfirmationController.cs" />
+    <Compile Include="Controllers\ContentController.cs" />
+    <Compile Include="Controllers\AlbumController.cs" />
+    <Compile Include="Controllers\LikeController.cs" />
+    <Compile Include="Controllers\SubscriptionController.cs" />
+    <Compile Include="Controllers\VotingController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\FeedbackController.cs" />
+    <Compile Include="Controllers\CommentController.cs" />
+    <Compile Include="Controllers\GroupController.cs" />
+    <Compile Include="Controllers\HelpController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TagController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Constraints\IsGuidConstraint.cs" />
+    <Compile Include="Helpers\ContentViewType.cs" />
+    <Compile Include="Helpers\ContentType.cs" />
+    <Compile Include="Helpers\DynamicJsonConverter.cs" />
+    <Compile Include="Helpers\DynamicJsonObject.cs" />
+    <Compile Include="Helpers\IEnumerableExtensions.cs" />
+    <Compile Include="Helpers\HtmlHelperExtension.cs" />
+    <Compile Include="Helpers\MvcHelperExtension.cs" />
+    <Compile Include="Helpers\UTCOffsetHelper.cs" />
+    <Compile Include="Helpers\ValidatePasswordLengthAttribute.cs" />
+    <Compile Include="Controllers\MainController.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Helpers\RoutesHelper.cs" />
+    <Compile Include="Services\ApiService\ApiResponse.cs" />
+    <Compile Include="Services\ApiService\ApiResponseCode.cs" />
+    <Compile Include="Services\ApiService\ApiService.cs" />
+    <Compile Include="Services\ApiService\PlatformErrorCode.cs" />
+    <Compile Include="Services\AuthenticationServiceImpl.cs" />
+    <Compile Include="Services\CachServiceImpl.cs" />
+    <Compile Include="Services\CachedViewModel.cs" />
+    <Compile Include="Services\AntibotService.cs" />
+    <Compile Include="Services\BingSearchService.cs" />
+    <Compile Include="Services\CookieService\CookieService.cs" />
+    <Compile Include="Services\AdminService\AdminService.cs" />
+    <Compile Include="Helpers\PaginationList.cs" />
+    <Compile Include="Services\UploadImageValidationService.cs" />
+    <Compile Include="Services\UserContext.cs" />
+    <Compile Include="ViewModels\Account\AccountBlockedInvitesViewModel.cs" />
+    <Compile Include="ViewModels\Account\AccountBlockedInvites_InviteViewModel.cs" />
+    <Compile Include="ViewModels\Account\AccountChangePasswordViewModel.cs" />
+    <Compile Include="ViewModels\Account\AccountSocialSignIn.cs" />
+    <Compile Include="ViewModels\Account\AccountTicketVerificationViewModel.cs" />
+    <Compile Include="ViewModels\Account\SignUpCvkViewModel.cs" />
+    <Compile Include="ViewModels\Account\InviteRequestViewModel.cs" />
+    <Compile Include="ViewModels\Account\InviteSignUpWithKeyViewModel.cs" />
+    <Compile Include="ViewModels\Account\SignInViewModel.cs" />
+    <Compile Include="ViewModels\Account\SignUpViewModel.cs" />
+    <Compile Include="ViewModels\Account\AccountRequestedInvitesViewModel.cs" />
+    <Compile Include="ViewModels\Account\AccountRequestedInvites_InviteViewModel.cs" />
+    <Compile Include="ViewModels\Account\AccountRecoverPasswordViewModel.cs" />
+    <Compile Include="ViewModels\Account\AccountSetNewPasswordViewModel.cs" />
+    <Compile Include="ViewModels\Account\AccountSignUpViewModel.cs" />
+    <Compile Include="ViewModels\Account\AccountCodeVerificationViewModel.cs" />
+    <Compile Include="ViewModels\Album\AlbumsViewModel.cs" />
+    <Compile Include="ViewModels\Album\AlbumViewModel.cs" />
+    <Compile Include="ViewModels\Album\AlbumItemViewModel.cs" />
+    <Compile Include="ViewModels\Album\AlbumAddItemViewModel.cs" />
+    <Compile Include="ViewModels\Album\AlbumMoveItemViewModel.cs" />
+    <Compile Include="ViewModels\Album\AlbumEditItemViewModel.cs" />
+    <Compile Include="ViewModels\Album\AlbumCreateEditViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupSurveyResultsViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupOpenPollReportViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupAddFgFormViewModel.cs" />
+    <Compile Include="ViewModels\Group\Group_FriendlyGroupsViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupMembers_ModeratorViewModel.cs" />
+    <Compile Include="ViewModels\Group\Group_RecommendedGroupsViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupPollReportViewModel.cs" />
+    <Compile Include="ViewModels\Home\HomeRoadmapViewModel.cs" />
+    <Compile Include="ViewModels\Home\HomeGroupsHubViewModel.cs" />
+    <Compile Include="ViewModels\Shared\ConfirmationViewModel.cs" />
+    <Compile Include="ViewModels\Feedback\FeedbackIndexViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupAddTagViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupArchiveViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupChildrenViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_ContentLayoutViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupCreateEditSurveyViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupCreatePetitionViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupCreatePollViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupDetailsViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupEditCandidatePetitionViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupEditExpertInfoViewModel.cs" />
+    <Compile Include="ViewModels\User\UserPayPalValidationViewModel.cs" />
+    <Compile Include="ViewModels\Shared\EditCommentViewModel.cs" />
+    <Compile Include="ViewModels\User\UserBlackListViewModel.cs" />
+    <Compile Include="ViewModels\User\UserBlogViewModel.cs" />
+    <Compile Include="ViewModels\User\UserSelfDelegationViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupEditLogoViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupEditPetitionCoauthorsViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupEditPetitionViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupEditPollViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupEditPostViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupEditTagViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupEditViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupExpertsViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupIndexViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupMembersViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupPetitionSignersViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupPrivacyViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupRequestsViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupSearchViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupSurveyOptionViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupTagsViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupTopicExpertsViewModel.cs" />
+    <Compile Include="ViewModels\Group\GroupTopicsViewModel.cs" />
+    <Compile Include="ViewModels\Group\Group_AddPostViewModel.cs" />
+    <Compile Include="ViewModels\Group\Group_ElectionCandidatesViewModel.cs" />
+    <Compile Include="ViewModels\Group\Group_ElectionViewModel.cs" />
+    <Compile Include="ViewModels\Group\Group_ElectionVotingViewModel.cs" />
+    <Compile Include="ViewModels\Group\Group_ExpertsViewModel.cs" />
+    <Compile Include="ViewModels\Group\Group_ModersViewModel.cs" />
+    <Compile Include="ViewModels\Group\Group_PollStatusViewModel.cs" />
+    <Compile Include="ViewModels\Group\Group_PollViewModel.cs" />
+    <Compile Include="ViewModels\Group\Group_PollVotePanelViewModel.cs" />
+    <Compile Include="ViewModels\Group\Group_SurveyViewModel.cs" />
+    <Compile Include="ViewModels\Home\HomeRssFeedViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_TagContentViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_AuthorContentViewModel.cs" />
+    <Compile Include="ViewModels\Account\AccountActivationViewModel.cs" />
+    <Compile Include="ViewModels\Home\HomeTodayViewModel.cs" />
+    <Compile Include="ViewModels\Home\HomeNewGroupsViewModel.cs" />
+    <Compile Include="ViewModels\Home\Home_PopularGroupsViewModel.cs" />
+    <Compile Include="ViewModels\Home\HomeIndexViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchIndexViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchTag_GroupViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchTag_ExpertViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchTagViewModel.cs" />
+    <Compile Include="ViewModels\Confirmation\ConfirmationActionViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_PostViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_PetitionViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_CommentsBlockViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_PetitionStatusViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_PollStatusViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_CalendarViewModel.cs" />
+    <Compile Include="ViewModels\Shared\UserViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_ContentFeedViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_BadgesViewModel.cs" />
+    <Compile Include="ViewModels\Shared\BadgeViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_LikesViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_EditPetitionCoauthorsViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_EditPetitionViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_CreatePetitionViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_RssFeedItemViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_RssFeedViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_CommentsViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_AddCommentViewModel.cs" />
+    <Compile Include="ViewModels\Shared\_NavigationBoxViewModel.cs" />
+    <Compile Include="ViewModels\User\UserQuestViewModel.cs" />
+    <Compile Include="ViewModels\User\UserDelegationViewModel.cs" />
+    <Compile Include="ViewModels\User\UserVotersViewModel.cs" />
+    <Compile Include="ViewModels\User\UserCommentsViewModel.cs" />
+    <Compile Include="ViewModels\User\UserArchiveViewModel.cs" />
+    <Compile Include="ViewModels\User\UserInvitesViewModel.cs" />
+    <Compile Include="ViewModels\User\UserProfileChangeRequestViewModel.cs" />
+    <Compile Include="ViewModels\User\UserTrashMessagesViewModel.cs" />
+    <Compile Include="ViewModels\User\UserPetitionNoticesViewModel.cs" />
+    <Compile Include="ViewModels\User\UserExpertsViewModel.cs" />
+    <Compile Include="ViewModels\User\UserPetitionSignersViewModel.cs" />
+    <Compile Include="ViewModels\User\UserEditSubscriptionViewModel.cs" />
+    <Compile Include="ViewModels\User\UserVotingsViewModel.cs" />
+    <Compile Include="ViewModels\User\UserDrafts_PetitionViewModel.cs" />
+    <Compile Include="ViewModels\Shared\ReplyCommentViewModel.cs" />
+    <Compile Include="ViewModels\User\UserCreateGroupViewModel.cs" />
+    <Compile Include="ViewModels\Shared\TagViewModel.cs" />
+    <Compile Include="ViewModels\User\UserEditContactsViewModel.cs" />
+    <Compile Include="ViewModels\User\UserEditBioViewModel.cs" />
+    <Compile Include="ViewModels\User\UserEditPersonalViewModel.cs" />
+    <Compile Include="ViewModels\User\UserEditAvatarViewModel.cs" />
+    <Compile Include="ViewModels\User\UserEditViewModel.cs" />
+    <Compile Include="ViewModels\User\UserIndexViewModel.cs" />
+    <Compile Include="ViewModels\User\UserDraftsViewModel.cs" />
+    <Compile Include="ViewModels\User\UserDrafts_ContentViewModel.cs" />
+    <Compile Include="ViewModels\User\UserEditPostViewModel.cs" />
+    <Compile Include="ViewModels\User\User_AddPostViewModel.cs" />
+    <Compile Include="ViewModels\User\UserGroups_GroupMemberViewModel.cs" />
+    <Compile Include="ViewModels\User\UserGroupsViewModel.cs" />
+    <Compile Include="ViewModels\User\User_ContactsViewModel.cs" />
+    <Compile Include="ViewModels\User\UserProfileViewModel.cs" />
+    <Compile Include="ViewModels\User\UserInviteUserViewModel.cs" />
+    <Compile Include="ViewModels\User\UserMessageViewModel.cs" />
+    <Compile Include="ViewModels\User\User_SubscriptionViewModel.cs" />
+    <Compile Include="ViewModels\User\UserSubscriptionViewModel.cs" />
+    <Compile Include="ViewModels\User\UserDialogsViewModel.cs" />
+    <Compile Include="ViewModels\User\UserDialogViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="404.htm" />
+    <Content Include="500.htm" />
+    <Content Include="MediaContent\GroupBanners\federation\200x300.png" />
+    <Content Include="MediaContent\GroupBanners\federation\234x60.png" />
+    <Content Include="MediaContent\GroupBanners\federation\240x100.png" />
+    <Content Include="MediaContent\GroupBanners\federation\468x60.png" />
+    <Content Include="MediaContent\GroupBanners\federation\src\200x300.png" />
+    <Content Include="MediaContent\GroupBanners\federation\src\234x60.png" />
+    <Content Include="MediaContent\GroupBanners\federation\src\240x100.png" />
+    <Content Include="MediaContent\GroupBanners\federation\src\468x60.png" />
+    <Content Include="MessageTemplates\SurveyNotice.html" />
+    <Content Include="MessageTemplates\ElectionNotice.html" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="MediaContent\Badges\alpha.png" />
+    <Content Include="MediaContent\Badges\debug.png" />
+    <Content Include="MessageTemplates\AdminInvitationMessage.html" />
+    <Content Include="MediaContent\Avatars\Alsh.jpg" />
+    <Content Include="MediaContent\Avatars\Grozdn.jpg" />
+    <Content Include="MediaContent\Avatars\Naval.jpg" />
+    <Content Include="MediaContent\Avatars\noimage.jpg" />
+    <Content Include="MediaContent\GroupLogos\noimage.jpg" />
+    <Content Include="MediaContent\noimage.jpg" />
+    <Content Include="MessageTemplates\PollNotice.html" />
+    <Content Include="MessageTemplates\CommentNotice.html" />
+    <Content Include="MessageTemplates\GroupModeratorNotice.html" />
+    <Content Include="MessageTemplates\PetitionNotice.html" />
+    <Content Include="MessageTemplates\SystemMessage.html" />
+    <Content Include="MessageTemplates\InvitationMessage.html" />
+    <Content Include="Resources\jqgrid\css\ellipsis-xbl.xml" />
+    <Content Include="Resources\jqgrid\css\ui.jqgrid.css" />
+    <Content Include="Resources\jqgrid\js\Changes.txt" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-ar.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-bg.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-bg1251.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-cat.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-cn.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-cs.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-da.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-de.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-el.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-en.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-es.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-fa.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-fi.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-fr.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-gl.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-he.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-hr.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-hr1250.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-hu.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-is.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-it.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-ja.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-lt.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-mne.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-nl.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-no.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-pl.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-pt-br.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-pt.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-ro.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-ru.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-sk.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-sr-latin.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-sr.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-sv.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-th.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-tr.js" />
+    <Content Include="Resources\jqgrid\js\i18n\grid.locale-ua.js" />
+    <Content Include="Resources\jqgrid\js\install.txt" />
+    <Content Include="Resources\jqgrid\js\jquery-1.5.2.min.js" />
+    <Content Include="Resources\jqgrid\js\jquery.jqGrid.min.js" />
+    <Content Include="Resources\jqgrid\js\jquery.jqGrid.src.js" />
+    <Content Include="Resources\jqgrid\plugins\grid.addons.js" />
+    <Content Include="Resources\jqgrid\plugins\grid.postext.js" />
+    <Content Include="Resources\jqgrid\plugins\grid.setcolumns.js" />
+    <Content Include="Resources\jqgrid\plugins\jquery.contextmenu.js" />
+    <Content Include="Resources\jqgrid\plugins\jquery.searchFilter.js" />
+    <Content Include="Resources\jqgrid\plugins\jquery.tablednd.js" />
+    <Content Include="Resources\jqgrid\plugins\searchFilter.css" />
+    <Content Include="Resources\jqgrid\plugins\ui.multiselect.css" />
+    <Content Include="Resources\jqgrid\plugins\ui.multiselect.js" />
+    <Content Include="Resources\jqgrid\src\css\ellipsis-xbl.xml" />
+    <Content Include="Resources\jqgrid\src\css\ui.jqgrid.css" />
+    <Content Include="Resources\jqgrid\src\css\ui.multiselect.css" />
+    <Content Include="Resources\jqgrid\src\grid.base.js" />
+    <Content Include="Resources\jqgrid\src\grid.celledit.js" />
+    <Content Include="Resources\jqgrid\src\grid.common.js" />
+    <Content Include="Resources\jqgrid\src\grid.custom.js" />
+    <Content Include="Resources\jqgrid\src\grid.filter.js" />
+    <Content Include="Resources\jqgrid\src\grid.formedit.js" />
+    <Content Include="Resources\jqgrid\src\grid.grouping.js" />
+    <Content Include="Resources\jqgrid\src\grid.import.js" />
+    <Content Include="Resources\jqgrid\src\grid.inlinedit.js" />
+    <Content Include="Resources\jqgrid\src\grid.jqueryui.js" />
+    <Content Include="Resources\jqgrid\src\grid.loader.js" />
+    <Content Include="Resources\jqgrid\src\grid.subgrid.js" />
+    <Content Include="Resources\jqgrid\src\grid.tbltogrid.js" />
+    <Content Include="Resources\jqgrid\src\grid.treegrid.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-ar.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-bg.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-bg1251.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-cat.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-cn.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-cs.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-da.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-de.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-dk.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-el.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-en.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-es.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-fa.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-fi.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-fr.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-gl.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-he.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-hr.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-hr1250.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-hu.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-is.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-it.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-ja.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-lt.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-mne.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-nl.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-no.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-pl.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-pt-br.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-pt.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-ro.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-ru.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-sk.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-sr-latin.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-sr.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-sv.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-th.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-tr.js" />
+    <Content Include="Resources\jqgrid\src\i18n\grid.locale-ua.js" />
+    <Content Include="Resources\jqgrid\src\jqDnR.js" />
+    <Content Include="Resources\jqgrid\src\jqModal.js" />
+    <Content Include="Resources\jqgrid\src\jquery.fmatter.js" />
+    <Content Include="Resources\jqgrid\src\JsonXml.js" />
+    <Content Include="Resources\jScrollPane\jquery.jscrollpane.css" />
+    <Content Include="Resources\jScrollPane\jquery.jscrollpane.min.js" />
+    <Content Include="Resources\jScrollPane\jquery.mousewheel.js" />
+    <Content Include="Resources\jScrollPane\mwheelIntent.js" />
+    <Content Include="Resources\redactor\css\docstyle.css" />
+    <Content Include="Resources\redactor\css\redactor.css" />
+    <Content Include="Resources\redactor\css\style.css" />
+    <Content Include="Resources\redactor\css\wym.css" />
+    <Content Include="Resources\redactor\langs\en.js" />
+    <Content Include="Resources\redactor\langs\ru.js" />
+    <Content Include="Resources\redactor\plugins\file.html" />
+    <Content Include="Resources\redactor\plugins\image.html" />
+    <Content Include="Resources\redactor\plugins\image_edit.html" />
+    <Content Include="Resources\redactor\plugins\link.html" />
+    <Content Include="Resources\redactor\plugins\table.html" />
+    <Content Include="Resources\redactor\plugins\video.html" />
+    <Content Include="Resources\redactor\redactor.js" />
+    <Content Include="Resources\scripts\backtab.js" />
+    <Content Include="Resources\scripts\feedpaginator.js" />
+    <Content Include="Resources\scripts\likes.js" />
+    <Content Include="Resources\scripts\date.format.js" />
+    <Content Include="Resources\scripts\jquery-1.7.2.min.js" />
+    <Content Include="Resources\scripts\jquery.highlight-3.js" />
+    <Content Include="Resources\scripts\oneclickbuttons.js" />
+    <Content Include="Resources\scripts\tags.js" />
+    <Content Include="Resources\scripts\jquery-ui-1.8.16.custom.min.js" />
+    <Content Include="Resources\scripts\jquery-ui.min.js" />
+    <Content Include="Resources\scripts\jquery.autocomplete.min.js" />
+    <Content Include="Resources\scripts\jquery.fancybox-1.3.4.js" />
+    <Content Include="Resources\scripts\jquery.imgareaselect.pack.js" />
+    <Content Include="Resources\scripts\jquery.tools.min.js" />
+    <Content Include="Resources\scripts\jquery.ui.core.min.js" />
+    <Content Include="Resources\scripts\jquery.ui.tabs.min.js" />
+    <Content Include="Resources\scripts\jquery.ui.widget.min.js" />
+    <Content Include="Resources\scripts\jquery.validate.min.js" />
+    <Content Include="Resources\scripts\jquery.zclip.min.js" />
+    <Content Include="Resources\scripts\jqueryslidemenu.js" />
+    <Content Include="Resources\scripts\s3Slider.js" />
+    <Content Include="Resources\scripts\tooltip.js" />
+    <Content Include="Resources\scripts\ZeroClipboard.swf" />
+    <Content Include="Resources\scripts\EditLogo.js" />
+    <Content Include="Resources\tagsinput\jquery.tagsinput.css" />
+    <Content Include="Resources\tagsinput\jquery.tagsinput.js" />
+    <Content Include="Resources\themes\base\content.css" />
+    <Content Include="Resources\themes\base\border-h.gif" />
+    <Content Include="Resources\themes\base\border-v.gif" />
+    <Content Include="Resources\themes\base\controls.css" />
+    <Content Include="Resources\themes\base\dialogs_ie.css" />
+    <Content Include="Resources\themes\base\dialogs.css" />
+    <Content Include="Resources\themes\base\dialog_ie.css" />
+    <Content Include="Resources\themes\base\forms.css" />
+    <Content Include="Resources\themes\base\headermenu.css" />
+    <Content Include="Resources\themes\base\images\border-h.gif" />
+    <Content Include="Resources\themes\base\images\border-v.gif" />
+    <Content Include="Resources\themes\base\images\buttons.gif" />
+    <Content Include="Resources\themes\base\images\Cancel16.png" />
+    <Content Include="Resources\themes\base\images\check.png" />
+    <Content Include="Resources\themes\base\images\checkbox-icons.png" />
+    <Content Include="Resources\themes\base\images\close.png" />
+    <Content Include="Resources\themes\base\images\close_black.png" />
+    <Content Include="Resources\themes\base\images\clouds.jpg" />
+    <Content Include="Resources\themes\base\images\clouds1.jpg" />
+    <Content Include="Resources\themes\base\images\comments1.png" />
+    <Content Include="Resources\themes\base\images\comments2.png" />
+    <Content Include="Resources\themes\base\images\content_type_election.png" />
+    <Content Include="Resources\themes\base\images\content_type_survey.png" />
+    <Content Include="Resources\themes\base\images\d2.png" />
+    <Content Include="Resources\themes\base\images\d2beta.png" />
+    <Content Include="Resources\themes\base\images\demo_logo.png" />
+    <Content Include="Resources\themes\base\images\content_type_petition.png" />
+    <Content Include="Resources\themes\base\images\content_type_voting.png" />
+    <Content Include="Resources\themes\base\images\clouds.jpg" />
+    <Content Include="Resources\themes\base\images\clouds1.jpg" />
+    <Content Include="Resources\themes\base\images\demo_logo.png" />
+    <Content Include="Resources\themes\base\images\demo_logo2.png" />
+    <Content Include="Resources\themes\base\images\external_link.png" />
+    <Content Include="Resources\themes\base\images\icons16\b-share-icon.png" />
+    <Content Include="Resources\themes\base\images\icons16\fb16.png" />
+    <Content Include="Resources\themes\base\images\icons16\ff16.png" />
+    <Content Include="Resources\themes\base\images\icons16\lj16.png" />
+    <Content Include="Resources\themes\base\images\icons16\mk16.png" />
+    <Content Include="Resources\themes\base\images\icons16\mm16.png" />
+    <Content Include="Resources\themes\base\images\icons16\ok16.png" />
+    <Content Include="Resources\themes\base\images\icons16\tw16.png" />
+    <Content Include="Resources\themes\base\images\icons16\vk16.png" />
+    <Content Include="Resources\themes\base\images\icons16\ya16.png" />
+    <Content Include="Resources\themes\base\images\indicator.gif" />
+    <Content Include="Resources\themes\base\images\left_arrow_gray.png" />
+    <Content Include="Resources\themes\base\images\left_arrow_white.png" />
+    <Content Include="Resources\themes\base\images\likes.png" />
+    <Content Include="Resources\themes\base\images\Login2_in16.png" />
+    <Content Include="Resources\themes\base\images\Login_in16.png" />
+    <Content Include="Resources\themes\base\images\mail1.png" />
+    <Content Include="Resources\themes\base\images\mail2.png" />
+    <Content Include="Resources\themes\base\images\message-closed.png" />
+    <Content Include="Resources\themes\base\images\message-open.png" />
+    <Content Include="Resources\themes\base\images\messages.png" />
+    <Content Include="Resources\themes\base\images\newspaper\bottomfade50-1.png" />
+    <Content Include="Resources\themes\base\images\newspaper\bottomfade50.png" />
+    <Content Include="Resources\themes\base\images\newspaper\bottomfade50f0-1.png" />
+    <Content Include="Resources\themes\base\images\newspaper\bottomfade50f0.png" />
+    <Content Include="Resources\themes\base\images\none.png" />
+    <Content Include="Resources\themes\base\images\np_banner1.png" />
+    <Content Include="Resources\themes\base\images\oblast_bg.png" />
+    <Content Include="Resources\themes\base\images\oblast_bg1.png" />
+    <Content Include="Resources\themes\base\images\oblast_bg_bottom.png" />
+    <Content Include="Resources\themes\base\images\oblast_bg_bottom1.png" />
+    <Content Include="Resources\themes\base\images\overlay.png" />
+    <Content Include="Resources\themes\base\images\overlay2.png" />
+    <Content Include="Resources\themes\base\images\pin-dark.png" />
+    <Content Include="Resources\themes\base\images\pin-light.png" />
+    <Content Include="Resources\themes\base\images\pin-lightest.png" />
+    <Content Include="Resources\themes\base\images\progressbar1.png" />
+    <Content Include="Resources\themes\base\images\progressbar2.png" />
+    <Content Include="Resources\themes\base\images\pseudofooter_down.png" />
+    <Content Include="Resources\themes\base\images\rating-down.png" />
+    <Content Include="Resources\themes\base\images\rating-squares.png" />
+    <Content Include="Resources\themes\base\images\rating-up.png" />
+    <Content Include="Resources\themes\base\images\reformal.png" />
+    <Content Include="Resources\themes\base\images\right_arrow_gray.png" />
+    <Content Include="Resources\themes\base\images\right_arrow_white.png" />
+    <Content Include="Resources\themes\base\images\rss16.png" />
+    <Content Include="Resources\themes\base\images\social\facebook_login.png" />
+    <Content Include="Resources\themes\base\images\tabs_main\discussions.png" />
+    <Content Include="Resources\themes\base\images\tabs_main\elections.png" />
+    <Content Include="Resources\themes\base\images\tabs_main\experts.png" />
+    <Content Include="Resources\themes\base\images\tabs_main\gazeta_on_main.png" />
+    <Content Include="Resources\themes\base\images\tabs_main\gazeta_on_main_title.png" />
+    <Content Include="Resources\themes\base\images\tabs_main\icon_groups.png" />
+    <Content Include="Resources\themes\base\images\tabs_main\petitions.png" />
+    <Content Include="Resources\themes\base\images\tabs_main\possible_top.png" />
+    <Content Include="Resources\themes\base\images\tabs_main\pseudotabs_bg_sel.png" />
+    <Content Include="Resources\themes\base\images\tabs_main\pseudotabs_bottom.png" />
+    <Content Include="Resources\themes\base\images\tabs_main\pseudotabs_tab.png" />
+    <Content Include="Resources\themes\base\images\tabs_main\votings.png" />
+    <Content Include="Resources\themes\base\images\tag.png" />
+    <Content Include="Resources\themes\base\images\tick.png" />
+    <Content Include="Resources\themes\base\images\toolbar.gif" />
+    <Content Include="Resources\themes\base\images\top_bg.png" />
+    <Content Include="Resources\themes\base\images\top_bg1.png" />
+    <Content Include="Resources\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Resources\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Resources\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Resources\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Resources\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Resources\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Resources\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Resources\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Resources\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Resources\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Resources\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Resources\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Resources\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Resources\themes\base\images\unread_messages.png" />
+    <Content Include="Resources\themes\base\images\shortcuts\clock.png" />
+    <Content Include="Resources\themes\base\images\shortcuts\lock.png" />
+    <Content Include="Resources\themes\base\images\shortcuts\star.png" />
+    <Content Include="Resources\themes\base\images\userpanel-bg.png" />
+    <Content Include="Resources\themes\base\images\userpanel-exit.png" />
+    <Content Include="Resources\themes\base\images\userpanel-gazeta.png" />
+    <Content Include="Resources\themes\base\images\userpanel-gazeta1.png" />
+    <Content Include="Resources\themes\base\images\userpanel-gazeta2.png" />
+    <Content Include="Resources\themes\base\images\userpanel-gazeta3.png" />
+    <Content Include="Resources\themes\base\images\userpanel-inter.png" />
+    <Content Include="Resources\themes\base\images\user_bg.png" />
+    <Content Include="Resources\themes\base\images\user_bg_bottom.png" />
+    <Content Include="Resources\themes\base\images\video.png" />
+    <Content Include="Resources\themes\base\images\votings.png" />
+    <Content Include="Resources\themes\base\images\whitebg.png" />
+    <Content Include="Resources\themes\base\images\whitebg1.png" />
+    <Content Include="Resources\themes\base\images\_1px.png" />
+    <Content Include="Resources\themes\base\images\_tick.png" />
+    <Content Include="Resources\themes\base\imgareaselect-default.css" />
+    <Content Include="Resources\themes\base\jquery-ui-1.8.16.custom.css" />
+    <Content Include="Resources\themes\base\content_layout.css" />
+    <Content Include="Resources\themes\base\jquery-ui.css" />
+    <Content Include="Resources\themes\base\table.css" />
+    <Content Include="Resources\themes\base\dialog.css" />
+    <Content Include="Resources\themes\base\images\fancybox\blank.gif" />
+    <Content Include="Resources\themes\base\images\fancybox\fancybox-x.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancybox-y.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancybox.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_close.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_loading.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_nav_left.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_nav_right.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_shadow_e.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_shadow_n.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_shadow_ne.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_shadow_nw.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_shadow_s.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_shadow_se.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_shadow_sw.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_shadow_w.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_title_left.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_title_main.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_title_over.png" />
+    <Content Include="Resources\themes\base\images\fancybox\fancy_title_right.png" />
+    <Content Include="Resources\themes\base\images\icons\facebook.png" />
+    <Content Include="Resources\themes\base\images\icons\google.png" />
+    <Content Include="Resources\themes\base\images\icons\googleplus.png" />
+    <Content Include="Resources\themes\base\images\icons\odnokl.png" />
+    <Content Include="Resources\themes\base\images\icons\twitter.png" />
+    <Content Include="Resources\themes\base\images\icons\vk.png" />
+    <Content Include="Resources\themes\base\images\informers_bg.png" />
+    <Content Include="Resources\themes\base\images\main_bg.png" />
+    <Content Include="Resources\themes\base\images\buttcalc\butt4_dis.png" />
+    <Content Include="Resources\themes\base\images\buttcalc\butt5.png" />
+    <Content Include="Resources\themes\base\images\buttcalc\butt5_over.png" />
+    <Content Include="Resources\themes\base\images\buttcalc\butt6_click.png" />
+    <Content Include="Resources\themes\base\images\menusel_bg.png" />
+    <Content Include="Resources\themes\base\images\ok_blue.png" />
+    <Content Include="Resources\themes\base\images\searchbutton.png" />
+    <Content Include="Resources\themes\base\images\shadow_down.png" />
+    <Content Include="Resources\themes\base\images\shadow_up.png" />
+    <Content Include="Resources\themes\base\images\sites_bg.png" />
+    <Content Include="Resources\themes\base\images\white14.png" />
+    <Content Include="Resources\themes\base\jquery.autocomplete.css" />
+    <Content Include="Resources\themes\base\jquery.fancybox-1.3.4.css" />
+    <Content Include="Resources\themes\base\jqueryslidemenu.css" />
+    <Content Include="Resources\themes\base\news.css" />
+    <Content Include="Resources\themes\base\path.css" />
+    <Content Include="Resources\themes\base\s3slider.css" />
+    <Content Include="Resources\themes\base\style.css" />
+    <Content Include="Resources\themes\base\styles.css" />
+    <Content Include="Resources\themes\base\tabs.css" />
+    <Content Include="Resources\themes\base\temp_content\Alsh.jpg" />
+    <Content Include="Resources\themes\base\temp_content\Grozdn.jpg" />
+    <Content Include="Resources\themes\base\temp_content\Milov.jpg" />
+    <Content Include="Resources\themes\base\temp_content\Naval.jpg" />
+    <Content Include="Views\User\Votings.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Wait.htm" />
+    <Content Include="Views\Home\_Rss.cshtml" />
+    <Content Include="Views\Help\Cases.cshtml" />
+    <Content Include="Views\Help\Features.cshtml" />
+    <Content Include="Views\Group\TopicExperts.cshtml" />
+    <Content Include="Views\User\Quest.cshtml" />
+    <Content Include="Views\Shared\Confirmation.cshtml" />
+    <Content Include="Views\Group\Members_Moderator.cshtml" />
+    <Content Include="Views\Home\Roadmap.cshtml" />
+    <Content Include="Views\Group\_RecommendedGroups.cshtml" />
+    <Content Include="packages.config" />
+    <Content Include="Views\Group\_FriendlyGroups.cshtml" />
+    <Content Include="Views\Group\AddFgForm.cshtml" />
+    <Content Include="Views\Home\GroupsHub.cshtml" />
+    <Content Include="Views\Search\Group.cshtml" />
+    <Content Include="Views\Account\CheckPaypal.cshtml" />
+    <Content Include="Views\Shared\EditComment.cshtml" />
+    <Content Include="Views\Shared\_SubscribeAndBlockMenu.cshtml" />
+    <Content Include="Views\Group\PollReport.cshtml" />
+    <Content Include="Views\Account\TicketVerification.cshtml" />
+    <Content Include="Views\Group\OpenPollReport.cshtml" />
+    <Content Include="Views\Group\SurveyResults.cshtml" />
+    <Content Include="Views\Account\SignUpCvk.cshtml" />
+    <None Include="Views\Shared\_LayoutWait.cshtml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\User\SelfDelegation.cshtml" />
+    <Content Include="Views\User\PayPalValidation.cshtml" />
+    <Content Include="Views\User\Comments.cshtml" />
+    <Content Include="Views\User\BlackList.cshtml" />
+    <Content Include="Views\User\Dialogs.cshtml" />
+    <Content Include="Views\User\Dialog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="MediaContent\Albums\Images\" />
+    <Folder Include="MediaContent\Reports\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\SignUp.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_SignIn.cshtml" />
+    <Content Include="Views\Account\SignUpWithKey.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_LightLayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\_Feed.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\AddPost.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\_MainMenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_HeaderMenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_MainMenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\_LayoutStyle.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\EditPost.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\AddPost.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\EditPost.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\CreateGroup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Drafts.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\Members.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\UserRequests.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_AddComment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Comments.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Search\Tag.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\InviteRequest.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\_Contacts.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Groups.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\Children.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\_MainMenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\EditAvatar.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\EditPersonal.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\EditBio.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\EditContacts.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Profile.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Search\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\BlockedInvites.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\RequestedInvites.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\Details.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\_Moders.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\SignIn.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\ReplyComment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Help\About.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\About\Members.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\About\Partners.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Help\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_CreatePetition.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\CreatePetition.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\RecoverPassword.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_EditPetition.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\EditPetition.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_EditPetitionCoauthors.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\EditPetitionCoauthors.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\CreatePetition.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\EditPetition.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\EditPetitionCoauthors.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\EditSubscription.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\PetitionSigners.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\PetitionSigners.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Likes.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\EditExpertInfo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\_Experts.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\InviteUser.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\InviteUserComplete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\About\Manifest.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Groups.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Today.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Rss.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Message.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\AddTag.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_EmptyLayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Experts.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\PetitionNotices.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\CreatePoll.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_ContentFeed.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Result.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Post.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\_Poll.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Confirmation\Action.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\_PollVotePanel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\_PollVoteStatus.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\EditLogo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\SetNewPassword.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\ChangePassword.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\_Popular.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Badges.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Calendar.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\EditPoll.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\TrashMessages.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Invites.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\_Feed.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\_Feed.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_PollStatus.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_PetitionStatus.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_ReplyComment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Archive.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\Archive.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\_Election.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\EditCandidatePetition.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_SocialShare.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_CommentsBlock.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Petition.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Subscription.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\CodeVerification.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\EmailVerification.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\_ElectionCandidates.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\_ElectionVoting.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Albums.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Album\MoveItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\ProfileChangeRequest.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Album\AddImage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Album\AddVideo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Album\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Album\Item.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\Albums.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Album\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Album\EditItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Album\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Album\AlbumsForEditor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Album\ForEditor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Album\ItemForEditor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Blog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_NavigationBox.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\About\Target.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Feedback\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Feedback.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Counters.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_ModalLayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\_PresentationTabs.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\Privacy.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\SocialSignIn.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\Activation.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Help\SmsTrouble.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\CreateSurvey.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\EditSurvey.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\_Survey.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Content.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\_PollExperts.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\_ElectionAbout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Upward.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\Topics.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\EditTag.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\Search.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Voters.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Delegation.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\Experts.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_AuthorContent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_TagContent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Group\Tags.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Federation.Core\Federation.Core.csproj">
+      <Project>{D7733F25-3ABE-42A0-A8FA-FC0880A28708}</Project>
+      <Name>Federation.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>15440</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://federation.ru</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

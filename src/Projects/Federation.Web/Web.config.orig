@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  For more information on how to configure your ASP.NET application, please visit
+  http://go.microsoft.com/fwlink/?LinkId=152368
+  -->
+<configuration>
+  <configSections>
+    <section name="loggingConfiguration" type="Microsoft.Practices.EnterpriseLibrary.Logging.Configuration.LoggingSettings, Microsoft.Practices.EnterpriseLibrary.Logging, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" requirePermission="true" />
+    <section name="dataConfiguration" type="Microsoft.Practices.EnterpriseLibrary.Data.Configuration.DatabaseSettings, Microsoft.Practices.EnterpriseLibrary.Data, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" requirePermission="true" />
+    <section name="resizer" type="ImageResizer.ResizerSection,ImageResizer" requirePermission="false" />
+  </configSections>
+  <loggingConfiguration name="" tracingEnabled="true" defaultCategory="Exceptions">
+    <listeners>
+      <add name="Event Log Listener" type="Microsoft.Practices.EnterpriseLibrary.Logging.TraceListeners.FormattedEventLogTraceListener, Microsoft.Practices.EnterpriseLibrary.Logging, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" listenerDataType="Microsoft.Practices.EnterpriseLibrary.Logging.Configuration.FormattedEventLogTraceListenerData, Microsoft.Practices.EnterpriseLibrary.Logging, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" source="Democratia2" formatter="Text Formatter" log="Application" machineName="." traceOutputOptions="None" />
+    </listeners>
+    <formatters>
+      <add type="Microsoft.Practices.EnterpriseLibrary.Logging.Formatters.TextFormatter, Microsoft.Practices.EnterpriseLibrary.Logging, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" template="Timestamp: {timestamp}{newline}&#xA;Message: {message}{newline}&#xA;Category: {category}{newline}&#xA;Priority: {priority}{newline}&#xA;EventId: {eventid}{newline}&#xA;Severity: {severity}{newline}&#xA;Title:{title}{newline}&#xA;Machine: {localMachine}{newline}&#xA;App Domain: {localAppDomain}{newline}&#xA;ProcessId: {localProcessId}{newline}&#xA;Process Name: {localProcessName}{newline}&#xA;Thread Name: {threadName}{newline}&#xA;Win32 ThreadId:{win32ThreadId}{newline}&#xA;Extended Properties: {dictionary({key} - {value}{newline})}" name="Text Formatter" />
+    </formatters>
+    <categorySources>
+      <add switchValue="All" name="General">
+        <listeners>
+          <add name="Event Log Listener" />
+        </listeners>
+      </add>
+      <add switchValue="All" name="Exceptions">
+        <listeners>
+          <add name="Event Log Listener" />
+        </listeners>
+      </add>
+      <add switchValue="All" name="Information">
+        <listeners>
+          <add name="Event Log Listener" />
+        </listeners>
+      </add>
+    </categorySources>
+    <specialSources>
+      <allEvents switchValue="All" name="All Events" />
+      <notProcessed switchValue="All" name="Unprocessed Category" />
+      <errors switchValue="All" name="Logging Errors &amp; Warnings">
+        <listeners>
+          <add name="Event Log Listener" />
+        </listeners>
+      </errors>
+    </specialSources>
+  </loggingConfiguration>
+  <dataConfiguration defaultDatabase="EntityModelContainer" />
+  <resizer>
+    <!-- Unless you (a) use Integrated mode, or (b) map all reqeusts to ASP.NET, 
+		     you'll need to add .ashx to your image URLs: image.jpg.ashx?width=200&height=20 -->
+    <pipeline fakeExtensions=".ashx" />
+    <plugins>
+      <!-- <add name="DiskCache" /> -->
+      <!-- <add name="PrettyGifs" /> -->
+      <add name="MvcRoutingShim" />
+    </plugins>
+  </resizer>
+  <connectionStrings>
+    <add name="EntityModelContainer" connectionString="metadata=res://*/EntityModel.csdl|res://*/EntityModel.ssdl|res://*/EntityModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=(local);initial catalog=federation;user id=sa;password=leontii;multipleactiveresultsets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+  </connectionStrings>
+  <appSettings>
+    <add key="ClientValidationEnabled" value="true" />
+    <add key="UnobtrusiveJavaScriptEnabled" value="true" />
+
+    <!-- PayPal Bank Cart Validation -->
+    <add key="deviceId" value="platformSDKDotNetSample"/>
+    <add key="ipAddress" value="127.0.0.1"/>
+    <add key="TrustAll" value="true"/>
+    <add key="ENDPOINT" value="https://svcs.paypal.com/"/>
+    <add key="PAYPAL_REDIRECT_URL" value="https://www.paypal.com/webscr&amp;cmd="/>
+    <add key="APPLICATION-ID" value="APP-0ND75637AK5529812"/>
+    <!--SOAP11 , JSON , XML-->
+    <add key="API_REQUESTFORMAT" value="SOAP11"/>
+    <add key="API_RESPONSEFORMAT" value="SOAP11"/>
+    <!--/*Three Token Credentials*/   -->
+    <add key="API_AUTHENTICATION_MODE" value="3TOKEN"/>
+    <add key="API_USERNAME" value="dr.arbium_api1.gmail.com"/>
+    <add key="API_PASSWORD" value="BJMDX5M263FBD72C"/>
+    <add key="API_SIGNATURE" value="Ahw1zMQr52gveFZbsbEMGT6JzeD6AcUx1UqQrYJzq7Rgc-nCfL-2ad5O"/>
+    <!--/* Use this for Certificate Credentials */
+    <add key="API_AUTHENTICATION_MODE" value="SSL" />
+    <add key="API_USERNAME" value="platfo_1255170694_biz_api1.gmail.com" />
+    <add key="API_PASSWORD" value="2DPPKUPKB7DQLXNR" />
+    <add key="PRIVATE_KEY_PASSWORD" value="11111111" />
+    <add key="CERTIFICATE" value="/certs/sdk.p12"/>-->
+    
+    <!-- End of PayPal Bank Cart Validation -->
+    
+  </appSettings>
+  <system.net>
+    <mailSettings>
+      <smtp from="noreply@democratia2.ru">
+        <network host="smtp.gmail.com" port="587" userName="noreply@democratia2.ru" password="federation2.0" enableSsl="true" />
+      </smtp>
+    </mailSettings>
+  </system.net>
+  <system.web>
+    <compilation debug="true" targetFramework="4.0">
+      <assemblies>
+        <add assembly="System.Web.Abstractions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+        <add assembly="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+        <add assembly="System.Web.Routing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+        <add assembly="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+        <add assembly="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+      </assemblies>
+    </compilation>
+    <authentication mode="Forms">
+      <forms loginUrl="~/Account/LogOn" timeout="525600" domain="federation.ru" />
+      <!-- 365 days * 24 hours * 60 minutes -->
+    </authentication>
+    <membership>
+      <providers>
+        <clear />
+        <add name="AspNetSqlMembershipProvider" type="System.Web.Security.SqlMembershipProvider" connectionStringName="ApplicationServices" enablePasswordRetrieval="false" enablePasswordReset="true" requiresQuestionAndAnswer="false" requiresUniqueEmail="false" maxInvalidPasswordAttempts="5" minRequiredPasswordLength="6" minRequiredNonalphanumericCharacters="0" passwordAttemptWindow="10" applicationName="/" />
+      </providers>
+    </membership>
+    <profile>
+      <providers>
+        <clear />
+        <add name="AspNetSqlProfileProvider" type="System.Web.Profile.SqlProfileProvider" connectionStringName="ApplicationServices" applicationName="/" />
+      </providers>
+    </profile>
+    <roleManager enabled="false">
+      <providers>
+        <clear />
+        <add name="AspNetSqlRoleProvider" type="System.Web.Security.SqlRoleProvider" connectionStringName="ApplicationServices" applicationName="/" />
+        <add name="AspNetWindowsTokenRoleProvider" type="System.Web.Security.WindowsTokenRoleProvider" applicationName="/" />
+      </providers>
+    </roleManager>
+    <pages>
+      <namespaces>
+        <add namespace="System.Web.Helpers" />
+        <add namespace="System.Web.Mvc" />
+        <add namespace="System.Web.Mvc.Ajax" />
+        <add namespace="System.Web.Mvc.Html" />
+        <add namespace="System.Web.Routing" />
+        <add namespace="System.Web.WebPages" />
+      </namespaces>
+      <controls>
+        <add tagPrefix="ajaxToolkit" assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" />
+      </controls>
+    </pages>
+    <customErrors mode="On">
+      <error statusCode="500" redirect="500.htm" />
+      <error statusCode="404" redirect="404.htm" />
+    </customErrors>
+    <httpModules>
+      <!-- This is for IIS5, IIS6, and IIS7 Classic, and Cassini/VS Web Server-->
+      <add name="ImageResizingModule" type="ImageResizer.InterceptModule" />
+    </httpModules>
+  </system.web>
+  <system.webServer>
+    <validation validateIntegratedModeConfiguration="false" />
+    <modules runAllManagedModulesForAllRequests="true">
+      <!-- This is for IIS7+ Integrated mode -->
+      <add name="ImageResizingModule" type="ImageResizer.InterceptModule" />
+    </modules>
+    <directoryBrowse enabled="false" />
+  </system.webServer>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Mvc" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="1.0.0.0-2.0.0.0" newVersion="3.0.0.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+</configuration>

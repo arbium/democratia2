@@ -1,0 +1,12 @@
+User-agent: Yandex
+Disallow: /MediaContent
+Disallow: /Resources
+Disallow: /404.htm
+Disallow: /500.htm
+Host: democratia2.ru
+                  
+User-agent: *
+Disallow: /MediaContent
+Disallow: /Resources
+Disallow: /404.htm
+Disallow: /500.htm

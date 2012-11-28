@@ -1,0 +1,65 @@
+﻿@using Federation.Web.ViewModels
+@model UserSubscriptionViewModel
+@{
+    ViewBag.Title = "Управление рассылкой";
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.UserId, NavigationBoxType.User))  
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        @if (!Model.IsEmailVerified)
+        {
+            <p style="color: orange">
+                Ваша электропочта не подтверждена!
+                @if (Model.VerificationEmailSendDate.HasValue)
+                {
+                    @:письмо с подтверждением было выслано @Model.VerificationEmailSendDate.Value.ToString("dd MMM HH:mm")   
+                }
+                else
+                {
+                    @Html.ActionLink("подтвердить", "SendEmailVerification")
+                }
+            </p>
+        }
+        <div class="styled_form">
+            @if (!string.IsNullOrEmpty(ViewBag.ValidationExceptionText))
+            {
+                <div class="validation_block">
+                    @ViewBag.ValidationExceptionText
+                </div>
+            }
+            @using (Html.BeginForm())
+            {
+                <div class="form_block">
+                    <div class="input_block">
+                        <div class="title">
+                            @Html.LabelFor(m => m.SubscriptionEmail, "Адрес для рассылки")
+                        </div>
+                        @Html.TextBoxFor(m => m.SubscriptionEmail)
+                    </div>                    
+                    <div class="input_block separator">
+                        @Html.CheckBoxFor(m => m.IsSubscribed)
+                        @Html.LabelFor(m => m.IsSubscribed)
+                    </div>
+                </div>                
+                <div class="submit_block">
+                    <input type="submit" value="Сохранить" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

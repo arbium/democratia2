@@ -1,0 +1,30 @@
+﻿@using Federation.Web.ViewModels
+@model _CommentsBlockViewModel
+
+<div class="comments_container">
+    @if (UserContext.Current != null && Request.IsAuthenticated)
+    {
+        <a href="#addcomment">Обсудить</a>
+    }
+    <h2 id="comments">
+        Комментарии <span>(@Model.Comments.CommentsCount)</span>
+    </h2>
+    @Html.Partial("_Comments", Model.Comments)
+    <div id="addcomment" class="comment_form">
+        @if (Model.IsDiscussionClosed)
+        {
+            <div>Обсуждение закрыто</div>
+        }
+        else
+        {
+            if (Model.IsDiscussionUnavailable)
+            {
+                <div>Обсуждение доступно только членам группы</div>
+            }
+            else
+            {
+                @Html.Partial("_AddComment", new _AddCommentViewModel { ContentId = Model.ContentId })
+            }            
+        }
+    </div>
+</div>

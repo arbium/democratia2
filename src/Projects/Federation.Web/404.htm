@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<script src="Resources/scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
+<body>
+    <script type="text/javascript">
+        var the_object = eval('([{"Title":"Москва","SearchSinonims":[],"Type":2,"Country":"Россия","Province":"Москва","Id":"4fb25948a975b521ccfb3ef0"},{"Title":"Россия","SearchSinonims":[],"Type":3,"Country":"Россия","Province":null,"Id":"4fb3aae6a975b51a38b55af2"},{"Title":"Свердловская область","SearchSinonims":[],"Type":2,"Country":"Россия","Province":"Свердловская область","Id":"4fb3c28ca975b518fcfd5126"}])');
+
+        var the_objectarr = $.map(the_object, function (val, i) {
+            return val.Title;
+        });
+
+        var t = $.getJSON("http://api.geonames.org/postalCodeLookupJSON?postalcode=6600&country=AT&username=demo", funtion(data){});
+
+        $(function () {
+            var url = gup("aspxerrorpath").split("/");
+
+            var u1 = url[1].toLowerCase();
+            var u2 = url[2].toLowerCase();
+            var u3 = url[3].toLowerCase();
+
+            if (u1 == "group" && u2 && u3) {
+                var href = u1 + "/" + u3 + "/" + u2;
+                $("#routing").append("Попробуйте перейти по <a href='" + href + "'>этой ссылке</a>.");
+            }
+        });
+
+        function gup(name) {
+            name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+            var regexS = "[\\?&]" + name + "=([^&#]*)";
+            var regex = new RegExp(regexS);
+            var results = regex.exec(window.location.href);
+            if (results == null)
+                return "";
+            else
+                return results[1];
+        }
+    </script>
+    <div>
+        Такой страницы не существует.
+        <div id="routing" style="margin: 5px 0px 5px 0px">
+            Возможно ссылка является битой или устаревшей. 
+        </div>
+        Если у вас есть вопросы свяжитесь с администратором support@democratia2.ru.
+        <a href="http://democratia2.ru">На главную</a>
+    </div>
+</body>
+</html>

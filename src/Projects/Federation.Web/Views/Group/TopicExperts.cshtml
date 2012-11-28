@@ -1,0 +1,73 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model GroupTopicExpertsViewModel
+@{
+    ViewBag.Title = "Эксперты по теме: " + Model.TopicName;
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.GroupId, NavigationBoxType.Group))
+</div>    
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li><a href="@Url.Action("topics", new { id = Model.GroupUrl })" class="back">◄</a></li>
+            <li>
+                <a class="selected">Эксперты по теме</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <div class="grouptopic_info">
+            <h2>@Model.TopicName</h2>
+            <div class="action_link">
+                <a href="@Url.Action("search", "group", new { id = Model.GroupId, tag = Model.TopicId })">@(DeclinationService.OfNumber(Model.ContentCount, "публикация","публикации","публикаций"))</a>
+            </div>
+            <div class="description">@Model.TopicDescription</div>
+        </div>
+        <div class="content_helper_control bottom_line">
+            <span>Эксперты</span>
+        </div>
+        <div class="delegation_list">
+            @foreach (var expert in Model.Experts)
+            {
+                <div class="delegation_item">
+                    <div class="radiobutton">
+                        @if(UserContext.Current.Id != null && UserContext.Current.Id != expert.Id && !Model.IsCurrentUserTopicExpert)
+                        {
+                            if (expert.VoteDelegated)
+                            {
+                                <a href="@Url.Action("undelegate", "user", new { Id = Model.TopicId })">
+                                    <img alt="делегирован" class="checked" src="@RoutesHelper.CurrentThemeFolder/images/_1px.png" />
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("delegate", "user", new { id = expert.ExpertId, tagId = Model.TopicId })">
+                                    <img alt="делегировать" src="@RoutesHelper.CurrentThemeFolder/images/_1px.png" />
+                                </a>
+                            }
+                        }
+                    </div>
+                    <div class="image">
+                        <a href="@Url.Action("delegation", "user", new { id = expert.Id, groupurl = Model.GroupUrl })">
+                            <img src="@expert.Image&w=48&h=64" alt="фото" />
+                        </a>
+                    </div>
+                    <div class="name">
+                        <a href="@Url.Action("delegation", "user", new { id = expert.Id, groupurl = Model.GroupUrl })">
+                            @expert.FullName
+                        </a>
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(expert.Description))
+                    {
+                        <div class="info">@Html.Raw(expert.Description) </div>
+                    }
+                    <div class="votes">@expert.VotesRelative% (@DeclinationService.OfNumber(expert.VotesCount, "голос", "голоса", "голосов"))</div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,78 @@
+﻿.path 
+{
+    margin-top:10px;
+    color: #aaaaaa;
+    font-size: 14px;    
+}
+.path a, .path a:link, .path a:visited {
+    color: #b8c4b7;
+}
+.path span {
+    color: #aaaaaa;
+}
+/* Лэйаутинг страниц */
+#page_header
+{
+    padding: 0px 0px 20px 0;
+}
+
+#page_header.no_padding
+{
+    padding: 0px;
+}
+
+#page_header.group
+{
+    margin: 0 340px 0 0;
+}
+
+#page_header .title
+{
+    margin-top: 10px;
+    overflow:auto;    
+}
+
+#page_header h1
+{
+    font-size: 30px;
+}
+
+#page_header .title h1 {
+    float:left;
+    display: inline-block;
+}
+
+#page_header .title .title_controls
+{
+    font-family: 'Lucida Sans Unicode' , 'Lucida Sans' , 'Arial' ,sans-serif;
+    font-size: 14px;
+    line-height: 42px;
+    height:42px;
+    overflow:auto;
+    float:right;    
+}
+
+#page_header .title .title_controls a
+{
+    padding-left: 10px;
+}
+
+#page_header .title .title_controls a.sexy-button
+{
+    margin-left: 10px;
+    line-height: 40px;
+}
+
+.right_column 
+{
+    width:300px;
+    float:right;
+}
+
+.left_column
+{
+    margin-right: 340px;
+}
+
+
+

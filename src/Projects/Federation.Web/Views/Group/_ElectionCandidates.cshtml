@@ -1,0 +1,105 @@
+﻿@using Federation.Web.ViewModels
+@using Federation.Core
+@model Group_ElectionCandidatesViewModel
+@{
+    var isMember = UserContext.Current != null && UserContext.Current.IsUserApprovedInGroup(Model.GroupId);
+}           
+
+<div class="candidates">
+    <div class="voting_progressbar">    
+        <div class="timeline">
+            <div class="start date">
+                <span>Дата начала:</span> @Model.AgitationStart.ToUserTime(UserContext.Current).ToString("dd.MM.yyyy HH:mm")
+            </div>
+            <div class="finish date">
+                <span>Дата завершения:</span> @Model.AgitationEnds.ToUserTime(UserContext.Current).ToString("dd.MM.yyyy HH:mm")
+            </div>
+            <div class="remaining">
+                Осталось:<br/>@Model.AgitationTimeRemaining
+            </div>
+        </div>
+        <div class="progressbar">
+            <div style="width:@(Model.RelativeTimeRemaining)%" class="bar yes">
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <div class="info-container">
+        <div class="info">
+            <table>
+                <tr>
+                    <td class="header">Период действия полномочий:</td>
+                    <td class="value">@Model.ElectionFrequency</td>
+                </tr>
+                <tr>
+                    <td class="header">Количество модераторов:</td>
+                    <td class="value">@Model.ModeratorsCount</td>
+                </tr>
+                <tr>
+                    <td class="header">Проходной порог:</td>
+                    <td class="value">@Model.SignsMinimumLimit</td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td class="header">Начало выдвижения:</td>
+                    <td class="value">@Model.AgitationStart.ToString("d MMMM yyyy")</td>
+                </tr>
+                <tr>
+                    <td class="header">Начало голосования:</td>
+                    <td class="value">@Model.AgitationEnds.ToString("d MMMM yyyy")</td>
+                </tr>
+                <tr>
+                    <td class="header">Подведение итогов:</td>
+                    <td class="value">@Model.ElectionEnd.ToString("d MMMM yyyy")</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <h2>Кандидаты:</h2>
+    @if (isMember && !Model.IsCandidate)
+    {
+        <div style="float: right">
+            @Html.ConfirmActionLink("Предложить свою кандидатуру", "Вы действительно хотите выдвинуть свою кандидатуру?",
+                Url.Action("becomecandidate", new { id = Model.ElectionId }), new { Class = "sexy-button color-green" })
+        </div>
+    }
+    @if (Model.Candidates.Count > 0)
+    {
+        foreach (var candidate in Model.Candidates)
+        {
+            <div class="expert">
+                <a href="@Url.Action("index", "user", new { id = candidate.UserId })">
+                    <img alt="аватар" src="@candidate.Avatar&w=48&h=64" />
+                </a>
+                <div class="info">
+                    <p class="name">
+                        <a href="@Url.Action("index", "user", new { id = candidate.UserId })">@candidate.FullName</a>
+                    </p>
+                    @if (candidate.PetitionId.HasValue)
+                    {
+                        <p class="weight">
+                            <a href="@Url.Action("petition", "group", new { id = candidate.PetitionId })">
+                                Петиция (@candidate.PetitonSigns)
+                            </a>
+                        </p>
+                        @*<p class="text">
+                            <a href="@Url.Action("petition", "group", new { id = candidate.PetitionId })">
+                                @Html.Raw(candidate.PetitonSummary)
+                            </a>
+                        </p>*@
+                    }
+                    else
+                    {
+                        <p class="weight">Нет петиции</p>
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Пока ни одного кандидата не зарегистрировано</p>
+    }
+</div>

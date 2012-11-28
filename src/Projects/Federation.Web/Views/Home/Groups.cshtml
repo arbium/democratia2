@@ -1,0 +1,68 @@
+﻿@using Federation.Web.ViewModels
+@model HomeGroupsViewModel
+@{
+    ViewBag.Title = "Группы и сообщества";
+    ViewBag.LayoutStyle = "layout_start";
+}
+
+@Html.Partial("_MainMenu")
+
+<div id="user_groups" class="body">
+    <div class="control">
+        @using (Html.BeginForm("groups", "home", FormMethod.Get))
+        {
+            <b>Выводить группы: </b>
+            @Html.RadioButtonFor(x => x.GroupStateFilter, -1, new { id = "GroupStateFilter0" })
+            <label for="GroupStateFilter0">все</label>                
+            @Html.RadioButtonFor(x => x.GroupStateFilter, 0, new { id = "GroupStateFilter1" })
+            <label for="GroupStateFilter1">недавно созданные</label>                
+            @Html.RadioButtonFor(x => x.GroupStateFilter, 1, new { id = "GroupStateFilter2" })
+            <label for="GroupStateFilter2">оформленные</label>                
+            @Html.RadioButtonFor(x => x.GroupStateFilter, 3, new { id = "GroupStateFilter3" })
+            <label for="GroupStateFilter3">архивные</label>
+            <div class="clear"><span></span></div>                
+            <b>Сортировать:</b>
+            @Html.RadioButtonFor(x => x.OrderByFilter, 0, new { id = "OrderByFilter0" })
+            <label for="OrderByFilter0">по количеству участников</label>                
+            @Html.RadioButtonFor(x => x.OrderByFilter, 1, new { id = "OrderByFilter1" })
+            <label for="OrderByFilter1">по дате создания</label>                
+            @Html.RadioButtonFor(x => x.OrderByFilter, 2, new { id = "OrderByFilter2" })
+            <label for="OrderByFilter2">по оглавлению</label>
+            <input class="f_button" type="submit" value="Обновить список" />
+        }
+    </div>
+    <div class="groups">
+        @foreach (var group in Model.FilteredGroups)
+        {             
+            <div class="group"> 
+                <div class="icon">
+                    <img alt="@group.Name" src="@group.Logo&w=90&h=120" />
+                </div>
+                <div class="description">
+                    <h2 class="title">
+                        <a href="@Url.Action("index", "group", new { id = group.Url })">@group.Name</a>
+                    </h2>
+                </div>
+                <div class="members_count">
+                    Количество участников: <b>@group.MembersCount</b>
+                </div>
+                <div class="tags">
+                    Темы:
+                    @{
+                        if (group.Tags.Count == 0)
+                        {
+                            <span>не указано</span>
+                        }
+                            
+                        var needcomma = false;
+                        foreach (var tag in group.Tags)
+                        {
+                            if (!needcomma) { needcomma = true;} else { <text>, </text> }
+                            @Html.ActionLink(tag.Title, "tag", "search", new { id = tag.Title }, null)                            
+                        }
+                    }
+                </div>	        
+            </div>
+        }
+    </div>
+</div>

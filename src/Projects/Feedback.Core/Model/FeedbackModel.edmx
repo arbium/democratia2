@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Feedback.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="FeedbackStoreContainer">
+    <EntitySet Name="Reports" EntityType="Feedback.Store.Reports" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Comments" EntityType="Feedback.Store.Comments" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="ReportComment" Association="Feedback.Store.ReportComment">
+      <End Role="Report" EntitySet="Reports" />
+      <End Role="Comment" EntitySet="Comments" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Reports">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="AuthorName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="AuthorId" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Email" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="TypeId" Type="tinyint" Nullable="false" />
+    <Property Name="OfficiallyReply" Type="nvarchar(max)" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Comments">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="AuthorName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="AuthorId" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Email" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ReportId" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <Association Name="ReportComment">
+    <End Role="Report" Type="Feedback.Store.Reports" Multiplicity="1" />
+    <End Role="Comment" Type="Feedback.Store.Comments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Report">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Comment">
+        <PropertyRef Name="ReportId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Feedback" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityContainer Name="FeedbackModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Reports" EntityType="Feedback.Report" />
+          <EntitySet Name="Comments" EntityType="Feedback.Comment" />
+          <AssociationSet Name="ReportComment" Association="Feedback.ReportComment">
+            <End Role="Report" EntitySet="Reports" />
+            <End Role="Comment" EntitySet="Comments" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Report">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Guid" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Type="String" Name="AuthorName" Nullable="false" />
+          <Property Type="String" Name="AuthorId" Nullable="true" >
+            <Documentation>
+              <Summary>Внешний идентификатор пользователя</Summary>
+            </Documentation>
+          </Property>
+          <Property Type="String" Name="Email" Nullable="true" />
+          <Property Type="String" Name="Text" Nullable="false" />
+          <Property Type="Byte" Name="TypeId" Nullable="false" />
+          <NavigationProperty Name="Comments" Relationship="Feedback.ReportComment" FromRole="Report" ToRole="Comment" />
+          <Property Type="String" Name="OfficiallyReply" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Comment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Text" Nullable="false" />
+          <Property Type="String" Name="AuthorName" Nullable="false" />
+          <Property Type="String" Name="AuthorId" Nullable="true" />
+          <Property Type="String" Name="Email" Nullable="true" />
+          <NavigationProperty Name="Report" Relationship="Feedback.ReportComment" FromRole="Comment" ToRole="Report" />
+          <Property Type="Guid" Name="ReportId" Nullable="false" />
+        </EntityType>
+        <Association Name="ReportComment">
+          <End Type="Feedback.Report" Role="Report" Multiplicity="1" />
+          <End Type="Feedback.Comment" Role="Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Report">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="ReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="FeedbackStoreContainer" CdmEntityContainer="FeedbackModelContainer">
+    <EntitySetMapping Name="Reports">
+      <EntityTypeMapping TypeName="IsTypeOf(Feedback.Report)">
+        <MappingFragment StoreEntitySet="Reports">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="AuthorName" ColumnName="AuthorName" />
+          <ScalarProperty Name="AuthorId" ColumnName="AuthorId" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Text" ColumnName="Text" />
+          <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+          <ScalarProperty Name="OfficiallyReply" ColumnName="OfficiallyReply" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Comments">
+      <EntityTypeMapping TypeName="IsTypeOf(Feedback.Comment)">
+        <MappingFragment StoreEntitySet="Comments">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Text" ColumnName="Text" />
+          <ScalarProperty Name="AuthorName" ColumnName="AuthorName" />
+          <ScalarProperty Name="AuthorId" ColumnName="AuthorId" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="ReportId" ColumnName="ReportId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram Name="FeedbackModel" >
+        <EntityTypeShape EntityType="Feedback.Report" Width="1.5" PointX="4.5" PointY="0.875" Height="2.5571907552083331" />
+        <EntityTypeShape EntityType="Feedback.Comment" Width="1.5" PointX="7.25" PointY="2.5" Height="2.1725878906249996" />
+        <AssociationConnector Association="Feedback.ReportComment">
+          <ConnectorPoint PointX="6" PointY="2.9660953776041667" />
+          <ConnectorPoint PointX="7.25" PointY="2.9660953776041667" />
+        </AssociationConnector>
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

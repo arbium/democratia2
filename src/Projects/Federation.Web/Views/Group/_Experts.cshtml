@@ -1,0 +1,38 @@
+﻿@using Federation.Web.ViewModels
+@model Group_ExpertsViewModel
+
+@foreach (var expert in Model.ExpertsList)
+{
+    <div class="user80">
+	    <span class="user_itemv80">
+		    <a href="@Url.Action("delegation", "user", new { id = expert.UserId, groupurl = Model.GroupUrl })" class="user_itemv80_a">
+                <span class="useritem_icon">
+                    <img alt="фото" src="@expert.Avatar&w=48&h=64" /><br />
+                </span>
+			    <span class="useritem_info">
+				    <span class="useritem_lastname">@expert.Name</span><br />
+				    <span class="useritem_name">@expert.Surname</span><br />
+				    <span class="useritem_city">@expert.City</span>
+			    </span>
+		    </a>
+	    </span>
+    </div>
+}
+<div class="actions">
+    @Html.ActionLink("Весь список экспертов", "experts", new { id = Model.GroupUrl }, new { Class = "action-button" })
+</div>
+@if (Request.IsAuthenticated)
+{
+    <div class="expert_status">
+        @if (Model.IsExpert)
+        {
+            @Html.ActionLink("Изменить список тэгов", "delegation", "user", new { groupurl = Model.GroupUrl}, new { Class = "action-button" })
+        }
+        else if (Model.IsMember)
+        {            
+            <div class="actions">
+                @Html.ActionLink("Стать экспертом", "delegation", "user", new { groupurl = Model.GroupUrl }, new { Class = "action-button" })
+            </div>
+        }
+    </div>
+}

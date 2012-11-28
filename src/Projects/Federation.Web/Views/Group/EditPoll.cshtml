@@ -1,0 +1,141 @@
+﻿@using Federation.Web.ViewModels
+@model GroupEditPollViewModel
+@{
+    ViewBag.Title = "Редактирование голосования";
+}
+
+<script src="../../Resources/scripts/jquery-ui.min.js" type="text/javascript"></script>
+<link href="../../Resources/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script src="../../Resources/tagsinput/jquery.tagsinput.js" type="text/javascript"></script>
+<link href="../../Resources/tagsinput/jquery.tagsinput.css" rel="stylesheet" type="text/css" />
+
+<script src="../../Resources/scripts/jquery.validate.min.js" type="text/javascript"></script>
+
+<script src="../../Resources/redactor/redactor.js" type="text/javascript"></script>
+<script src="../../Resources/redactor/langs/ru.js" type="text/javascript"></script>
+<link href="../../Resources/redactor/css/redactor.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    $(function () {
+        document.redactor = $("#Text").redactor({
+            buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|', 'image', 'video', 'table', 'link', '|', 'fontcolor', 'backcolor', '|', 'alignleft', 'aligncenter', 'alignright', 'justify', '|', 'horizontalrule', 'fullscreen'],
+            lang: 'ru', 
+            albums: '@Url.Action("albumsforeditor", "album", new { groupId = Model.GroupId })'
+        });
+        
+        $('#TagTitles').tagsInput({
+            defaultText: 'добавьте тему',
+            width: '603px',
+            height: '33px',
+            autocomplete_url: '@Url.Action("findmatchingtags", "tag", new { id = Model.GroupId }, "http")?showTopics=false',
+            autocomplete: { minLength: '3' }
+        });
+    });
+</script>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    <div class="form_help">
+        <h3>
+            Редактирование голосования<br/>
+            @Html.ActionLink(Model.GroupName, "index", new { id = Model.GroupUrl })
+        </h3>
+        <p>Здесь вы можете создать голосование по какому-либо вопросу.</p>
+        <p>
+            <b>Черновик</b> - вы можете сохранить свою публикацию как черновик. Это позволит вам вернутся и дописать ее позже.<br/>
+            Также можно скинуть ссылку на черновик знакомым и обсудить ее до момента публикации.
+        </p>
+    </div>
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        @if (Model.IsContentModeration && Request.IsAuthenticated && !UserContext.Current.IsUserModeratorInGroup(Model.GroupId))
+        {
+            <p style="color: orange">
+                В соответствии с настройками группы, новый контент проходит премодерацию
+            </p>
+        }
+        <div class="styled_form">
+            @if (!string.IsNullOrEmpty(ViewBag.ValidationExceptionText))
+            {
+                <div class="validation_block">
+                    @ViewBag.ValidationExceptionText
+                </div>
+            }
+            @using (Html.BeginForm())
+            {
+                <div class="form_block">
+                    @Html.HiddenFor(m => m.PollId)
+                    @Html.HiddenFor(m => m.GroupId)
+                    @Html.HiddenFor(m => m.GroupName)
+                    @Html.HiddenFor(m => m.GroupUrl)
+                    @Html.HiddenFor(m => m.IsDraft)
+                    <div class="input_block">
+                        <div class="title">                    
+                            @Html.LabelFor(m => m.Title)<span class="required">*</span>
+                        </div>
+                        @Html.TextBoxFor(m => m.Title, new { autofocus = "" })
+                        @Html.ValidationMessageFor(m => m.Title)
+                    </div>
+                    <div class="input_block redactor separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.Text)<span class="required">*</span>
+                        </div>                    
+                        @Html.TextAreaFor(m => m.Text)
+                        @Html.ValidationMessageFor(m => m.Text)
+                    </div>
+                    <div class="input_block separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.Duration)
+                        </div>
+                        @Html.TextBoxFor(m => m.Duration, new { placeholder = "указывается в днях" })
+                        @Html.ValidationMessageFor(m => m.Duration)
+                    </div>
+                    <div class="input_block separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.Topics)
+                        </div>
+                        @if (Model.Topics.Count != 0)
+                        {
+                            for (var i = 0; i < Model.Topics.Count; i++)
+                            {                                
+                                @Html.HiddenFor(m => m.Topics[i].Id)
+                                @Html.HiddenFor(m => m.Topics[i].Title)
+                                @Html.CheckBoxFor(m => m.Topics[i].IsChecked, new { id = "topic_" + i })
+                                <label style="position: relative; top: -3px; margin-right: 5px" for="@("topic_" + i)">
+                                    @Model.Topics[i].Title
+                                </label>
+                            }
+                        }
+                        else
+                        {
+                            <text>Темы группы не настроены. @Html.ActionLink("Подробнее", "topics")</text>
+                        }
+                    </div>
+                    <div class="input_block separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.TagTitles)
+                        </div>                    
+                        @Html.TextBoxFor(m => m.TagTitles, new { Class = "tags" })
+                        @Html.ValidationMessageFor(m => m.TagTitles)
+                    </div>
+                </div>
+                <div class="submit_block">
+                    <input type="submit" value="Сохранить" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

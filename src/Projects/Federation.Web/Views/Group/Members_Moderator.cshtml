@@ -1,0 +1,56 @@
+﻿@using Federation.Web.ViewModels
+@model GroupMembers_ModeratorViewModel
+@{
+    ViewBag.Title = "Участники";
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.GroupId, NavigationBoxType.Group))
+    <h2>Модераторы</h2>
+    @Html.Partial("_Moders", Model.Moderators)
+</div>
+<div class="layout_content">
+     <div class="lighttabs_container">
+        <div class="jqueryslidemenu servicebuttonmenu">
+            <ul>
+                <li>
+                    @using (Html.BeginForm())
+                    {
+                        @Html.HiddenFor(x => x.GroupId)
+                        <input name="query" class="searchboxid-replace" type="text" placeholder="Найти пользователя" />
+                        <input class="searchbuttonid-replace" type="image" src="@RoutesHelper.CurrentThemeFolder/images/searchbutton.png" />
+                    }
+                </li>
+            </ul>
+        </div>
+        <ul class="lighttabs">
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+                <li>
+                    <a href="@Url.Action("userrequests")">Заявки</a>
+                </li>    
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        @if (Model.MembersTotalCount > 0)
+        {
+            foreach (var member in Model.Members)
+            {
+                <div class="record">
+                    <img src="@member.Avatar&w=30&h=40" alt="@member.FullName"/>
+                    @Html.ActionLink(member.FullName, "index", "user", new { id = member.Id }, null)
+                    <a href="@Url.Action("dialog", "user", new { id = member.Id })#send-message">[написать сообщение]</a>
+                    @Html.ConfirmActionLink("[исключить из группы]", "Вы действительно хотите выгнать пользователя?",
+                            Url.Action("approvemember", new { id = member.GroupMemberId, approve = false }))
+                </div>
+            }
+        }
+        else
+        {
+            <h3>Пока заявок нет</h3>
+        }
+    </div>
+</div>

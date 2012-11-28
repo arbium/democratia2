@@ -1,0 +1,284 @@
+﻿@using Federation.Core
+@using Federation.Web
+@using Federation.Web.ViewModels
+@model SearchTagViewModel
+@{  
+    ViewBag.Title = "Поиск по тэгу";
+    
+    const int maxExperts = 5;
+    const int maxGroups = 3;
+    const int maxContent = 5;
+}
+
+@helper ShowExpert(SearchTag_ExpertViewModel expert)
+{
+    <div class="expert_item">
+        <div class="user">
+            <div class="user_padding">
+                <a class="usericon" href="@Url.Action("index", "user", new { id = expert.UserId })">
+                    <img src="@expert.Avatar&w=48&h=64" alt="@expert.Name" />
+                </a>
+                <a class="username" href="@Url.Action("index", "user", new { id = expert.UserId })">
+                    @expert.Name
+                </a>
+                <div class="clear"><span></span></div>
+            </div>
+        </div>
+        <div class="labels_list">
+            @if (expert.Tags.Count > 1)
+            {
+                <text>По тэгу </text><strong>@Html.ActionLink(Model.Tag, "tag", "search", new { id = Model.Tag })</strong><text>, а так же по тэгам:<br /></text>
+                <div class="labels">
+                    @foreach (var tag in expert.Tags)
+                    {
+                        if (Model.Tag != tag.Title)
+                        {
+                            @Html.ActionLink(tag.Title, "tag", "search", new { id = tag.Title })
+                        }
+                    }
+                </div>
+            }
+            else
+            {
+                <text>По тэгу </text><strong>@Html.ActionLink(Model.Tag, "tag", "search", new { id = Model.Tag })</strong>
+            }
+        </div>
+        <div class="group">
+            <div class="group_padding">
+                <div class="to_symbol">
+                    <span style="display: block; font-size: 11px">в группе</span>&rarr;
+                </div>
+                <a class="groupicon" href="@Url.Action("index", "group", new { id = expert.UserId })">
+                    <img src="@expert.GroupLogo&w=48&h=64" alt="@expert.GroupName" />
+                </a>
+                @Html.ActionLink(expert.GroupName, "index", "group", new { id = expert.GroupUrl }, new { Class = "groupname" })
+                <div class="clear"><span></span></div>
+            </div>
+        </div>
+    </div><!--expert_item-->
+}
+@helper ShowGroup(SearchTag_GroupViewModel group)
+{
+    <div class="group_item">
+        <div class="group">
+            <div class="group_padding">
+                <a class="groupicon" href="@group.Link">
+                    <img src="@group.Logo&w=48&h=64" alt="@group.Name" />
+                </a>
+                <div class="groupname">
+                    <a href="@group.Link">@group.Name</a>
+                </div>
+                <div class="groupdata">
+                    <p>Участников: @group.MembersCount</p>
+                    <p>Группа создана: @group.CreationDate.ToUserTime(UserContext.Current).ToString("d MMMM yyyy")</p>
+                </div>
+                <div class="clear"><span></span></div>
+            </div>
+        </div><!--group-->
+        <div class="group_data"></div>
+    </div><!--group_item-->
+}
+@helper ShowContent(SearchTag_ContentViewModel content)
+{
+    var record = content;
+    
+    <div class="record wide @record.ContentClass">
+        <div class="corner"><div class="img"></div></div>
+        <div class="main"> 
+            @if(record.AuthorId.HasValue) {
+                <div class="author">
+                    <a href="@Url.Action("index", "user", new { id = record.AuthorId })">
+                        <img class="icon" src="@record.AuthorAvatar&w=48&h=64" alt="" />
+                    </a>
+                    <div class="name">
+                        <a class="username" href="@Url.Action("index", "user", new { id = record.AuthorId })">
+                            @record.AuthorName
+                        </a>
+                    </div>
+                </div>
+            }
+            <div><small class="grey">@record.ContentType.GetTitle()</small></div>
+	        <span class="group">
+                @if(record.ContentType == ContentViewType.GroupPetition || record.ContentType == ContentViewType.GroupPost || record.ContentType == ContentViewType.Poll) {
+                    <a class="groupicon" href="@Url.Action("index", "group", new { id = record.GroupUrl })">
+                        <img class="icon" src="@record.GroupLogo" alt="" />
+                    </a>
+                    <a class="groupname" href="@Url.Action("index", "group", new { id = record.GroupUrl })">@record.GroupName</a><text>&nbsp;&rarr;</text>
+                }                    
+            </span>
+		    <div class="content">
+			    <h3 class="title"><a href="@record.Url">@record.Title</a></h3>                    
+			    <div class="summary"><a href="@record.Url">@Html.Raw(record.Summary)</a></div>
+		    </div>
+        </div>	    
+@*            <div class="control">
+            <div class="comments"><a href="@record.Url#comments">@record.CommentsCount</a></div>
+            <div class="date">@record.PostDate.ToUserTime(UserContext.Current).ToString("dd MMMM yyyy, HH:mm")</div>
+            @if(record.Tags.Count > 0) {
+                <div class="feedlabels">
+                <div class="labels">
+                    @foreach(var label in record.Tags) {
+                        @Html.ActionLink(label.Title, "Tag", "Search", new { id = label.Title })
+                    }
+                </div>
+                </div>
+            }
+        </div>
+*@        
+    </div>
+@*            <table><tr>
+        <td>
+            <a href="@post.Link">
+                <img src="@post.Image" alt="Фотография" style="margin: 0.25em" />
+            </a>
+        </td>
+        <td>
+            <h3><a href="@post.Link">@post.Title</a></h3>
+            <span>(@post.AuthorName)</span>
+            @if(!string.IsNullOrWhiteSpace(post.GroupLink) && !string.IsNullOrWhiteSpace(post.GroupName)) {
+                <a href="@post.GroupLink" class="grey">← @post.GroupName</a>
+            }
+        </td>
+    </tr></table>*@
+}
+
+<script type="text/javascript">
+    function ShowMore(tagid) {
+        jQuery('#' + tagid).fadeToggle();
+        var text = jQuery('#' + tagid + '_a').find('span').text();
+
+        if (text.indexOf("+") == 0) {
+            text = text.replace("+", "–");
+            jQuery('#' + tagid + '_a').addClass("expanded");
+        } else {
+            text = text.replace("–", "+");
+            jQuery('#' + tagid + '_a').removeClass("expanded");
+        }
+        jQuery('#' + tagid + '_a').find('span').text(text);
+    }
+</script>
+
+<div class="layout_pageheader"></div>
+<div class="layout_content">    
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div id="search_tag" class="body">
+        @if (!Model.IsEmptyRequest)
+        {
+            <div class="title">
+                <h1>
+                    <span class="black">@Model.Tag</span>
+                </h1>
+            </div>
+        }    
+        <!--page_header-->
+        @*<style type="text/css">
+            #search_tag .right_column {
+	            float: right;
+	            width: 300px;
+            }
+            #search_tag .left_column {
+	            margin-right: 340px;
+            }
+        </style>
+        <div class="right_column">
+            <h2>Связанные тэги</h2>
+        </div>*@
+        <div class="left_column">
+            <div class="fl_l" style="width: 100%" id="search_result">
+                @if(Model.IsEmptyRequest)
+                {
+                    <h2>Задан пустой поисковый запрос</h2>
+                }
+                else if(Model.IsEmptyResult)
+                {
+                    <h2>К сожалению по вашему запросу ничего не найдено</h2>
+                }
+                else
+                {
+                    if (Model.Experts.Count > 0)
+                    {
+                        <div class="experts_list">
+                            <h2>Эксперты</h2>
+                            @for (int i = 0, l = Math.Min(Model.Experts.Count, maxExperts); i < l; i++)
+                            {
+                                @ShowExpert(Model.Experts[i]);
+                            }
+                            @if (Model.Experts.Count > maxExperts)
+                            {
+                                <a id="experts_more_a" class="show_more" href="javascript:ShowMore('experts_more')"><span>+ Ещё @(Model.Experts.Count - maxExperts)</span></a>
+                                <div id="experts_more" style="display: none">
+                                    @for (int i = maxExperts, l = Model.Experts.Count; i < l; i++)
+                                    {
+                                        @ShowExpert(Model.Experts[i])
+                                    }
+                                </div><!--experts_more-->
+                            }                            
+                        </div><!--experts_list-->
+                    }
+                    if (Model.Groups.Count > 0)
+                    {
+                        <div class="groups_list">
+                            <h2>Группы</h2>
+                            @for (int i = 0, l = Math.Min(Model.Groups.Count, maxGroups); i < l; i++)
+                            {
+                                @ShowGroup(Model.Groups[i])
+                                if ((i + 1) % 3 == 0)
+                                {
+                                    <div class="clear"><span></span></div>
+                                }
+                            }
+                            @if (Model.Groups.Count > maxGroups)
+                            {
+                                <div class="clear"><span></span></div>                                
+                                <a id="groups_more_a" class="show_more" href="javascript:ShowMore('groups_more')"><span>+ Ещё @(Model.Groups.Count - maxGroups)</span></a>
+                                <div id="groups_more" style="display: none;">
+                                    @for (int i = maxGroups, l = Model.Groups.Count; i < l; i++)
+                                    {
+                                        @ShowGroup(Model.Groups[i])
+                                        //@((i + 1) % 3)
+                                        if ((i + 1) % 3 == 0)
+                                        {
+                                            <div class="clear"><span></span></div>
+                                        }
+                                    }
+                                </div><!--groups_more-->
+                            }
+                            <div class="clear"><span></span></div>
+                        </div><!--groups_list-->
+                    }
+                    if (Model.Content.Count > 0)
+                    {
+                        <div class="posts_list contentfeed common">
+                            <h2>Контент</h2>
+                            @for (int i = 0, l = Math.Min(Model.Content.Count, maxContent); i < l; i++)
+                            {
+                                @ShowContent(Model.Content[i])
+                            }
+                            @if (Model.Content.Count > maxContent)
+                            {
+                                <div class="clear"><span></span></div>
+                                <a id="posts_more_a" class="show_more" href="javascript:ShowMore('posts_more')"><span>+ Ещё @(Model.Content.Count - maxContent)</span></a>
+                                <div id="posts_more" style="display: none">
+                                    @for (int i = maxContent, l = Model.Content.Count; i < l; i++)
+                                    {
+                                        @ShowContent(Model.Content[i])
+                                    }
+                                </div><!--posts_more-->
+                            }
+                        </div><!--posts_list-->
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

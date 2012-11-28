@@ -1,0 +1,66 @@
+﻿@using Federation.Web.ViewModels
+@model _PollStatusViewModel
+
+<div class="contentfeed common">
+    @foreach (var record in Model.Votings)
+    {
+        <div class="record short poll">
+            <div class="corner"><span></span></div>
+            <div class="main">
+		        <div class="content">
+                    <h3 class="title">
+                        <a href="@Url.Action("poll", "group", new { id = record.Id })">@record.Title</a>
+                    </h3>
+                    <div class="info">
+                        @if (record.IsFinished)
+                        {
+                            <div class="duration">
+                                завершилось <span>@record.FinishDate.ToString("d MMMM yyyy")</span>
+                            </div>
+                            <div class="comments">
+                                <a href="@Url.Action("poll", "group", new { id = record.Id })">@record.CommentsCount</a>
+                            </div>
+                            <div class="voted">
+                                приняли участие <span>@record.Voted</span> из <span>@record.Participants</span> человек
+                            </div>
+                            <div class="result">@Html.Raw(record.VoteResult)</div>
+                            if (record.IsUserParticipant)
+                            {
+                                <div class="uservote">@Html.Raw(record.UserVoteResult)</div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="duration">
+                                завершится <span>@record.FinishDate.ToString("d MMMM yyyy")</span>
+                            </div>
+                            <div class="comments">
+                                <a href="@Url.Action("poll", "group", new { id = record.Id })">@record.CommentsCount</a>
+                            </div>
+                            <div class="voted">
+                                приняли участие <span>@record.Voted</span> из <span>@record.Participants</span> человек
+                            </div>
+                            <div class="result">
+                                до завершения осталось <span>@record.TimeLeft</span>
+                            </div>
+                            if (record.IsUserParticipant)
+                            {
+                                <div class="uservote">@Html.Raw(record.UserVoteResult)</div>
+                            }
+                        }
+                    </div>                
+		        </div>
+                <div class="author">
+                    <a class="usericon" href="@Url.Action("index", "group", new { id = record.GroupUrl })">
+			            <img class="icon" src="@record.GroupLogo&w=30&h=40" alt="лого" />
+                    </a>
+                    <div class="name">
+                        <a class="username" href="@Url.Action("index", "group", new { id = record.GroupUrl })">
+                            @record.GroupName
+                        </a>
+                    </div>
+		        </div>
+            </div><!--main-->    
+        </div><!--record-->
+    }
+</div>

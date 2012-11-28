@@ -1,0 +1,108 @@
+﻿@using Federation.Web.ViewModels
+@model FeedbackIndexViewModel
+@{
+    ViewBag.Title = "Обратная связь";
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            @if (Request.Params["isdialog"] != "true")
+            {
+                <li>
+                    <a class="back">◄</a>
+                </li>
+            }
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <div class="styled_form">
+            @if (!string.IsNullOrEmpty(ViewBag.ValidationExceptionText))
+            {
+                <div class="validation_block">
+                    @ViewBag.ValidationExceptionText
+                </div>
+            }
+            @using (Html.BeginForm(new { isdialog = Request.Params["isdialog"] }))
+            {
+                <div class="form_block">
+                    @if (Request.IsAuthenticated)
+                    { 
+                        @Html.HiddenFor(x => x.Answer)
+                        @Html.HiddenFor(x => x.UserId)
+                        <div class="input_block">
+				            <div class="title">
+					            @Html.LabelFor(x => x.Subject)
+				            </div>
+					        @Html.TextBoxFor(m => m.Subject)
+			            </div>
+                    }
+                    else
+                    {
+                        <div class="input_block">
+				            <div class="title">
+					            @Html.LabelFor(x => x.Name)
+				            </div>
+					        @Html.TextBoxFor(m => m.Name)
+			            </div>
+                        <div class="input_block">
+                            <div class="title">
+                                @Html.LabelFor(x => x.Email)
+                            </div>
+                            @Html.TextBoxFor(m => m.Email)
+                        </div>
+                        <div class="input_block separator">
+				            <div class="title">
+					            @Html.LabelFor(x => x.Subject)
+				            </div>
+					        @Html.TextBoxFor(m => m.Subject)
+			            </div>
+                    }
+                    <div class="input_block">
+				        <div class="title">
+					        @Html.LabelFor(x => x.Text)<span class="required">*</span>
+				        </div>
+                        @Html.ValidationMessageFor(m => m.Text)
+                        @Html.TextAreaFor(x => x.Text)
+			        </div>
+                    @if (!Request.IsAuthenticated)
+                    {
+                        @Html.HiddenFor(x => x.SafetyKey)
+                        <div class="input_block separator">
+                            <span class="title">
+                                @Html.LabelFor(m => m.Answer)<span class="required">*</span>
+                            </span>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <img alt="anti spam question" src="@Model.SafetyImageUrl" />
+                                    </td>
+                                    <td style="vertical-align: bottom; text-align: center">
+                                        @Html.LabelFor(m => m.Tip):                                
+                                        <b>@Html.DisplayTextFor(m => m.Tip)</b>
+                                        <br />
+                                        @Html.TextBoxFor(m => m.Answer)
+                                        @Html.ValidationMessageFor(m => m.Answer)
+                                    </td>
+                                </tr>
+                            </table> 
+                            <div>
+                                <small class="grey">
+                                    Изображения подобраны системой <a href="http://www.bing.com">Bing</a>, в некоторых случаях изображение может не совпадать с текстом вопроса.<br/>Перегрузите страницу для обновления вопроса.
+                                </small>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="submit_block">
+                    <input type="submit" value="Отправить" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

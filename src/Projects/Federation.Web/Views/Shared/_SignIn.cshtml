@@ -1,0 +1,43 @@
+﻿@{
+    var isError = false;
+    if (ViewBag.ValidationExceptionText != null)
+    {
+        isError = true;
+    }
+}
+<div id="login_window">
+	<h1>Вход в систему</h1>
+    
+    <div class="login @(isError ? "error" : "")">
+        @if (isError)
+        {
+            <span class="errormsg">@ViewBag.ValidationExceptionText</span>
+        }
+	    <form method="POST" action="@Url.Action("signin", "account", null, "https")">
+            <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl"/>
+		    <label name="UserIdentificator">Логин (email)</label>
+		    <input name="UserIdentificator" id="UserIdentificator" type="text" />
+		    <div style="height: 10px" class="clear"><span></span></div>
+
+		    <label name="Password">Пароль</label>
+		    <input name="Password" id="Password" type="password"/>
+		    <div class="clear" style="height: 10px"><span></span></div>
+
+            <input class="f_button" type="submit" value=" Войти " />
+            <div class="clear" style="height: 10px"><span></span></div>
+            @Html.ActionLink("Забыли пароль?", "recoverpassword", "account", new { Class= "forget" }, null)
+	    </form>
+    </div>
+    <div class="register">
+        <p>
+            <span style="font-size: 11px; color:#777">Или войдите через аккаунт социальной сети</span>
+            <br/>
+            <a href="@Url.Action("socialsignin", "account", new Federation.Web.ViewModels.AccountSocialSignIn { SocialType = Federation.Core.SocialType.Facebook, ReturnUrl = Model.ReturnUrl })">
+                <img alt="Вход с Facebook" class="" src="@RoutesHelper.CurrentThemeFolder/images/social/facebook_login.png" />
+            </a>                        
+	    </p>
+	    <h3>Ещё не зарегистрированы?</h3>
+	    <h2><a class="fancy_iframe" href="@Url.Action("signup", "account", new { returnUrl = Model.ReturnUrl })">Регистрация займёт меньше минуты →</a></h2>
+        <div style="height: 10px;" class="clear"><span></span></div>
+    </div>	
+</div>

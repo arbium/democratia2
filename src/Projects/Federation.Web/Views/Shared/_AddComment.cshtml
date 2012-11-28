@@ -1,0 +1,34 @@
+﻿@using Federation.Web.ViewModels
+@model _AddCommentViewModel
+
+<div class="comment_add">
+    @if (Request.IsAuthenticated)
+    {
+        <script src="../../Resources/scripts/jquery.validate.min.js" type="text/javascript"></script>
+
+        <div id="_addcomment_form" class="styled_form">
+            @using (Html.BeginForm("add", "comment"))
+            {
+                <div class="form_block">
+                    @Html.HiddenFor(m => m.ContentId)
+                    @Html.HiddenFor(m => m.ParentCommentId)
+                    @Html.HiddenFor(m => m.ReturnUrl)
+                    @Html.ValidationMessageFor(m => m.Text)
+                    @Html.TextAreaFor(m => m.Text, new { style = "width: 99%; max-width: 99%; min-width: 99%; height: 100px" })
+                </div>
+                <div class="submit_block">
+                    <input type="submit" value="Добавить комментарий" class="f_button" style="vertical-align: bottom" />
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        var returnUrl = Request.Url == null ? null : Request.Url.ToString();
+        <div class="styled_form">
+            <a href="@Url.Action("signin", "account", new SignInViewModel { ReturnUrl = returnUrl })">
+                <input type="submit" value="Добавить комментарий" class="f_button" style="vertical-align: bottom" />
+            </a>
+        </div>
+    }
+</div>

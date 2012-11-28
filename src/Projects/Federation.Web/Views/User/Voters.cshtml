@@ -1,0 +1,160 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model UserVotersViewModel
+@{
+    ViewBag.Title = "Сторонники";; 
+}
+
+<style type="text/css">
+    .groups {
+        width: 100%;
+    }
+
+    .groups tr {
+        border-bottom: #DDE2E7 solid 1px;
+    }
+    .groups td {
+        padding: 10px 0;
+    }
+
+    .groups .col1 {
+        width: 30%;
+        min-width: 160px;
+    }
+    .groups .col2 {
+    }
+    .groups .col3 {
+        width: 20%;
+    }
+
+    .groups .link {
+        text-decoration: none;
+        color: #4D6582;
+    }
+    .groups .link:hover {
+        color: #C00;
+    }
+    .groups .link > img {
+    }
+    .groups .link > span {
+        vertical-align: top;
+        margin: 0 5px;
+    }
+
+    .groups .actions {
+        float: right;
+    }
+    .groups .actions > a {
+        font-size: 0.9em;
+    }
+
+    .groups .tags > a {
+        border: #DDDDDD solid 1px;
+        background-color: #F0F0F0;
+        color: #666666;
+        border-radius: 4px;
+        padding: 1px 5px;
+        font-size: 0.9em;
+        text-decoration: none;
+        vertical-align: top;
+    }
+    
+    .groups .tags > span.tag {
+        border: #DDDDDD solid 1px;
+        background-color: #F0F0F0;
+        color: #666666;
+        border-radius: 4px;
+        padding: 1px 5px;
+        font-size: 0.9em;
+        text-decoration: none;
+        vertical-align: top;
+    }
+    
+    .groups .tags > a:hover {
+        color: inherit;
+    }
+    
+    .groups .tags > a.checked{
+        color: #333;
+    }
+</style>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    <div class="author">
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.UserId, NavigationBoxType.User))
+    </div>
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            @if (!Model.IsForeignProfile)
+            {
+            <li>
+                <a href="@Url.Action("experts")">Эксперты</a>
+            </li>
+            }
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div>
+        @if(Model.Groups.Count == 0)
+        {
+            <h2>Вы ещё не заявились экспертом ни в одной группе</h2>
+        }
+        else
+        {
+            <table class="groups">
+                @foreach (var group in Model.Groups)
+                {
+                    <tr>
+                        <td class="col1">
+                            <a class="link" href="@Url.Action("delegation", "user", new { id = Model.UserId ,GroupUrl = group.Url })">
+                                <div style="overflow: auto; float: left; margin: 0 10px 0 0">
+                                    <img src="@group.Logo&w=48&h=64" alt="лого" />
+                                </div>
+                                @group.Name 
+                            </a>
+                            <br />
+                            <br />
+                            <span class="grey">
+                                @DeclinationService.OfNumber(group.VotersCount, "человек", "человека", "человек")
+                            </span>
+                        </td>
+                        <td class="col2">
+                            <span class="tags">
+                                @foreach (var tag in group.ExpertTags)
+                                {
+                                   <span class="tag">@tag.Title</span>
+                                    
+                                }
+                            </span>
+                        </td>
+                        @*<td class="col3">
+                            <div class="actions">
+                                @if (Request.IsAuthenticated)
+                                {
+                                     if (Model.IsForeignProfile)
+                                     {
+                                         <a href="@Url.Action("delegation", "user", new {id = group.ExpertId})">Делегировать голос</a>
+                                         <br />
+                                         <a href="@Url.ConfirmAction("Вы действительно больше не поддерживаете данного эксперта?",
+                                                                  Url.Action("deletedelegating", "user", new {id = group.ExpertId}))">Отказаться от эксперта</a>
+                                     }
+                                     else
+                                     {
+                                         <a href="@Url.ConfirmAction("Вы действительно расхотели быть экспертом?",
+                                                                  Url.Action("ceasetobeexpert", "group", new {id = group.Url}))">Перестать быть экспертом</a>
+                                     }
+                                }
+                            </div>
+                        </td>*@
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+</div>

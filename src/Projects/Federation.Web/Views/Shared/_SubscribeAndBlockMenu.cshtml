@@ -1,0 +1,57 @@
+﻿@model Guid?
+           
+@if (Request.IsAuthenticated && Model != null)
+{
+    var userId = (Guid)Model;
+    
+    if (UserContext.Current.SubscribedUsers.Contains(userId))
+    {
+        <li>
+            @Html.ConfirmActionLink("Отписаться от пользователя", "Вы действительно хотите удалить пользователя из своей подписки?",
+                     Url.Action("unsubscribefromuser", "subscription", new { id = userId }))
+        </li>
+    }
+    else
+    {
+        if (UserContext.Current.BlackList.Contains(userId))
+        {
+            <li>
+                @Html.ConfirmActionLink("Подписаться на пользователя",
+                        "Вы действительно хотите подписаться на пользователя? В таком случае он будет удален из вашего черного списка.",
+                         Url.Action("subscribetouser", "subscription", new { id = userId }))
+            </li>
+        }
+        else
+        {
+            <li>
+                @Html.ActionLink("Подписаться на пользователя", "subscribetouser", "subscription", new { id = userId }, null)
+            </li>
+        }
+    }
+
+    if (UserContext.Current.BlackList.Contains(userId))
+    {
+        <li>
+            @Html.ConfirmActionLink("Убрать из черного списка", "Вы действительно хотите убрать пользователя из черного списка?",
+                      Url.Action("userinblacklist", "user", new { id = userId, block = false }))
+        </li>
+    }
+    else
+    {
+        if (UserContext.Current.SubscribedUsers.Contains(userId))
+        {
+            <li>
+                @Html.ConfirmActionLink("Внести в черный список", 
+                        "Вы действительно хотите внести пользователя в черный список? В таком случае он уберется из вашей подписки.",
+                          Url.Action("userinblacklist", "user", new { id = userId, block = true }))
+            </li>
+        }
+        else
+        {
+            <li>
+                @Html.ConfirmActionLink("Внести в черный список", "Вы действительно хотите внести пользователя в черный список?",
+                          Url.Action("userinblacklist", "user", new { id = userId, block = true }))
+            </li>
+        }
+    }
+}

@@ -1,0 +1,46 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model AccountSocialSignIn
+@{
+    ViewBag.Title = "Вход через соц сети";
+    var state = CryptographyHelper.ToMD5(Guid.NewGuid().ToString());
+    HttpContext.Current.Session.Add("state", state);
+    HttpContext.Current.Session.Add("SocialSignIn_ReturnUrl", Model.ReturnUrl);
+    var socialType = Model.SocialType;
+    ViewBag.LayoutStyle = "layout_start";
+}
+@section Header
+{
+    <script type="text/javascript" src="http://connect.facebook.net/ru_RU/all.js"></script>
+}
+       
+<script type="text/javascript">
+    function fbLogin() {
+        location = "https://www.facebook.com/dialog/oauth?client_id=301981299827190&redirect_uri=@Url.Action("facebooksignin", "account", null, "http")&state=@state";
+    };
+    $(document).ready(function () {
+        switch(@((byte)socialType))
+        {
+            case 0:
+                fbLogin();
+                break;
+        }
+    });
+</script>
+
+@Html.Partial("_MainMenu")
+
+<div class="body">
+    <h2>Вход в Демократию2 через сторонние сервисы</h2>
+    @switch (socialType)
+    {
+        case SocialType.Facebook:
+            <p>Происходит подключение к Фейсбук и проверка личности.</p>
+            <a style="cursor: pointer" onclick="fbLogin()">Послать запрос на авторизацию повторно</a>
+            break;
+            
+        default:
+            <span>Ошибка. Данная соц. сеть не имплементирована.</span>
+            break;
+    }
+</div>

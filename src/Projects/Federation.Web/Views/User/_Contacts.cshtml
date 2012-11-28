@@ -1,0 +1,72 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model User_ContactsViewModel
+@{
+    var isSelf = false;
+    if (Request.IsAuthenticated)
+    {
+        isSelf = Model.UserId == UserContext.Current.Id;
+    }
+}
+<style>
+    /* реализация с MoiKrug надо сделать свою */
+    .contacts .icon {
+        position: relative;
+        line-height: 20px;
+        display: block;
+        /*background: url(/images/icons16x16/mk-messenger-iconset3.png) no-repeat 0 -400px;*/
+        padding: 0 0 0 25px;
+        min-height: 20px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-indent: 0;
+        margin: 5px 0px;
+    }
+
+    .contacts .icon_email {	background-position: 0 -350px;}
+    .contacts .icon_type_1375 {background-position: 0 -600px;}
+    .contacts .icon_type_1377 {background-position: 0 -750px;}
+    .contacts .icon_type_1379 {background-position: 0 -698px;}
+    .contacts .icon_type_249146 {background-position: 0 -1100px;}
+    .contacts .icon_type_675 {background-position: 0 0;}
+    .contacts .icon_type_676 {background-position: 0 -48px;}
+    .contacts .icon_type_1373 {background-position: 0 -300px;}
+    .contacts .icon_vcard {background-position: 0 -1048px;}
+    .contacts .icon.qrcode {background-position: 0 -1248px;height: 23px;}
+    .contacts .icon.twitter {background-position: 0 -48px;}
+    .contacts .icon.livejournal {background-position: 0 -648px;}
+    .contacts .icon.linkedin {background-position: 0 -398px;}
+    .contacts .icon.vkontakte {background-position: 0 -298px;}
+    .contacts .icon.yaru {background-position: 0 -198px;}
+    .contacts .icon.fotki {background-position: 0 -748px;}
+</style>
+
+<div class="contacts">
+    <h4 class="grey">
+        Я на других сайтах
+    </h4>
+    <ul>
+        @if (Model.Facebook!= null)
+        {
+            <li class="icon sites_icon livejournal">
+                Facebook: <a rel="me" class="newwindow" target="_blank" href="@Model.Facebook">@Model.Facebook</a>
+                @if (isSelf)
+                {
+                    <a href="@Url.Action("socialdeattach", "account", new { social = SocialType.Facebook })" style = "color:#aaa;">[ удалить привязку ]</a>
+                }
+            </li>
+        }
+        else if (isSelf)
+        {
+            <li class="icon sites_icon livejournal">
+                Facebook: <a href="@Url.Action("SocialSignIn", "Account", new { social = (byte)SocialType.Facebook })">прикрепить учетную запись Facebook</a>
+            </li>
+        }
+        @if (Model.LiveJournal != null)
+        {
+            <li class="icon sites_icon linkedin">
+                LiveJournal: <a rel="me" class="newwindow" target="_blank" href="@Model.LiveJournal">@Model.LiveJournal</a>
+            </li>
+        }
+    </ul>
+</div>

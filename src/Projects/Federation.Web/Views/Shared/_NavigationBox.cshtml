@@ -1,0 +1,159 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model _NavigationBoxViewModel
+
+<style>
+    .group_exit {
+        float: right;
+        padding: 6px;
+        display: none;
+        color: #4D6483 !important;
+    }
+    .group_exit:hover {
+        border-radius: 5px;
+        background-color: #EEEEEE;
+    }
+
+    .user:hover .group_exit {
+        display: block;
+    }
+</style>
+
+<div id="navigator_box">
+    @if (Model.Group != null)
+    {
+        <div class="user">
+            <a href="@Url.Action("index", "group", new { id = Model.Group.Url })" class="icon">
+                <img alt="лого" src="@Model.Group.Logo&w=69&h=92" class="icon" />
+            </a>
+            @if (Model.Group.IsModerator)
+            {
+                <a class="group_exit" title="Снять полномочия модератора" href="@Url.ConfirmAction("Вы действительно хотите снять с себя полномочия модератора?",
+                         Url.Action("leave", "group", new { id = Model.Group.Url }))">
+                    <img src="@RoutesHelper.CurrentThemeFolder/images/Cancel16.png" alt="✖" />
+                </a>
+            }
+            else if (Model.Group.Id != ConstHelper.RootGroupId && Model.Group.IsMember)
+            {
+                <a class="group_exit" title="Выйти из группы" href="@Url.ConfirmAction("Вы действительно хотите выйти из группы?",
+                         Url.Action("leave", "group", new { id = Model.Group.Url }))">                 
+                    <img src="@RoutesHelper.CurrentThemeFolder/images/Login_in16.png" alt="✖" />
+                </a>
+            }
+            <a href="@Url.Action("index", "group", new { id = Model.Group.Url })" class="name">
+                @Model.Group.Name
+            </a>            
+        </div>
+        <div class="info">
+            @if (Request.IsAuthenticated && UserContext.Current.IsUserInGroup(Model.Group.Id))
+            {
+                <div>
+                    @if (UserContext.Current.IsUserModeratorInGroup(Model.Group.Id))
+                    {
+                        <span class="grey">Вы модератор этой группы</span>
+                    }
+                    else if (UserContext.Current.IsUserApprovedInGroup(Model.Group.Id))
+                    {
+                        <span class="grey">Вы состоите в этой группе</span>
+                    }
+                    else
+                    {
+                        <span class="orange">Ваша заявка находится на рассмотрении</span>
+                    }
+                </div>
+            }
+            @if (Model.Group.IsContentModerated && Model.Group.IsMembersModerated)
+            {
+                <span>Контент и члены группы проходят премодерацию</span>
+            }
+            else if (Model.Group.IsContentModerated)
+            {
+                <span>Контент группы проходит премодерацию</span>
+            }
+            else if (Model.Group.IsMembersModerated)
+            {
+                <span>Члены группы проходят премодерацию</span>
+            }
+        </div>
+        <div class="navigation">
+            <table>
+                <tr>
+                    <td>@Html.ActionLink("Группа", "index", "group", new { id = Model.Group.Url }, null)</td>
+                    <td>@Html.ActionLink("Профиль", "details", "group", new { id = Model.Group.Url }, null)</td>
+                </tr>
+                <tr>
+                    <td>@Html.ActionLink("Участники", "members", "group", new { id = Model.Group.Url }, null)</td>
+                    <td>@Html.ActionLink("Делегирование", "topics", "group", new { id = Model.Group.Url }, null)</td>                    
+                </tr>
+                <tr>
+                    <td>@Html.ActionLink("Альбомы", "albums", "group", new { id = Model.Group.Url }, null)</td>
+                    <td>@Html.ActionLink("Архив", "archive", "group", new { id = Model.Group.Url }, null)</td>
+                </tr>
+                <tr>
+                    @if (Model.Group.HasChild)
+                    {
+                        <td>@Html.ActionLink("Вложенные группы", "children", "group", new { id = Model.Group.Url }, null)</td>
+                    }
+                </tr>
+            </table>
+        </div>
+    }
+    else if (Model.User != null)
+    {
+        <div class="user">
+            <a href="@Url.Action("index", "user", new { id = Model.User.Id })" class="icon">
+                <img alt="фото" src="@Model.User.Avatar&w=69&h=92" class="icon" />
+            </a>
+            <a href="@Url.Action("index", "user", new { id = Model.User.Id })" class="name">
+                @Model.User.SurName<br/>
+                @Model.User.FirstName<br/>
+                @Model.User.Patronymic
+            </a>
+        </div>
+        <div class="info">
+            @if (Request.IsAuthenticated && UserContext.Current.BlackList.Contains(Model.User.Id))
+            {
+                <span class="grey">Пользователь у вас в черном списке</span>
+            }
+        </div>
+        <div class="navigation">
+            @if (Model.User.Self)
+            {
+                <table>
+                    <tr>
+                        <td>@Html.ActionLink("Пользователь", "index", "user", new { id = Model.User.Id }, null)</td>
+                        <td>@Html.ActionLink("Профиль", "profile", "user", new { id = Model.User.Id }, null)</td>                        
+                    </tr>
+                    <tr>
+                        <td>@Html.ActionLink("Группы", "groups", "user", new { id = Model.User.Id }, null)</td>
+                        <td>@Html.ActionLink("Делегирование", "experts", "user")</td>                        
+                    </tr>
+                    <tr>
+                        <td>@Html.ActionLink("Альбомы", "albums", "user", new { id = Model.User.Id }, null)</td>
+                        <td>@Html.ActionLink("Архив", "archive", "user", new { id = Model.User.Id }, null)</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ActionLink("Черновики", "drafts", "user", new { id = Model.User.Id }, null)</td>
+                    </tr>
+                </table>
+            }
+            else
+            {
+                 <table>
+                    <tr>
+                        <td>@Html.ActionLink("Пользователь", "blog", "user", new { id = Model.User.Id }, null)</td>
+                        <td>@Html.ActionLink("Профиль", "profile", "user", new { id = Model.User.Id }, null)</td>
+                    </tr>         
+                    <tr>
+                        <td>@Html.ActionLink("Группы", "groups", "user", new { id = Model.User.Id }, null)</td>
+                        <td>@Html.ActionLink("Делегирование", "voters", "user", new { id = Model.User.Id }, null)</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ActionLink("Альбомы", "albums", "user", new { id = Model.User.Id }, null)</td>
+                        <td>@Html.ActionLink("Архив", "archive", "user", new { id = Model.User.Id }, null)</td>                        
+                    </tr>
+                </table>
+            }            
+        </div>
+    }
+</div>

@@ -1,0 +1,91 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model SignUpCvkViewModel
+@{
+    ViewBag.Title = "Регистрация нового пользователя";
+    ViewBag.LayoutStyle = "layout_start";
+}
+
+@*ВНИМАНИЕ: выполнено в альфа-интерфейсе*@
+
+<script type="text/javascript">
+    $(function () {
+        var timeOffset = -(new Date()).getTimezoneOffset() / 60;
+        var timeOffsetHours = parseInt(timeOffset);
+        var timeOffsetMinutes = (timeOffset - timeOffsetHours) * 60;
+        if (timeOffsetMinutes == 0)
+            timeOffsetMinutes = "00";
+        $("select > option[value='" + timeOffsetHours + ":" + timeOffsetMinutes + "']").attr("selected", "selected");
+    });
+</script>
+
+@Html.Partial("_MainMenu")
+
+<div class="path">
+	<a href="@Url.Action("index", "home")">Главная</a>
+	/
+	<span>Регистрация с использованием приглашения</span>
+</div>
+
+<div class="main_info_space">
+    <div class="login_window p20">
+	    <h1>Регистрация</h1>
+        @using (Html.BeginForm("signupcvk", "account", FormMethod.Post, null))
+        {
+            <div class="FForm FForm_big" style="background-color: #F7F0E8;">
+                @Html.HiddenFor(m => m.InviteKey)
+
+                <div class="FForm_param">
+                    <div class="FForm_ParamName">
+                        @Html.LabelFor(m => m.Email) <span>*</span>
+                    </div>
+                    <div class="FForm_ParamRight">
+                        @Html.TextBoxFor(m => m.Email, new { Class = "FForm_inputField" })
+                        @Html.ValidationMessageFor(m => m.Email)
+                    </div>
+                </div>
+                <div class="FForm_ParamInter"><span></span></div>
+
+                <div class="FForm_param">
+                    <div class="FForm_ParamName">
+                        @Html.LabelFor(m => m.Password) <span>*</span>
+                    </div>
+                    <div class="FForm_ParamRight">
+                        @Html.PasswordFor(m => m.Password, new { Class = "FForm_inputField fl_l", Style = "margin-right: 4px" })
+                        <span>
+                            <small>Пароль не должен содержать открытые или широко известные данные - Дни рождения, элементы адреса или телефона - такие части пароля облегчают злоумышленникам подбор пароля.</small>
+                        </span>
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+                </div>
+                <div class="FForm_ParamInter"><span></span></div>
+
+                <div class="FForm_param">
+                    <div class="FForm_ParamName">
+                        @Html.LabelFor(m => m.PhoneNumber) <span>*</span>
+                    </div>
+                    <div class="FForm_ParamRight">
+                        @Html.TextBoxFor(m => m.PhoneNumber, new { Class = "FForm_inputField" })
+                        <small>(будет использоваться для подтверждения вашего аккаунта)</small>
+                        @Html.ValidationMessageFor(m => m.PhoneNumber)
+                    </div>
+                </div>
+                <div class="FForm_ParamInter"><span></span></div>
+
+                <div class="FForm_param">
+                    <div class="FForm_ParamName">
+                        @Html.LabelFor(m => m.UTCOffset) <span>*</span>
+                    </div>
+                    <div class="FForm_ParamRight">
+                        @Html.DropDownListFor(x => x.UTCOffset, UTCOffsetHelper.SelectListItems)
+                    </div>
+                </div>
+
+                <div class="clear" style="height: 10px"><span></span></div>
+            </div>
+		    <div class="FForm FForm_buttons" style="background-color: #E4D3C2">
+			    <input class="f_button" value=" Зарегистрироваться " type="submit" />
+		    </div>
+        }
+    </div>
+</div>

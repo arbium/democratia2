@@ -1,0 +1,80 @@
+﻿@using Federation.Web.ViewModels
+@model GroupAddTagViewModel
+@{
+    var isModer = false;
+    if (Request.IsAuthenticated)
+    {
+        isModer = UserContext.Current.IsUserModeratorInGroup(Model.GroupId);
+    }
+
+    ViewBag.Title = isModer ? "Добавление темы" : "Предложение темы";
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    <div class="form_help">
+        <h3>
+            Добавление тем группы<br/>
+            @Html.ActionLink(Model.GroupName, "index", "group", new { id = Model.GroupUrl })
+        </h3>        
+        <p><b>Темы группы</b> - определяют основные вопросы, по которым будут происходить голосования и обсуждения в группе.</p>
+        <p>Только по указанным темам пользователи могут объявить себя экспертами и делегировать друг другу голоса.</p>
+        <p>
+            Количество основных тем группы не ограничено, однако чем их больше тем сложнее будет использовать систему.<br/>
+            Мы рекомендуем не более 10 основных тем группы.
+        </p>
+        <p><b>Рекомендация тем</b> - любой участник группы может рекомендовать модераторам основную тему группы. </p>
+        <p>
+            <b>Оформление темы:</b> Тема группы состоит из Заголовка и Описания. Заголовк не должен быть длинным и должен состоять только из букв и цифр.<br/>
+            В описании группы важно достаточно развернуто объяснить, почему такая тема выбрана и какие именно вопросы будут обсуждаться.
+        </p>
+    </div>
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <div class="styled_form">
+            @if (!string.IsNullOrEmpty(ViewBag.ValidationExceptionText))
+            {
+                <div class="validation_block">
+                    @ViewBag.ValidationExceptionText
+                </div>
+            }
+            @using (Html.BeginForm())
+            {
+                <div class="form_block">
+                    @Html.HiddenFor(m => m.GroupUrl)
+                    @Html.HiddenFor(m => m.GroupId)
+                    @Html.HiddenFor(m => m.GroupName)
+                    <div class="input_block">
+                        <div class="title">                    
+                            @Html.LabelFor(m => m.Title)<span class="required">*</span>
+                        </div>
+                        @Html.TextBoxFor(m => m.Title)
+                        @Html.ValidationMessageFor(m => m.Title)
+                    </div>
+                    <div class="input_block separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.Description)<span class="required">*</span>
+                        </div>                    
+                        @Html.TextAreaFor(m => m.Description)
+                        @Html.ValidationMessageFor(m => m.Description)
+                    </div>
+                </div>
+                <div class="submit_block">
+                    <input type="submit" value="Добавить" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

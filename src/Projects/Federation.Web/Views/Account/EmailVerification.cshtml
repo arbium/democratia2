@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = "Подтверждение почты";
+    ViewBag.LayoutStyle = "layout_start";
+}
+
+@Html.Partial("_MainMenu")
+
+<h1>@ViewBag.Message</h1>
+
+@Html.ActionLink("На главную", "index", "home") @Html.ActionLink("В свой профиль", "index", "home")

@@ -1,0 +1,41 @@
+﻿@using Federation.Web.ViewModels
+@model ReplyCommentViewModel
+@{
+    ViewBag.Title = "Добавление комментария";
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @if (Model.GroupId.HasValue)
+    {
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.GroupId.Value, NavigationBoxType.Group))
+    }
+    else if (Model.AuthorId.HasValue)
+    {
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.AuthorId.Value, NavigationBoxType.User))
+    }    
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        @if (Model != null)
+        {    
+            @Html.Partial("_ReplyComment", Model.Comment)
+
+            if (Model.AddComment != null)
+            {
+                @Html.Partial("_AddComment", Model.AddComment)
+            }
+        }
+    </div>
+</div>

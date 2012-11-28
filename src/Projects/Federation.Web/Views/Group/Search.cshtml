@@ -1,0 +1,26 @@
+﻿@using Federation.Web.ViewModels
+@model GroupSearchViewModel
+@{
+    ViewBag.Title = "Поиск по теме";
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.GroupId, NavigationBoxType.Group))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title <i>@Model.Tag</i></a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        @Html.Partial("_Feed", Model.Feed)
+    </div>
+</div>

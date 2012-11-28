@@ -1,0 +1,45 @@
+﻿@using Federation.Web.ViewModels
+@model object
+@{
+    ViewBag.Title = "Цели системы Демократия2";
+}
+
+@Html.Partial("_MainMenu")
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @if (!Request.IsAuthenticated)
+    {
+        <div class="signin">
+            @Html.Partial("_SignIn", new SignInViewModel())
+        </div>
+    }
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <div class="tableanounce" id="tableanounce_closest">            <div class="icon"></div>            <div class="title">
+                <a name="closest">
+                    <h2>Ближайшие цели системы</h2>
+                </a>
+            </div>            <div class="anounce">                <p></p>                <p></p>            </div>        </div>        <div class="tableanounce" id="tableanounce_years">            <div class="icon"></div>            <div class="title">
+                <a name="years">
+                    <h2>Цели системы на 2-3 года</h2>
+                </a>
+            </div>            <div class="anounce">                <p></p>            </div>        </div>        <div class="tableanounce" id="tableanounce_far">            <div class="icon"></div>            <div class="title">
+                <a name="far">
+                    <h2>Далеко идущие планы</h2>
+                </a>
+            </div>            <div class="anounce">                <p></p>                <p></p>            </div>        </div>
+    </div>
+</div>

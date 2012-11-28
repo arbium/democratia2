@@ -1,0 +1,44 @@
+﻿@using Federation.Web.ViewModels
+@model UserPetitionSignersViewModel
+@{
+    ViewBag.Title = "Подписавшие петицию";
+}
+
+<style type="text/css">
+    .signer {
+        margin-bottom: 5px;
+        overflow: auto;
+    }
+
+    .signer > h3 {
+        display: inline-block;
+    }
+</style>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.AuthorId, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <h2>@Model.PetitionTitle</h2>
+        @foreach (var signer in Model.Signers)
+        {
+            <div class="signer">
+                <img src="@signer.Avatar&w=30&h=40" alt="Фото" />
+                <h3>@Html.ActionLink(signer.Name, "index", new { id = signer.Id })</h3>
+            </div>            
+        }
+    </div>
+</div>

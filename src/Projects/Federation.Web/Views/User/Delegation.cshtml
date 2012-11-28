@@ -1,0 +1,148 @@
+﻿@using Federation.Web.ViewModels
+@using Federation.Core
+@model UserDelegationViewModel
+@{
+    ViewBag.Title = "Делегирование";
+}
+<div class="layout_pageheader">
+</div>
+<div class="layout_sidemenu">
+     @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(@Model.Expert.UserId, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li><a class="back">◄</a> </li>
+            <li><a class="selected">@ViewBag.Title</a> </li>
+        </ul>
+        <div class="lighttabs_border">
+        </div>
+    </div>
+    <div class="body">
+        @using (Html.BeginForm())
+        {
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.GroupUrl)
+            <div class="content_helper_control">
+                <img src="@Model.GroupLogo&w=15&h=20" alt="лого" />
+                <span>@Model.GroupName</span>
+            </div>
+            <div class="content_department">
+                <div style="overflow: auto">
+                    <a class="link" style="float: left; margin: 0 10px 8px 0" href="@Url.Action("index", "user", new { id = Model.Expert.UserId })">
+                        <img src="@Model.Expert.Avatar&w=150&h=180" alt="лого" />
+                    </a>
+                    @Html.ActionLink(Model.Expert.Name, "index", "user", new { id = Model.Expert.UserId }, new { style = "font-size: 16px; text-decoration: none" })
+                    <p>
+                        <i>@Model.Expert.Info</i>
+                    </p>
+                </div>
+                <div class="input_block separator">
+                </div>
+            </div>
+            <div class="content_helper_control">
+                <span>Экспертные темы</span>
+            </div>
+            <div class="content_department">
+                @if (Model.AnonymouseTags.Count > 0)
+                {
+                    <div class="delegation_list">
+                        @foreach (var tag in Model.AnonymouseTags)
+                        {
+                            <div class="delegation_item">
+                                <div style="overflow: auto; margin: 10px 0 0 0;">
+                                    <h2>@tag.Title</h2>
+                                </div>
+                                <div style="overflow: auto;">
+                                    <p style="margin: 0 0 0 0;">@tag.Description</p>
+                                </div>
+                                <div style="float: right;">
+                                    <p style="margin: 0 0 0 0; font-size: 12px; line-height: 24px;" class="grey">
+                                        <img style="float: left; height: 24px; margin: 0 3px 0 0;" src="/Resources/themes/base/images/votings.png" />@DeclinationService.OfNumber(@Model.VotersCountForTag[tag.Id], "человек", "человека", "человек")
+                                        (@(Math.Round(Model.VotersCountForTag[tag.Id] * 100 / (float)Model.GroupMemberCount, 2).ToString("F"))%)</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                @if (Model.DisabledTags.Count > 0) {
+                <p class="grey">
+                    Тэги, по которым вы оба являетесь экспертами:</p>
+                <div class="delegation_list">
+                    @foreach (TagViewModel tag in Model.DisabledTags)
+                    {
+                        <div class="delegation_item">
+                            <div class="checkbox">
+                                <img alt="невозможно" title="Вы не можете делегировать свой голос по этой теме. Вы сами являетесь в ней экспертом!" class="disabled" src="@RoutesHelper.CurrentThemeFolder/images/_1px.png" />
+                            </div>
+                            <div style="overflow: auto; margin: 10px 0 0 0;">
+                                <h2>@tag.Title</h2>
+                            </div>
+                            <div style="overflow: auto;">
+                                <p style="margin: 0 0 0 0;">@tag.Description</p>
+                            </div>
+                            <div style="float: right;">
+                                <p style="margin: 0 0 0 0; font-size: 12px; line-height: 24px;" class="grey">
+                                    <img style="float: left; height: 24px; margin: 0 3px 0 0;" src="/Resources/themes/base/images/votings.png" />@DeclinationService.OfNumber(@Model.VotersCountForTag[tag.Id], "человек", "человека", "человек")
+                                    (@(Math.Round(Model.VotersCountForTag[tag.Id] * 100 / (float)Model.GroupMemberCount, 2).ToString("F"))%)</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+                } 
+                @if (Model.CheckedTags.Count > 0) {
+                <p class="grey">
+                    Тэги, по которым вы делегировали эксперту свой голос:</p>
+                <div class="delegation_list">
+                    @foreach (TagViewModel tag in Model.CheckedTags)
+                    {
+                        <div class="delegation_item">
+                            <div class="checkbox">
+                                <a href="@Url.Action("undelegate", "user", new { id = tag.Id })">
+                                    <img alt="делегирован" class="checked" src="@RoutesHelper.CurrentThemeFolder/images/_1px.png" /></a>
+                            </div>
+                            <div style="overflow: auto; margin: 10px 0 0 0;">
+                                <h2>@tag.Title</h2>
+                            </div>
+                            <div style="overflow: auto;">
+                                <p style="margin: 0 0 0 0;">@tag.Description</p>
+                            </div>
+                            <div style="float: right;">
+                                <p style="margin: 0 0 0 0; font-size: 12px; line-height: 24px;" class="grey">
+                                    <img style="float: left; height: 24px; margin: 0 3px 0 0;" src="/Resources/themes/base/images/votings.png" />@DeclinationService.OfNumber(@Model.VotersCountForTag[tag.Id], "человек", "человека", "человек")
+                                    (@(Math.Round(Model.VotersCountForTag[tag.Id] * 100 / (float)Model.GroupMemberCount, 2).ToString("F"))%)</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+                } 
+                @if (Model.NotCheckedTags.Count > 0) {
+                <p class="grey">
+                    Выберите тэги, по которым вы хотите делегировать свой голос эксперту:</p>
+                <div class="delegation_list">
+                    @foreach (TagViewModel tag in Model.NotCheckedTags)
+                    {
+                        <div class="delegation_item">
+                            <div class="checkbox">
+                                <a href="@Url.Action("delegate", "user", new { id = Model.Expert.Id, tagId = tag.Id })">
+                                    <img alt="делегировать" src="@RoutesHelper.CurrentThemeFolder/images/_1px.png" /></a>
+                            </div>
+                            <div style="overflow: auto; margin: 10px 0 0 0;">
+                                <h2>@tag.Title</h2>
+                            </div>
+                            <div style="overflow: auto;">
+                                <p style="margin: 0 0 0 0;">@tag.Description</p>
+                            </div>
+                            <div style="float: right;">
+                                <p style="margin: 0 0 0 0; font-size: 12px; line-height: 24px;" class="grey">
+                                    <img style="float: left; height: 24px; margin: 0 3px 0 0;" src="/Resources/themes/base/images/votings.png" />@DeclinationService.OfNumber(@Model.VotersCountForTag[tag.Id], "человек", "человека", "человек")
+                                    (@(Math.Round(Model.VotersCountForTag[tag.Id] * 100 / (float)Model.GroupMemberCount, 2).ToString("F"))%)</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+                }
+            </div>
+        }
+    </div>
+</div>

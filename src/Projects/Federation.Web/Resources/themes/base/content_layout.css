@@ -1,0 +1,52 @@
+﻿/* Лэйаутинг страниц */
+/* Общий блок */
+.layout_pageheader
+{
+    padding: 0px 0px 20px 0;
+    
+}
+
+/* Меню с элементами управления */
+.layout_sidemenu
+{
+    width:300px;
+    float:right;
+}
+
+/* Блок основного контента */
+.layout_content
+{
+    margin-right: 340px;
+}
+
+
+
+.layout_content .header
+{    
+    
+    margin-bottom:5px;
+}
+
+.layout_content .header.underlined
+{    
+    border-bottom: 1px solid #DDE2E7;
+}
+
+.layout_content .header .title
+{
+}
+
+.layout_content .header .title h1 {
+    float:left;
+
+    font-size: 24px;
+    line-height: 32px;
+}
+
+.layout_content .path 
+{
+    padding:0px;
+    margin:0px;
+    color: #aaaaaa;
+    font-size: 14px;    
+}

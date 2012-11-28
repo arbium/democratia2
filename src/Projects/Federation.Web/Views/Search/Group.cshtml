@@ -1,0 +1,139 @@
+﻿@using Federation.Web.ViewModels
+@model SearchIndexViewModel
+@{
+    ViewBag.Title = "Поиск по сайту";
+}
+
+<script src="../../Resources/scripts/jquery.highlight-3.js" type="text/javascript"></script>
+
+<style type="text/css">
+    .search-result {
+        padding-top: 5px;
+        padding-bottom: 7px;
+        overflow: auto;
+        border-top: whitesmoke solid 1px;
+        border-bottom: whitesmoke solid 1px;
+    }
+
+    .search-result a {
+        text-decoration: none;
+    }
+
+    .search-result .image {
+        float: left;
+        margin-right: 7px;
+    }
+
+    .search-result .title {
+        font-size: 1.1em;
+    }
+
+    .search-result .text {
+        margin: 3px 0;
+    }
+    .search-result .text > a {
+        color: #111;
+    }
+
+    .search-result .feedlabels {
+        font-size: .9em;
+    }
+    .search-result .feedlabels > a {
+        margin-right: 7px;
+    }
+
+    .highlight {
+        background-color: yellow;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        var query = "@Model.Query";
+        if (query) {
+            var querySplit = query.split(' ');
+            $.each(querySplit, function (index, value) {
+                $(".search-result").highlight(value);
+            });
+        }
+    });
+</script>
+
+@helper SearchResult(IEnumerable<SearchIndex_ResultViewModel> results)
+{
+    foreach (var result in results)
+    {
+        <div class="search-result">
+            @if (!string.IsNullOrEmpty(result.Image))
+            {
+                <div class="image">
+                    <img src="@result.Image&w=48&h=64" alt="изображение" />
+                </div>
+            }
+            <div>
+                <b class="title">
+                    <a href="@result.Url">@result.Title</a>
+                </b>
+                <span class="grey">(@result.Type)</span>
+                <div class="text">
+                    <a href="@result.Url">@result.Text</a>
+                </div>
+                @if (result.Tags.Count != 0)
+                {
+                    <div class="feedlabels">
+                        @foreach (var tag in result.Tags)
+                        {
+                            <a href="@Url.Action("index", new { id = tag.Title })">@tag.Title</a>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    <div class="form_help">
+        <h3>
+            Ничего не нашлось?
+        </h3>
+        <p>
+            @Html.ActionLink("Создать новую группу", "creategroup", "user")
+        </p>
+    </div>    
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        @if (string.IsNullOrWhiteSpace(Model.Query))
+        {
+            using (Html.BeginForm("index", "search", FormMethod.Get))
+            {
+                <p>
+                    <input name="id" value="@Model.Query" class="searchboxid-replace" type="text" placeholder="Искать на этом сайте" />
+                    <input class="searchbuttonid-replace" type="image" src="@RoutesHelper.CurrentThemeFolder/images/searchbutton.png" />
+                </p>
+            }
+        }
+        else
+        {
+            <h2>Группы</h2>
+            if (Model.Groups.Any())
+            {
+                @SearchResult(Model.Groups)                
+            }
+            else
+            {
+                <h3>К сожалению по вашему запросу ничего не найдено</h3>
+            }
+        }
+    </div>
+</div>

@@ -1,0 +1,229 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model UserDraftsViewModel
+@{
+    ViewBag.Title = "Ваши черновики";
+
+    const string confirmPublishMessage = "Вы действительно хотите опубликовать запись?";
+    const string confirmDeleteMessage = "Вы действительно хотите удалить запись?";
+}
+
+<style>
+    .blog_note.draft {
+        border: 1px solid #FFAAAA;
+        padding: 10px;
+    }
+</style>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.AuthorId, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body" id="user_drafts">
+        <div class="otheruser_profile_blog">
+                <h2>Посты</h2>
+                @if (Model.Posts.Count > 0)
+                {  
+                    <div class="blog_notes_list">
+                        @foreach (var post in Model.Posts)
+                        {
+                            <div class="blog_note draft">
+                                <div class="title">
+                                    <h2>@Html.ActionLink(post.Title, "post", post.Controller, new { id = post.Id }, null)</h2>
+                                </div>
+                                <div>
+                                    <p>@post.Summary</p>
+                                </div>
+                                @if (post.Tags.Count != 0)
+                                {
+                                    <div class="labels">
+                                        @foreach (var label in post.Tags)
+                                        {
+                                            @Html.ActionLink(label.Title, "tag", "search", new {id = label.Title}, null)<text></text>
+                                        }
+                                    </div>
+                                }
+                                <div class="controls">
+                                    <div class="controls_design">
+                                        <div class="time">
+                                            <a href="@Url.Action("post", post.Controller, new { id = post.Id })">#</a> 
+                                            @post.PostDate.ToUserTime(UserContext.Current).ToString("d MMMM yyyy, HH:mm")
+                                        </div>
+                                        <div class="lastlinks">
+                                            @Html.ConfirmActionLink("Опубликовать", confirmPublishMessage, Url.Action("publish", "content", new { id = post.Id }))
+                                            @Html.ActionLink("Редактировать", "editpost", post.Controller, new { id = post.Id }, null)
+                                            @Html.ConfirmActionLink("Удалить", confirmDeleteMessage, Url.Action("delete", "content", new { id = post.Id }))
+                                        </div>
+                                    </div>
+                                    <!--controls_design-->
+                                </div>
+                                <!--controls-->
+                            </div>
+                            <!--blog_note-->
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="infospace_container">
+                        <h3>У вас нет черновиков постов</h3>
+                    </div>
+                }
+            
+                <h2>Опросы</h2>
+                @if (Model.Surveys.Count > 0)
+                {  
+                    <div class="blog_notes_list">
+                        @foreach (var survey in Model.Surveys)
+                        {
+                            <div class="blog_note draft">
+                                <div class="title">
+                                    <h2>@Html.ActionLink(survey.Title, "survey", "group", new { id = survey.Id }, null)</h2>
+                                </div>
+                                <div>
+                                    <p>@survey.Summary</p>
+                                </div>
+                                @if (survey.Tags.Count != 0)
+                                {
+                                    <div class="labels">
+                                        @foreach (var label in survey.Tags)
+                                        {
+                                            @Html.ActionLink(label.Title, "tag", "search", new {id = label.Title}, null)<text></text>
+                                        }
+                                    </div>
+                                }
+                                <div class="controls">
+                                    <div class="controls_design">
+                                        <div class="time">
+                                            <a href="@Url.Action("survey", "group", new { id = survey.Id })">#</a> @survey.PostDate.ToUserTime(UserContext.Current).ToString("d MMMM yyyy, HH:mm")
+                                        </div>
+                                        <div class="lastlinks">
+                                            @Html.ConfirmActionLink("Опубликовать", confirmPublishMessage, Url.Action("publish", "content", new { id = survey.Id }))
+                                            @Html.ActionLink("Редактировать", "edit", "content", new { id = survey.Id }, null)
+                                            @Html.ConfirmActionLink("Удалить", confirmDeleteMessage, Url.Action("delete", "content", new { id = survey.Id }))
+                                        </div>
+                                    </div>
+                                    <!--controls_design-->
+                                </div>
+                                <!--controls-->
+                            </div>
+                            <!--blog_note-->
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="infospace_container">
+                        <h3>У вас нет черновиков опросов</h3>
+                    </div>
+                }
+
+                <h2>Петиции</h2>
+                @if (Model.Petitions.Count > 0)
+                {  
+                    <div class="blog_notes_list">
+                        @foreach (var petition in Model.Petitions)
+                        {
+                            <div class="blog_note draft">
+                                <div class="title">
+                                    <h2>
+                                        @Html.ActionLink(petition.Title, "petition", petition.Controller, new { id = petition.Id }, null)
+                                    </h2>
+                                    <span class="grey">
+                                        @petition.Privacy
+                                        @if (petition.GroupId.HasValue)
+                                        {
+                                            <text>← @Html.ActionLink(petition.GroupName, "index", "group", new { id = petition.GroupUrl }, null)</text>
+                                        }
+                                    </span>
+                                </div>
+                                <div>
+                                    @petition.Summary
+                                </div>
+                                @if (petition.Tags.Count != 0)
+                                {
+                                    <div class="labels">
+                                        @foreach (var label in petition.Tags)
+                                        {
+                                            @Html.ActionLink(label.Title, "tag", "search", new {id = label.Title}, null)<text></text>
+                                        }
+                                    </div>
+                                }
+                                <div class="controls">
+                                    <div class="controls_design">
+                                        <div class="time">
+                                            <a href="@Url.Action("petition", petition.Controller, new { id = petition.Id })">#</a> 
+                                            @petition.CreationDate.ToUserTime(UserContext.Current).ToString("d MMMM yyyy, HH:mm")
+                                        </div>
+                                        <div class="lastlinks">
+                                            @Html.ActionLink("Управление соавторами", "editpetitioncoauthors", petition.Controller, new { id = petition.Id }, null)
+                                            @Html.ConfirmActionLink("Опубликовать", confirmPublishMessage, Url.Action("publishpetition", "voting", new { id = petition.Id }))
+                                            @Html.ActionLink("Редактировать", "editpetition", petition.Controller, new { id = petition.Id }, null)
+                                            @Html.ConfirmActionLink("Удалить", confirmDeleteMessage, Url.Action("delete", "content", new { id = petition.Id }))
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="infospace_container">
+                        <h3>У вас нет черновиков петиций</h3>
+                    </div>
+                }
+
+                <h2>Соавторство в петициях</h2>
+                @if (Model.CoauthorPetitions.Count > 0)
+                {  
+                    <div class="blog_notes_list">
+                        @foreach (var petition in Model.CoauthorPetitions)
+                        {
+                            <div class="blog_note draft">
+                                <div class="title">
+                                    <h2>
+                                        @Html.ActionLink(petition.Title, "petition", petition.Controller, new { id = petition.Id }, null)
+                                    </h2>
+                                    <span class="grey">
+                                        @petition.Privacy
+                                        @if (petition.GroupId.HasValue)
+                                        {
+                                            <text>← @Html.ActionLink(petition.GroupName, "index", "group", new { id = petition.GroupUrl }, null)</text>
+                                        }
+                                    </span>
+                                </div>
+                                <div>
+                                    @petition.Summary
+                                </div>
+                                @if (petition.Tags.Count != 0)
+                                {
+                                    <div class="labels">
+                                        @foreach (var label in petition.Tags)
+                                        {
+                                            @Html.ActionLink(label.Title, "tag", "search", new {id = label.Title}, null)<text></text>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="infospace_container">
+                        <h3>Нет черновиков петиций с вашим соавторством</h3>
+                    </div>
+                }
+        </div>
+    </div>
+</div>

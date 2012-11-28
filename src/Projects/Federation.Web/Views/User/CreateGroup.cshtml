@@ -1,0 +1,132 @@
+﻿@using Federation.Web.ViewModels
+@model UserCreateGroupViewModel
+@{
+    ViewBag.Title = "Создание группы";
+
+    var userName = UserContext.Current.DisplayName;
+    var userId = UserContext.Current.Id;
+}
+
+<script src="../../Resources/scripts/jquery.validate.min.js" type="text/javascript"></script>
+
+<script src="../../Resources/redactor/redactor.js" type="text/javascript"></script>
+<script src="../../Resources/redactor/langs/ru.js" type="text/javascript"></script>
+<link href="../../Resources/redactor/css/redactor.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Summary").redactor({
+            buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent'],
+            lang: 'ru'
+        });
+    });
+</script>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    <div class="form_help">
+        <h3>
+            Создание группы<br/>
+            @Html.ActionLink(userName, "index", "group", new { id = userId })
+        </h3>
+        <p><b>Человеко-понятный Url (ЧПУ)</b> - идентификатор группы, который будет отображен в пути бразуера при просмотре группы. ЧПУ может состоять только из букв, цифр или нижнего подчеркивания.</p>
+        <p>
+            <b>Модераторы группы</b> - люди модерирующие публикации в группе, настраивающее ее поведение и следящие за соблюдением правил внутри группы.<br/>
+            Минимальное количество модераторов 3.
+        </p>
+    </div>
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">Создать группу</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <div class="styled_form">
+            @if (!string.IsNullOrEmpty(ViewBag.ValidationExceptionText))
+            {
+                <div class="validation_block">
+                    @ViewBag.ValidationExceptionText
+                </div>
+            }
+            @using (Html.BeginForm("creategroup", "user", FormMethod.Post, new { id = "group-form", enctype = "multipart/form-data" }))
+            {
+                <div class="form_block">
+                    <div class="input_block">
+                        <div class="title">                    
+                            @Html.LabelFor(m => m.Name)<span class="required">*</span>
+                        </div>
+                        @Html.TextBoxFor(m => m.Name, new { autofocus = "" })
+                        @Html.ValidationMessageFor(m => m.Name)
+                    </div>
+                    <div class="input_block">
+                        <div class="title">                    
+                            @Html.LabelFor(m => m.Label)
+                        </div>
+                        @Html.TextBoxFor(m => m.Label, new { autofocus = "" })
+                        @Html.ValidationMessageFor(m => m.Label)
+                    </div>
+                    <div class="input_block separator">
+                        <div class="title">Логотип</div>
+                        <input type="file" id="Logo" name="logo" class="FForm_inputField" />
+                    </div>                        
+                    <div class="input_block">
+                        <div class="title">Либо укажите ссылку:</div>
+                        @Html.TextBoxFor(x => x.LogoUrl, new { Class = "FForm_inputField" })
+                    </div>
+                    <div class="input_block redactor separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.Summary)
+                        </div>                    
+                        @Html.TextAreaFor(m => m.Summary)
+                        @Html.ValidationMessageFor(m => m.Summary)
+                    </div>
+                    <div class="input_block">
+                        <div class="title">
+                            @Html.LabelFor(m => m.Category)
+                        </div>
+                        @Html.DropDownListFor(m => m.Category, Model.CategoryList)
+                    </div>
+                    <div class="input_block separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.ModeratorsCount)<span class="required">*</span>
+                        </div>                    
+                        @Html.TextBoxFor(m => m.ModeratorsCount)
+                        @Html.ValidationMessageFor(m => m.ModeratorsCount)
+                    </div>
+                    <div class="input_block separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.ElectionFrequency)<span class="required">*</span>
+                        </div>                    
+                        @Html.TextBoxFor(m => m.ElectionFrequency)
+                        @Html.ValidationMessageFor(m => m.ElectionFrequency)
+                    </div>
+                    <div class="input_block">
+                        <div class="title">
+                            @Html.LabelFor(m => m.PollQuorum)<span class="required">*</span>
+                        </div>                    
+                        @Html.TextBoxFor(m => m.PollQuorum)
+                        @Html.ValidationMessageFor(m => m.PollQuorum)
+                    </div>
+                    <div class="input_block">
+                        <div class="title">
+                            @Html.LabelFor(m => m.ElectionQuorum)<span class="required">*</span>
+                        </div>                    
+                        @Html.TextBoxFor(m => m.ElectionQuorum)
+                        @Html.ValidationMessageFor(m => m.ElectionQuorum)
+                    </div>
+                </div>
+                <div class="submit_block">
+                    <input type="submit" value="Создать" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

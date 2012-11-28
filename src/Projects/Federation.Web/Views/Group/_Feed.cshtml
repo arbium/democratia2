@@ -1,0 +1,189 @@
+﻿@using Federation.Core
+@using Federation.Web
+@using Federation.Web.ViewModels
+@model _ContentFeedViewModel
+           
+<script src="../../Resources/scripts/feedpaginator.js" type="text/javascript"></script>
+
+<style type="text/css">
+    div.hide.record {
+        display: none;        
+    }
+
+    div.expand {
+        margin: 15px 0;
+        padding: 5px;
+        color: gray;
+        display: none;
+        border-top: 1px solid whitesmoke;
+        border-bottom: 1px solid whitesmoke;
+    }
+    div.expand > a {
+        cursor: pointer;
+        text-decoration: none;
+        border-bottom: 1px dashed;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        $("div.expand").css("display", "block");
+
+        $("div.expand > a").click(function () {
+            $(this).parent().css("display", "none");
+            $("#item" + $(this).attr("item")).removeClass("hide");
+        });
+    })
+</script>
+
+<div class="contentfeed common">
+    @{
+        var itemN = 0;        
+        foreach (var record in Model.FeedContent)
+        {
+            itemN++;
+            var hide = Request.IsAuthenticated && record.AuthorId.HasValue && UserContext.Current.BlackList.Contains(record.AuthorId.Value);
+            
+            if (hide)
+            {
+                <div class="expand">
+                    Автор контента в черном списке.
+                    <a item="@itemN">показать</a>
+                </div>
+            }            
+            <div id="@("item" + itemN)" class="record wide @(hide ? "hide" : string.Empty) @record.ContentClass @(record.IsGroupAttached ? "attached" : string.Empty) @(record.IsFinished ? "finished" : "notfinished")">
+                <div class="corner"><div class="img"></div></div>
+                <div class="main">
+                    @if (record.AuthorId.HasValue)
+                    {
+                        if (!record.IsGroupAttached)
+                        {
+                            <div class="author">
+                                <a href="@Url.Action("index", "user", new { id = record.AuthorId }, null)">
+                                    <img class="icon" src="@record.AuthorAvatar&w=48&h=64" alt="" />
+                                </a>
+                                <div class="name">
+                                    <a class="username" href="@Url.Action("index", "user", new { id = record.AuthorId }, null)">
+                                        <b>@record.AuthorSurname</b>
+                                        <br />
+                                        @record.AuthorFirstName
+                                        @record.AuthorPatronymic
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="author small">
+                                <a href="@Url.Action("index", "user", new { id = record.AuthorId }, null)">
+                                    <img class="icon" src="@record.AuthorAvatar&w=48&h=64" alt="" />
+                                </a>
+                            </div>
+                        }
+                    }
+                    <div class="group">
+                        <span>@record.ContentTypeName</span>
+                        <p class="alert">@record.ContentStateAlert</p>
+                    </div>
+                    <div class="content">                                 
+                        <h3 class="title">
+                            <a href="@record.Url">@record.Title</a>
+                        </h3>      
+                        @if (!record.IsGroupAttached)
+                        {     
+                            <div class="summary">
+                                <a href="@record.Url">@Html.Raw(record.Summary)</a>
+                            </div>
+                        }
+                    </div>
+                </div>	    
+                <div class="control">
+                    <div class="comments">
+                        @if (record.CommentsCountNum > 0)
+                        {
+                            <a href="@record.Url#comments" title="перейти к комментариям">@record.CommentsCountNum</a>
+                        }
+                        else
+                        { 
+                            <a class="nocomments" href="@record.Url#comments" title="Добавить комментарий"><span></span></a>
+                        }
+                    </div>
+                    @if (record.ContentType == ContentViewType.Poll)
+                    {
+                        <div class="date">
+                            @record.StartDate.ToUserTime(UserContext.Current).ToString("d MMM yyyy")
+                            @if(record.EndDate.HasValue)
+                            {
+                               <text> - </text>
+                               @record.EndDate.Value.ToUserTime(UserContext.Current).ToString("d MMM yyyy")
+                            }
+                        </div>
+                        if (record.Vote.HasValue)
+                        {
+                            <div>
+                                @switch (record.Vote.Value)
+                                {
+                                    case VoteOption.NotVoted:
+                                        <span style="color: orange">Вы не голосовали</span>
+                                        break;
+
+                                    case VoteOption.Yes:
+                                        <text>Вы проголосовали <span style="color: forestgreen">За</span></text>
+                                        break;
+
+                                    case VoteOption.No:
+                                        <text>Вы проголосовали <span style="color: crimson">Против</span></text>
+                                        break;
+
+                                    case VoteOption.Refrained:
+                                        <text>Вы <span style="color: mediumblue">Воздержались</span></text>
+                                        break;
+                                }
+                            </div>
+                        }
+                        if (record.IsFinished)
+                        {
+                            <div>
+                                Завершено.
+                                @switch (record.Result)
+                                {
+                                    case VoteOption.NotVoted:
+                                        <span style="color: orange">Провалено</span>
+                                        break;
+
+                                    case VoteOption.Yes:
+                                        <text>Большинство проголосовало <span style="color: forestgreen">За</span></text>
+                                        break;
+
+                                    case VoteOption.No:
+                                        <text>Большинство проголосовало <span style="color: crimson">Против</span></text>
+                                        break;
+
+                                    case VoteOption.Refrained:
+                                        <text>Большинство <span style="color: mediumblue">Воздержалось</span></text>
+                                        break;
+                                }
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="date">@record.PostDate.ToUserTime(UserContext.Current).ToString("dd MMMM yyyy, HH:mm")</div>
+                    }
+                    @if (record.Tags.Count > 0)
+                    {
+                        <div class="feedlabels">
+                            <div class="labels">
+                                @foreach (var label in record.Tags)
+                                {
+                                    @Html.ActionLink(label.Title, "search", "group", new { Id = record.GroupUrl, tag = label.Title }, null)
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+    @Html.PageLoadButton(Model.FeedContent)
+</div>

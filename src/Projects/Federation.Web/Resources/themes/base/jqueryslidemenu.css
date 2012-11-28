@@ -1,0 +1,201 @@
+.servicebuttonmenu { 
+	float: right; 
+	border-radius: 4px;
+	border: #dde2e7 1px solid;
+}
+
+.lighttabs_container .servicebuttonmenu
+{
+    position:relative;
+    top:4px;
+}
+
+
+.servicebuttonmenu > ul > li > a, 
+.servicebuttonmenu > ul > li > input
+{
+	background: url(images/buttcalc/button_inter.png) right no-repeat, url(images/buttcalc/button_bg.png) repeat-x;
+}
+.servicebuttonmenu > ul > li:last-child > a,
+.servicebuttonmenu > ul > li:last-child > input
+ {
+	background: url(images/buttcalc/button_bg.png) repeat-x;
+}
+.servicebuttonmenu > ul > li > a:hover,
+.servicebuttonmenu > ul > li > a:active 
+{
+	/*background: url(images/buttcalc/button_inter.png) right no-repeat, url(images/buttcalc/button_bg.png) 0 10px repeat-x;*/
+	color: #4D6582;
+	cursor: pointer;
+}
+.servicebuttonmenu > ul > li:last-child > a:hover,
+.servicebuttonmenu > ul > li:last-child > a:active {
+	background: url(images/buttcalc/button_bg.png) repeat-x;
+}
+
+.servicebuttonmenu > ul > li > input:hover,
+.servicebuttonmenu > ul > li > input:active 
+{
+    color: #000;
+	cursor: pointer;
+}
+.servicemenu > a img,
+.servicemenu > a:link img,
+.servicemenu > a:visited img 
+{
+	padding: 4px 0px;
+	opacity: 0.5;
+}
+.servicemenu > a:hover img,
+.servicemenu > a:active img 
+{
+	padding: 4px 0px;
+	opacity: 1;
+}
+
+.servicemenu ul
+{
+    visibility:hidden;
+    display:none;
+}
+
+
+/*jQuerySlideMenu*/
+
+.jqueryslidemenu {
+	margin: 0;
+}
+
+.jqueryslidemenu .separator {
+    border-bottom: 1px solid gainsboro;
+}
+
+.jqueryslidemenu ul{
+	margin: 0;
+	padding: 0;
+	position: relative; 
+	list-style: none; 
+	min-width: 99%;
+}
+.servicebuttonmenu {
+
+}
+
+
+/*Top level list items*/
+.jqueryslidemenu .servicemenu ul>li{
+	position: relative;
+	display: inline;
+	float: left;
+	text-align: right;
+}
+
+.jqueryslidemenu ul>li{
+	display: inline;
+	float: left;
+	text-align: right;
+}
+
+
+.jqueryslidemenu li { 
+	margin: 0; padding: 0; text-decoration: none;
+}
+.jqueryslidemenu ul li a {
+	display: block;
+}
+
+
+/*Top level menu link items style*/
+.jqueryslidemenu ul>li>a {
+	white-space: nowrap;
+	display: block;
+	font-size: 13px; 
+	font-weight: normal;
+	color: #8899AA;
+	text-decoration: none;
+	padding: 0px 5px;
+	line-height: 23px;
+	
+}
+.jqueryslidemenu ul>li>a:hover,
+.jqueryslidemenu ul>li>a:active 
+{
+    color: #4d6582;
+}
+
+.jqueryslidemenu ul>li>input{
+	padding: 0px 5px;
+	line-height: 23px;
+	height: 23px;	
+	color: #555;
+	border: 0px;
+	background-color:transparent;
+	white-space: nowrap;
+	display: block;
+	font-size: 13px; 
+	font-weight: normal;
+	text-decoration: none;
+}
+
+
+.jqueryslidemenu ul>li.over>a {
+	z-index: 999;
+	position: relative;
+}
+
+
+
+
+/*1st sub level menu*/
+.jqueryslidemenu ul li ul{
+	background: #edeff1;
+	border: #dde2e7 1px solid;
+	position: absolute; left: 0;
+	top: 23px;
+	display: block;/* visibility: hidden;*/
+	z-index: 998;
+	
+}
+
+/*Sub level menu list items (undo style from Top level List Items)*/
+.jqueryslidemenu ul li ul li{
+	display: list-item;
+	float: none;
+	width: 100%;
+}
+
+/* additions */
+.jqueryslidemenu ul li ul li a,
+.jqueryslidemenu ul li ul li a:link,
+.jqueryslidemenu ul li ul li a:visited { 
+	font-size: 12px;
+	font-style: normal;    
+}
+
+.jqueryslidemenu ul li ul li a:hover,
+.jqueryslidemenu ul li ul li a:active { 
+	background: #FFF;
+	color: #000;
+}
+
+/*All subsequent sub menu levels vertical offset after 1st level sub menu */
+.jqueryslidemenu ul li ul li ul{
+	top: 0px;
+}
+* html .jqueryslidemenu ul li a{  /*IE6 hack to get sub menu links to behave correctly*/
+	display: inline-block;
+}
+
+
+/* ######### CSS classes applied to down and right arrow images  ######### */
+/*
+.downarrowclass{
+	width: 1px; height: 1px;
+	display: none;
+}
+.rightarrowclass{
+	position: absolute;
+	top: 6px;
+	right: 5px;
+}
+*/

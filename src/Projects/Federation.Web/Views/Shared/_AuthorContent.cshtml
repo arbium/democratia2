@@ -1,0 +1,20 @@
+﻿@using Federation.Web.ViewModels
+@model _AuthorContentViewModel
+
+@if (Model.AuthorContent.Count > 0)
+{
+    <div class="recomended_content author">
+        <div class="content_helper_control">
+            <span>Другие публикации автора</span>
+        </div>
+        <div class="content_department">
+            @foreach (var item in Model.AuthorContent)
+            {
+                <div class="recomended_item">
+                    <span>@item.ContentType:</span>
+                    <a href="@item.Url">@item.Title</a>
+                </div>
+            }
+        </div>
+    </div>
+}

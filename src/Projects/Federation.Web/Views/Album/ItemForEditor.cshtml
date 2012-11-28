@@ -1,0 +1,70 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model AlbumItemViewModel
+@{
+    ViewBag.Title = "Альбом";
+}
+
+<style type="text/css">
+    .gray {
+        color: gray;
+    }
+</style>
+
+<script type="text/javascript">
+    function imgSelect(src, title, link) {
+        var alt = title != '' ? title : 'изображение';
+        parent.document.redactor.execCommand("inserthtml", "<a href='" + link + "' target='_blank'><img src='" + src + "' alt='" + alt + "' title='" + title + "' /></a>");
+        parent.document.redactor.modalClose();
+    }
+
+    function vidSelect(src) {
+        //parent.document.redactor.execCommand("inserthtml", "<iframe src='" + src + "' frameborder='0' width='320' height='195'></iframe>");
+        var embedCode =
+            "<object width='320' height='195'>" +
+        	    "<param name='movie' value='" + src + "'></param>" +
+	            "<param name='allowFullScreen' value='true'></param>" +
+	            "<param name='allowscriptaccess' value='always'></param>" +
+	            "<embed src='" + src + "' type='application/x-shockwave-flash' width='320' height='195' allowscriptaccess='always' allowfullscreen='true'></embed>" +
+            "</object>";
+        parent.document.redactor.execCommand("inserthtml", embedCode);
+        parent.document.redactor.modalClose();
+    }
+</script>
+
+<a href="@Url.Action("foreditor", "album", new { id = Model.AlbumId })">← Назад</a>
+
+<div>
+    <b><big>@Model.Title</big></b><br />
+    <div style="display: inline-block">
+        @switch (Model.Type)
+        {
+            case AlbumItemType.Image:
+                <a href="@Model.Src">
+                    <img src="@Model.Src&w=320&h=240" alt="@Model.Title" />
+                </a>
+                break;
+
+            case AlbumItemType.Video:
+                <iframe src="@Model.Src" frameborder="0" width="320" height="195"></iframe>
+                break;
+        }
+    </div>
+    <div style="display: inline-block; vertical-align: top">
+        @switch (Model.Type)
+        {
+            case AlbumItemType.Image:
+                <a href="#" onclick="imgSelect('@Model.Src&w=320&h=240', 
+                    '@Model.Title', '@Url.Action("item", "album", new { id = Model.Id })')"> [Выбрать] </a>
+                break;
+
+            case AlbumItemType.Video:
+                <a href="#" onclick="vidSelect('@Model.Src', '@Model.Title')"> [Выбрать] </a>
+                break;
+        }                
+    </div>
+    <div>
+        <span class="gray">Дата добавления: @Model.CreationDate.ToUserTime(UserContext.Current).ToString("d MMM yyyy")</span><br />
+        <div>@Model.Description</div>
+    </div>
+</div>

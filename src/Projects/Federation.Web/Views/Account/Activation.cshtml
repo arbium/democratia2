@@ -1,0 +1,140 @@
+﻿@using Federation.Web.ViewModels
+@model AccountActivationViewModel           
+@{
+    ViewBag.Title = "Активация аккаунта";
+    ViewBag.LayoutStyle = "layout_start";
+}
+
+@Html.Partial("_MainMenu")
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+        <div class="form_help">
+            <h3>Актуализация данных</h3>
+            <p>
+                В форме ниже введите номер своего телефона и нажмите "отправить SMS". 
+                <br />
+                Код, полученный в SMSке - введите в следующее поле "Код".
+            </p>
+            <p>
+                <a href="@Url.Action("smstrouble", "help")">Что делать, если SMS не приходит?</a>
+            </p>
+        </div>
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+            <div id="page_header">
+                <div class="title">
+                    <h1>
+                        Подтверждение телефона и почты
+                    </h1>
+                </div>
+                Вы успешно зарегистрировались! Теперь подтвердите Ваш номер телефона для активации аккаунта.
+            </div>
+            <div class="styled_form">
+                @if (!string.IsNullOrEmpty(ViewBag.ValidationExceptionText))
+                {
+                    <div class="validation_block">
+                        @ViewBag.ValidationExceptionText
+                    </div>
+                }
+                @using (Html.BeginForm())
+                {
+                    @Html.HiddenFor(x => x.CodeId)
+                    @Html.HiddenFor(x => x.ShowCode)
+                    @Html.HiddenFor(x => x.Id)
+                    <div class="form_block">
+                        <div class="input_block">
+                            <div class="title">Email аккаунта</div>
+                            @Html.DisplayTextFor(x => x.AccountMail)
+                            @Html.HiddenFor(m => m.AccountMail)
+                        </div>
+                        <div class="input_block">
+                            <div class="title">
+                                Email для рассылок<span class="required">*</span>
+                            </div>
+                            @if (!Model.ShowCode)
+                            {
+                                @Html.TextBoxFor(x => x.SubscribtionMail)
+                                @Html.ValidationMessageFor(m => m.SubscribtionMail)
+                            }
+                            else
+                            {
+                                <big>
+                                    @Html.DisplayTextFor(x => x.SubscribtionMail)
+                                </big>
+                                @Html.HiddenFor(x => x.SubscribtionMail)
+                            }
+                        </div>
+                        <div class="input_block separator">
+                            <div class="title">
+                                Мобильный телефон<span class="required">*</span>
+                            </div>
+                            @if (!Model.ShowCode)
+                            {
+                                @Html.TextBoxFor(x => x.Phone)
+                                @Html.ValidationMessageFor(m => m.Phone)
+                            }
+                            else
+                            {
+                                <big>
+                                    @Html.DisplayTextFor(x => x.Phone)
+                                </big>
+                                @Html.HiddenFor(x => x.Phone)
+                            }
+                        </div>
+                        @if (Model.ShowCode)
+                        {
+                            <div class="input_block">
+                                <div class="title">Код активации</div>
+                                @Html.TextBoxFor(x => x.Code)
+                                @Html.ValidationMessageFor(m => m.Code)
+                            </div>
+                        }
+                    </div>
+                    <div class="submit_block">
+                        @if (Model.ShowCode)
+                        {
+                            <input type="submit" value="Активировать" />
+                        }
+                        else
+                        {
+                            <input type="submit" value="Получить смс" />
+                        }                    
+                    </div>
+                }
+            </div>
+            <p>
+                <small>
+                    Если смс не пришло в течении 2х минут нажмите на кнопку "Выслать смс повторно".
+                    <br />
+                    В случае возникновения проблем обратитесь в службу технической поддержки.
+                </small>
+            </p>
+            <div class="styled_form">
+                @using (Html.BeginForm())
+                {
+                    @Html.HiddenFor(x => x.CodeId)
+                    @Html.HiddenFor(x => x.ShowCode)
+                    @Html.HiddenFor(x => x.Id)
+                    @Html.HiddenFor(m => m.AccountMail)
+                    @Html.HiddenFor(x => x.SubscribtionMail)
+                    @Html.HiddenFor(x => x.Phone)
+                    <div class="submit_block">
+                        <input type="submit" value="Выслать смс повторно" />
+                    </div>
+                }
+            </div>
+    </div>
+</div>

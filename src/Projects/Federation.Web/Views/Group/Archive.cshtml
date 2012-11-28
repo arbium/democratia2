@@ -1,0 +1,113 @@
+﻿@using System.Globalization
+@using Federation.Core
+@using Federation.Web.ViewModels
+@model GroupArchiveViewModel
+@{
+    ViewBag.Title = Model.GroupName;
+}
+
+<script type="text/javascript">
+    var counter = 0;
+    var clicks = 0;
+
+    $(function () {
+        $("input[type=checkbox]").click(function () {
+            clicks++;
+            setInterval(function () {
+                counter++;
+                if (counter > clicks)
+                    $("#filter-form").submit();
+            }, 777);
+        });
+    });
+</script>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    <div id="group-info">
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.GroupId, NavigationBoxType.Group))
+    </div>
+    @Html.Partial("_Calendar", Model.Calendar)
+    <div class="filter" style="margin: 5px">
+        @using (Html.BeginForm("archive", "group", FormMethod.Get, new { id = "filter-form" }))
+        {
+            @Html.Hidden("year")
+            @Html.Hidden("month")
+            @Html.Hidden("day")
+            <div style="float: right">
+                <input class="f_button" type="submit" value="Обновить" />
+            </div>
+            <div>
+                @Html.CheckBox("posts", Model.ContentType.Posts)
+                <label for="posts">Посты</label>
+                <br />
+                @Html.CheckBox("polls", Model.ContentType.Polls)
+                <label for="polls">Голосования</label>
+                <br />
+                @Html.CheckBox("petitions", Model.ContentType.Petitions)
+                <label for="petitions">Петиции</label>
+                <br />
+                @Html.CheckBox("elections", Model.ContentType.Elections)
+                <label for="elections">Выборы</label>
+            </div>
+        }
+    </div>
+</div>
+<div class="layout_content">
+     <div class="lighttabs_container">
+         <ul class="lighttabs">
+            <li>
+                <a class="selected">Архив</a>
+            </li>
+         </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <div style="font-style: italic">
+            @if (!Model.ContentType.IsSomethingChecked())
+            {
+                <text>Выберите тип контента</text>
+            }
+            else
+            {
+                <text>Показаны</text>
+                if (Model.ContentType.Posts)
+                {
+                    <b>посты</b>
+                }
+                if (Model.ContentType.Polls)
+                {
+                    <b>голосования</b>
+                }
+                if (Model.ContentType.Petitions)
+                {
+                    <b>петиции</b>
+                }
+                if (Model.ContentType.Elections)
+                {
+                    <b>выборы</b>
+                }
+                <text>за</text>
+                if (Model.Calendar.Day.HasValue && Model.Calendar.Month.HasValue && Model.Calendar.Year.HasValue)
+                {
+                    var date = new DateTime(Model.Calendar.Year.Value, Model.Calendar.Month.Value, Model.Calendar.Day.Value);
+                    <text>@date.ToString("d MMMM yyyy")</text>
+                }
+                else if (Model.Calendar.Month.HasValue && Model.Calendar.Year.HasValue)
+                {
+                    <text>@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Model.Calendar.Month.Value).ToLower() @Model.Calendar.Year</text>
+                }
+                else if (Model.Calendar.Year.HasValue)
+                {
+                    <text>@Model.Calendar.Year год</text>
+                }
+                else
+                {
+                    <text>всё время</text>
+                }
+            }
+            @Html.ActionLink("[сбросить фильтр]", "archive", new { id = Model.GroupUrl })
+        </div>
+        @Html.Partial("_Feed", Model.Feed)
+    </div>
+</div>

@@ -1,0 +1,104 @@
+﻿@using Federation.Web.ViewModels
+@model Group_FriendlyGroupsViewModel
+@{
+    var isModer = Request.IsAuthenticated && UserContext.Current.IsUserModeratorInGroup(Model.GroupId);
+}
+
+<style type="text/css">
+    .add-fg {
+        text-decoration: none !important;
+    }
+
+    .remove-fg {
+        display: none;
+    }
+    div:hover > .remove-fg {
+        display: inline;
+    }
+
+    #add-fg-form {
+        display: none;
+        margin-bottom: 7px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        $(".add-fg").each(function () {
+            $(this).attr("href", "#");
+        });
+
+        $(".add-fg").click(function () {
+            $("#add-fg-form").css("display", "block");
+        });
+
+        $("#add-fg-form input:button").click(function () {
+            if (confirm('Вы уверены?'))
+                $("#add-fg-form").submit();
+        });
+    })
+</script>
+
+@helper AddFgLink()
+{
+    <a href="@Url.Action("addfgform", new { id = Model.GroupUrl })" class="add-fg">Добавить</a>
+}
+@helper AddFgForm()
+{
+    using (Html.BeginForm("addfriendlygroup", "group", FormMethod.Get, new { id = "add-fg-form" }))
+    {
+        @Html.HiddenFor(x => Model.GroupUrl, new { name = "id" })
+        @Html.TextBox("fg", null, new { placeholder = "Url группы" })
+        <input type="button" value="Ок" />
+    }
+}
+
+@if (isModer)
+{
+    <div class="recomended_content">
+        <div class="content_helper_control">
+            <span>Дружественные группы</span>
+            @if (Model.Groups.Count > 0)
+            {
+                @AddFgLink()
+            }
+        </div>
+        <div class="content_department">            
+            @if (Model.Groups.Count > 0)
+            {
+                @AddFgForm()
+                foreach (var group in Model.Groups)
+                {
+                    <div class="recomended_item">
+                        <img src="@group.Logo&w=15&h=20" alt="" />
+                        <a href="@Url.Action("index", new { id = group.Url })">@group.Name</a>
+                        @Html.ConfirmActionLink("[убрать]", "Вы действительно хотите убрать выбранную группу из друзей?",
+                            Url.Action("removefriendlygroup", new { id = Model.GroupUrl, fg = group.Url }), new { Class = "remove-fg" })
+                    </div>
+                }
+            }
+            else
+            {
+                @AddFgLink()
+                @AddFgForm()
+            }            
+        </div>
+    </div>    
+}
+else if (Model.Groups.Count > 0)
+{
+    <div class="recomended_content">
+        <div class="content_helper_control">
+            <span>Дружественные группы</span>
+        </div>
+        <div class="content_department">
+            @foreach (var group in Model.Groups)
+            {
+                <div class="recomended_item">
+                    <img src="@group.Logo&w=15&h=20" alt="" />
+                    <a href="@Url.Action("index", new { id = group.Url })">@group.Name</a>
+                </div>
+            }
+        </div>
+    </div>    
+}

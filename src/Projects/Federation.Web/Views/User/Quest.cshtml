@@ -1,0 +1,186 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model UserQuestViewModel
+@{
+    ViewBag.Title = "Стартовый квест";
+}
+
+@Html.Partial("_MainMenu")
+
+<style type="text/css">
+    .head {
+        overflow: auto;
+    }
+
+    .head > h3 {
+        float: left;
+    }
+    
+    .bar_wrap {
+        width: 50%;
+        margin-top: 3px;
+        float: right;
+    }
+
+    .stages {
+        margin-top: 10px;
+    }
+
+    .stages td {
+        padding: 5px 0;
+    }
+    .stages a {
+        text-decoration: none;
+    }
+
+    .tick {
+        padding-top: 2px;
+        margin-right: 4px;
+    }
+
+    .highlight {
+        padding: 3px 7px;
+        background-color: #FFFF7F;
+        border-radius: 1px;
+    }
+</style>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.UserId, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <div class="head">
+            <h3>Знакомство с системой</h3>
+            <div class="bar_wrap">
+                <div class="bar" style="width: @Model.QuestProgress.Percents()%"></div>
+            </div>
+        </div>
+        <table class="stages">
+            <tr>
+                <td>
+                    @if (Model.QuestProgress.HasFlag(QuestProgress.Avatar))
+                    {
+                        <img class="tick" alt="выполнено" src="@RoutesHelper.CurrentThemeFolder/images/tick.png"/>
+                    }
+                </td>
+                <td>
+                    @if (Model.QuestProgress.HasFlag(QuestProgress.Avatar))
+                    {
+                        <span>Установка фотографии на аватар</span>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("editavatar")">Установка фотографии на аватар</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @if (Model.QuestProgress.HasFlag(QuestProgress.Info))
+                    {
+                        <img class="tick" alt="выполнено" src="@RoutesHelper.CurrentThemeFolder/images/tick.png"/>
+                    }
+                </td>
+                <td>
+                    @if (Model.QuestProgress.HasFlag(QuestProgress.Info))
+                    {
+                        <span>Заполнение информации о себе</span>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("editbio")">Заполнение информации о себе</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @if (Model.QuestProgress.HasFlag(QuestProgress.GroupsJoin))
+                    {
+                        <img class="tick" alt="выполнено" src="@RoutesHelper.CurrentThemeFolder/images/tick.png"/>
+                    }
+                </td>
+                <td>
+                    @if (Model.QuestProgress.HasFlag(QuestProgress.GroupsJoin))
+                    {
+                        <span>Вступление в 3 интересных сообщества (группы)</span>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("groups", "home", new { groupstatefilter = 1, orderbyfilter = 0 })">Вступление в 3 интересных сообщества (группы)</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @if (Model.QuestProgress.HasFlag(QuestProgress.Voting))
+                    {
+                        <img class="tick" alt="выполнено" src="@RoutesHelper.CurrentThemeFolder/images/tick.png"/>
+                    }
+                </td>
+                <td>
+                    @if (Model.QuestProgress.HasFlag(QuestProgress.Voting))
+                    {
+                        <span>Участие в голосовании</span>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("index")">Участие в голосовании</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @if (Model.QuestProgress.HasFlag(QuestProgress.Delegating))
+                    {
+                        <img class="tick" alt="выполнено" src="@RoutesHelper.CurrentThemeFolder/images/tick.png"/>
+                    }
+                </td>
+                <td>
+                    @if (Model.QuestProgress.HasFlag(QuestProgress.Delegating))
+                    {
+                        <span>Делегирование или объявление себя экспертом</span>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("groups")">Делегирование или объявление себя экспертом</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @if (Model.QuestProgress.HasFlag(QuestProgress.Commenting))
+                    {
+                        <img class="tick" alt="выполнено" src="@RoutesHelper.CurrentThemeFolder/images/tick.png"/>
+                    }
+                </td>
+                <td>
+                    @if (Model.QuestProgress.HasFlag(QuestProgress.Commenting))
+                    {
+                        <span>Написание комментария</span>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("index")">Написание комментария</a>
+                    }
+                </td>
+            </tr>
+        </table>
+        @if (Model.QuestProgress.HasFlag(QuestProgress.Completed))
+        {
+            <p class="highlight">Поздравляем, вы успешно справились со всеми заданиями и получаете за это <a href="@Url.Action("profile")">награду</a>!</p>
+        }
+    </div>
+</div>

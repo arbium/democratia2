@@ -1,0 +1,34 @@
+﻿@using Federation.Web.ViewModels
+@{
+    ICollection<Group_Poll_ExpertViewModel> experts = Model;
+}
+<div class="experts_vote">
+    <h2>Эксперты</h2>    
+    @if (experts.Count == 0)
+    {
+        <text>В данном голосовании ни один эксперт участия не принимает</text>
+    }
+    else
+    {
+        foreach (var expert in experts)
+        {
+            <div class="expert">
+                <a href="@Url.Action("index", "user", new { id = expert.Id })">
+                    <img alt="аватар" src="@expert.Avatar&w=48&h=64" />
+                </a>
+                <div class="info">
+                    <p class="name">
+                        <a href="@Url.Action("index", "user", new { id = expert.Id })"><b>@expert.Surname</b> @expert.Name</a>
+                    </p>
+                    <p class="weight">
+                        <b>@expert.RelativeRepresent%</b> (@expert.Represent)@Html.Raw(expert.VoteResult)
+                    </p>
+                    @if (!string.IsNullOrWhiteSpace(expert.Comment))
+                    {
+                        <p class="comment">@expert.Comment</p>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>

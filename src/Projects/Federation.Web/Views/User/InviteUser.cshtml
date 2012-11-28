@@ -1,0 +1,87 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model UserInviteUserViewModel
+@{
+    ViewBag.Title = "Приглашение пользователя";
+}
+
+@*ВНИМАНИЕ: выполнено в альфа-интерфейсе*@
+
+<div class="path">
+    <a href="@Url.Action("index", "home")">Главная</a>
+	/
+	<span>Приглашение нового пользователя</span>
+</div>
+<div class="main_info_space">
+    <div class="login_window p20">
+	    <h1>Приглашение нового пользователя (@Model.GivenInvitesCount/@ConstHelper.MaxInvitesCount)</h1>
+        <p>
+            Посмотреть список приглошенных вами пользователей и статус их регистрации: <a href="@Url.Action("invites")">список приглашенных</a>
+        </p>
+        <h3>@ViewBag.ValidationExceptionText</h3>
+        @if (Model.GivenInvitesCount >= ConstHelper.MaxInvitesCount)
+        {
+            <p>Вы исчерпали лимит приглашений!</p>
+        }
+        else
+        {
+            using (Html.BeginForm())
+            {
+                @Html.HiddenFor(m => m.ReferalId)
+                @Html.HiddenFor(m => m.GivenInvitesCount)
+		        <div class="FForm FForm_big" style="background-color: #F7F0E8;">
+			        <p></p>
+            	    <div class="FForm_param">
+				        <div class="FForm_ParamName">
+					        @Html.LabelFor(m => m.SurName) <span>*</span>
+				        </div>
+				        <div class="FForm_ParamRight">
+					        @Html.TextBoxFor(m => m.SurName, new { Class = "FForm_inputField" })
+					        <small></small>
+                            @Html.ValidationMessageFor(m => m.SurName)
+				        </div>
+			        </div>
+			        <div class="FForm_ParamInter"><span></span></div>
+                    
+                    <div class="FForm_param">
+				        <div class="FForm_ParamName">
+					        @Html.LabelFor(m => m.Name) <span>*</span>
+				        </div>
+				        <div class="FForm_ParamRight">
+					        @Html.TextBoxFor(m => m.Name, new { Class = "FForm_inputField" })
+					        <small></small>
+                            @Html.ValidationMessageFor(m => m.Name)
+				        </div>
+			        </div>
+			        <div class="FForm_ParamInter"><span></span></div>
+	        
+                    <div class="FForm_param">
+				        <div class="FForm_ParamName">
+					        @Html.LabelFor(m => m.Patronymic) <span>*</span>
+				        </div>
+				        <div class="FForm_ParamRight">
+					        @Html.TextBoxFor(m => m.Patronymic, new { Class = "FForm_inputField" })
+					        <small></small>
+                            @Html.ValidationMessageFor(m => m.Patronymic)
+				        </div>
+			        </div>
+			        <div class="FForm_ParamInter"><span></span></div>
+
+			        <div class="FForm_param">
+				        <div class="FForm_ParamName">
+					        @Html.LabelFor(m => m.Email) <span>*</span>
+				        </div>
+				        <div class="FForm_ParamRight">
+					        @Html.TextBoxFor(m => m.Email, new { Class = "FForm_inputField" })
+                            @Html.ValidationMessageFor(m => m.Email)
+				        </div>
+			        </div>
+			        <div class="clear" style="height: 10px;"><span></span></div>
+		        </div>
+		        <div class="FForm FForm_buttons" style="background-color: #E4D3C2;">
+			        <input class="f_button" value=" Пригласить " type="submit">
+		        </div>
+            }
+        }
+    </div>
+</div>

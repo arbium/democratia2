@@ -1,0 +1,140 @@
+﻿@using Federation.Core
+@using Federation.Web
+@using Federation.Web.ViewModels
+@model _ContentFeedViewModel  
+
+<div class="contentfeed">
+    @{
+        var itemN = 0;
+        foreach (var record in Model.FeedContent)
+        {
+            itemN++;
+
+            var recordDate = record.PostDate;
+            if (record.ContentType == ContentViewType.Poll)
+            {
+                recordDate = record.StartDate;
+            }
+            <div id="@("item" + itemN)" class="record wide @record.ContentClass @(record.IsFinished ? "finished" : "notfinished")">
+                <div class="corner"><span> </span></div>
+                <div class="main">
+                    @if (record.AuthorId.HasValue)
+                    {
+                        <div class="author">
+                            <a href="@Url.Action("index", "user", new { id = record.AuthorId })">
+                                <img class="icon" src="@record.AuthorAvatar&w=48&h=64" alt="" />
+                            </a>
+                            <div class="name">
+                                <a class="username" href="@Url.Action("index", "user", new { id = record.AuthorId })">
+                                    <b>@record.AuthorSurname</b>
+                                    <br />
+                                    @record.AuthorFirstName
+                                    @record.AuthorPatronymic
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    <div class="group">
+                        @if (record.GroupId.HasValue)
+                        {
+                            <a class="groupname" href="@Url.Action("index", "group", new { id = record.GroupUrl })">@record.GroupName</a>
+                        }
+                        @if (@record.ContentTypeName != null)
+                        { 
+                            <text>&nbsp;&rarr;</text>
+                            <span>@record.ContentTypeName</span>
+                        }
+                    </div>
+                    <div class="content">                                 
+                        <h3 class="title">
+                            <a href="@record.Url">@record.Title</a>
+                        </h3>                    
+                        <div class="summary">
+                            <a href="@record.Url">@Html.Raw(record.Summary)</a>
+                        </div>                                   			    
+                    </div>
+                </div>
+                <div class="control">
+                    <div class="comments">
+                        @if (record.CommentsCountNum > 0)
+                        {
+                            <a href="@record.Url#comments" title="перейти к комментариям">@record.CommentsCountNum</a>
+                        }
+                        else
+                        { 
+                            <a class="nocomments" href="@record.Url#comments" title="Добавить комментарий"><span></span></a>
+                        }
+                    </div>
+                    @*<div class="date">@record.PostDate.ToUserTime(UserContext.Current).ToString("dd MMMM yyyy, HH:mm")</div>*@
+                    <div class="date" title="время публикации">
+                        @recordDate.ToUserTime(UserContext.Current).ToString("HH:mm")
+                    </div>
+                    <div class="date">
+                        @record.StartDate.ToUserTime(UserContext.Current).ToString("d MMM yyyy") - 
+                        @(record.EndDate.HasValue ? record.EndDate.Value.ToUserTime(UserContext.Current).ToString("d MMM yyyy") : "бессрочно")
+                    </div>
+                    @*@if (record.Vote.HasValue)
+                    {
+                        <div>
+                            @switch(record.Vote.Value)
+                            {                                                            
+                                case VoteOption.NotVoted:
+                                    <span style="color: orange">Вы не голосовали</span>
+                                    break;
+                                
+                                case VoteOption.Yes:
+                                    <text>Вы проголосовали <span style="color: forestgreen">За</span></text>
+                                    break;
+                                
+                                case VoteOption.No:
+                                    <text>Вы проголосовали <span style="color: crimson">Против</span></text>
+                                    break;
+                                
+                                case VoteOption.Refrained:
+                                    <text>Вы <span style="color: mediumblue">Воздержались</span></text>
+                                    break;
+                            }
+                        </div>
+                    }*@
+                    @if (record.IsFinished)
+                    {
+                        <div>
+                            Завершено.
+                            @switch (record.Result)
+                            {
+                                case VoteOption.NotVoted:
+                                    <span style="color: orange">Провалено</span>
+                                    break;
+
+                                case VoteOption.Yes:
+                                    <text>Большинство проголосовало <span style="color: forestgreen">За</span></text>
+                                    break;
+
+                                case VoteOption.No:
+                                    <text>Большинство проголосовало <span style="color: crimson">Против</span></text>
+                                    break;
+
+                                case VoteOption.Refrained:
+                                    <text>Большинство <span style="color: mediumblue">Воздержалось</span></text>
+                                    break;
+                            }
+                        </div>
+                    }
+                    @if (record.Tags.Count > 0)
+                    {
+                        <div class="feedlabels">
+                            <div class="labels">
+                                @*Теги:*@
+                                @foreach (var label in record.Tags)
+                                {
+                                    @Html.ActionLink(label.Title, "tag", "search", new { id = label.Title }, null)
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+    <a class="action-button" href="@Url.Action("index","group", new { id = "federation" })">Еще</a>
+</div>

@@ -1,0 +1,66 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model Group_ElectionViewModel
+
+@if (Model.Stage == ElectionStage.Agitation)
+{
+    @Html.Partial("_ElectionCandidates", Model.ElectionCandidates)
+}
+@if (Model.Stage == ElectionStage.Voting)
+{
+    @Html.Partial("_ElectionVoting", Model.ElectionVoting)
+}
+@if (Model.Stage == ElectionStage.Completed)
+{
+    <div>
+        Выборы окончены. Поздравляем победителей:
+        @foreach (var winner in Model.Winners)
+        {
+            <div>
+                <img src="@winner.Avatar&w=32&h=32" alt="фото" style="display: inline" />
+                <a href="@Url.Action("index", "user", new { id = winner.UserId })">@winner.FullName</a>
+                <span class="grey">@winner.Votes</span>
+            </div>
+        }
+        @if (Model.Candidates.Count != 0)
+        {
+            <span>Остальные участники:</span>
+            foreach (var candidate in Model.Candidates)
+            {
+                <div>
+                    <a href="@Url.Action("index", "user", new { id = candidate.UserId })">@candidate.FullName</a>
+                    <span class="grey">@candidate.Votes</span>
+                </div>
+            }
+        }
+    </div>
+}
+@if (Model.Stage == ElectionStage.Failed)
+{
+    <div>
+        Выборы провалены
+        @if (Model.Candidates.Count < Model.GroupModersCount)
+        {
+            <span> из-за недостаточного количества кандидатов.</span>
+        }
+        else if (Model.Turnout < Model.Quorum)
+        {
+            <span> из-за низкой явки. Кворум: @Model.Quorum, явка: @(Model.Turnout).</span>                        
+        }
+        else
+        {
+            <span> вследствие непреодолимой силы.</span>
+        }
+        @if (Model.Candidates.Count != 0)
+        {
+            <span>Результаты:</span>
+            foreach (var candidate in Model.Candidates)
+            {
+                <div>
+                    <a href="@Url.Action("index", "user", new { id = candidate.UserId })">@candidate.FullName</a>
+                    <span class="grey">@candidate.Votes</span>
+                </div>
+            }
+        }
+    </div>
+}

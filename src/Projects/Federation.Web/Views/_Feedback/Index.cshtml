@@ -1,0 +1,24 @@
+﻿@using Federation.Web.ViewModels
+@model FeedbackIndexViewModel
+
+@{
+    ViewBag.Title = "Обратная связь";
+}
+
+<h2>Поделитесь своими </h2>
+
+@if (Request.IsAuthenticated)
+{ 
+    <div>
+        <h1>Добавить комментарий</h1>
+        if(@Request.IsAuthenticated)
+        {
+            @Html.Partial("_SmallAddReport", new Feedback_SmallAddReportViewModel());
+        }
+        else
+        {
+             @Html.Partial("_GuestSmallAddReport", new Feedback_GuestSmallAddReportViewModel());
+        }
+        
+    </div>
+}

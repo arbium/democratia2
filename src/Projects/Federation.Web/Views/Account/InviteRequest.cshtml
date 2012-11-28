@@ -1,0 +1,126 @@
+﻿@using Federation.Web.ViewModels
+@model InviteRequestViewModel
+@{
+    ViewBag.Title = "Запрос инвайта";
+    ViewBag.LayoutStyle = "layout_start";
+}
+
+@*ВНИМАНИЕ: выполнено в альфа-интерфейсе*@
+
+<script src="../../Resources/redactor/redactor.js" type="text/javascript"></script>
+<script src="../../Resources/redactor/langs/ru.js" type="text/javascript"></script>
+<link href="../../Resources/redactor/css/redactor.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    $(function () {
+        $("#UserInfo").redactor({
+            buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent'],
+            lang: 'ru'
+        });
+    });
+</script>
+
+@Html.Partial("_MainMenu")
+
+<div class="path"> 
+	<a href="@Url.Action("index", "home")">Главная</a> /
+	<span>Получение приглашения</span>
+</div>
+
+<div class="main_info_space">
+    <div class="login_window p20">
+	    <h1>Получение приглашения</h1>
+        @using (Html.BeginForm("inviterequest", "account"))
+        {
+		    <div class="FForm FForm_big" style="background-color: #F7F0E8;">
+			    <p>Заполните данную форму, чтобы получить приглашение</p>
+
+                <div class="FForm_param">
+				    <div class="FForm_ParamName">
+					    @Html.LabelFor(m => m.Surname) <span>*</span>
+				    </div>
+				    <div class="FForm_ParamRight">
+					    @Html.TextBoxFor(m => m.Surname, new { Class = "FForm_inputField" })
+					    <small></small>
+                        @Html.ValidationMessageFor(m => m.Surname)
+				    </div>
+			    </div>
+			    <div class="FForm_ParamInter"><span></span></div>
+
+			    <div class="FForm_param">
+				    <div class="FForm_ParamName">
+					    @Html.LabelFor(m => m.Name) <span>*</span>
+				    </div>
+				    <div class="FForm_ParamRight">
+					    @Html.TextBoxFor(m => m.Name, new { Class = "FForm_inputField" })
+					    <small></small>
+                        @Html.ValidationMessageFor(m => m.Name)
+				    </div>
+			    </div>
+			    <div class="FForm_ParamInter"><span></span></div>                
+
+                <div class="FForm_param">
+				    <div class="FForm_ParamName">
+					    @Html.LabelFor(m => m.Patronymic) <span>*</span>
+				    </div>
+				    <div class="FForm_ParamRight">
+					    @Html.TextBoxFor(m => m.Patronymic, new { Class = "FForm_inputField" })
+					    <small></small>
+                        @Html.ValidationMessageFor(m => m.Patronymic)
+				    </div>
+			    </div>
+			    <div class="FForm_ParamInter"><span></span></div>
+
+                <div class="FForm_param">
+				    <div class="FForm_ParamName">
+					    @Html.LabelFor(m => m.Email) <span>*</span>
+				    </div>
+				    <div class="FForm_ParamRight">
+					    @Html.TextBoxFor(m => m.Email, new { Class = "FForm_inputField" })
+					    <small></small>
+                        @Html.ValidationMessageFor(m => m.Email)
+				    </div>
+			    </div>
+			    <div class="FForm_ParamInter"><span></span></div>
+
+                <div class="FForm_param">
+				    <div class="FForm_ParamName">
+					    @Html.LabelFor(m => m.FacebookUrl) <span></span>
+				    </div>
+				    <div class="FForm_ParamRight">
+					    @Html.TextBoxFor(m => m.FacebookUrl, new { Class = "FForm_inputField" })
+					    <small></small>
+                        @Html.ValidationMessageFor(m => m.FacebookUrl)
+				    </div>
+			    </div>
+			    <div class="FForm_ParamInter"><span></span></div>
+
+                <div class="FForm_param">
+				    <div class="FForm_ParamName">
+					    @Html.LabelFor(m => m.LiveJournalUrl) <span></span>
+				    </div>
+				    <div class="FForm_ParamRight">
+					    @Html.TextBoxFor(m => m.LiveJournalUrl, new { Class = "FForm_inputField" })
+					    <small></small>
+				    </div>
+			    </div>
+                <div class="FForm_ParamInter"><span></span></div>
+
+                <div class="FForm_param">
+				    <div class="FForm_ParamName">
+					    @Html.LabelFor(m => m.UserInfo) <span></span>
+				    </div>
+				    <div class="FForm_ParamRight">
+					    @Html.TextAreaFor(m => m.UserInfo, new { Class = "FForm_inputField" })
+					    <small></small>
+				    </div>
+			    </div>
+
+			    <div class="clear" style="height: 10px;"><span></span></div>
+		    </div>
+		    <div class="FForm FForm_buttons" style="background-color: #E4D3C2;">
+			    <input class="f_button" value=" Запросить приглашение " type="submit">
+		    </div>
+        }
+    </div>
+</div>

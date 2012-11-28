@@ -1,0 +1,36 @@
+﻿@model object
+@{
+    ViewBag.Title = "Помощь";
+    ViewBag.LayoutStyle = "layout_start";
+}
+
+@Html.Partial("_MainMenu")
+
+<div class="layout_pageheader"></div>
+<div class="help_page">
+    <div class="help_topic">
+        <h3>О проекте</h3>
+        <div class="help_item">
+            @Html.ActionLink("В двух словах о системе", "about")
+        </div>
+        <div class="help_item">
+            @Html.ActionLink("Возможности системы", "features")
+        </div>            
+        <div class="help_item">
+            @Html.ActionLink("Примеры использования проекта", "cases")
+        </div>
+    </div>
+    <div class="help_topic">
+        <h3>Регистрация и активация аккаунта</h3>
+        <div class="help_item">
+            @Html.ActionLink("На телефон не приходит смс с кодом", "smstrouble")
+        </div>
+    </div>
+    <div class="help_topic">
+        <h3>Обратная связь и техническая поддержка</h3>
+        <div class="help_item">
+            Связаться с нами можно через <a href="@Url.Action("index", "feedback")">форму обратной связи</a> 
+            или по <a href="mailto:support@democratia2.ru">email</a>
+        </div>
+    </div>
+</div>

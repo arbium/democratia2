@@ -1,0 +1,394 @@
+﻿@using System
+@using System.Configuration
+@using System.Collections.Generic
+@using Federation.Core
+@using Federation.MailService
+
+<div style="font-family: Arial, sans-serif; font-size: 13px; background: #F0f0f0">
+	<div style="width: 800px; margin: 0 auto; padding-top: 20px">
+		<div style="padding: 5px 40px; background: #FFF">
+			<div style="line-height: 40px; float: right">
+				@* Временно вики не работает - открывается лига.
+                <a href="http://wiki.democratia2.ru" style="color: black">Вики-справка</a>*@
+			</div>
+			<div>
+                <a href="http://democratia2.ru" style="text-decoration: none">
+                    <h1 style="color: #003; font-family: Arial, sans-serif; font-size: 30px; margin-bottom: 5px; line-height: 40px">Демократия2</h1>
+                </a>
+			</div>
+			<div>
+				<a href="http://democratia2.ru/user/inboxmessages">Перейти в Личные сообщения</a>
+				&nbsp;
+				&nbsp;
+				<a href="http://democratia2.ru/user">Перейти в свой аккаунт</a>
+			</div>
+            <h3 style="margin-bottom: 5px; font-size: 22px; font-weight: normal; color: #F80">
+                @Model.FeedDate.ToString("dd MMMM yyyy")
+            </h3>
+			<div>
+				<a href="http://democratia2.ru/user">@Model.UserFullName</a>, за прошедший день вам пришли следующие сообщения:
+			</div>
+            @if (Model.Content.Count != 0)
+            {
+                <div>
+                    <div style="overflow: auto">
+                        <h2 style="font-family: 'Times New Roman', times, serif; font-weight: normal; margin-bottom: 5px; font-size: 26px; color: #446644">Подписки</h2>
+                    </div>
+                    <div>
+                        @foreach (var group in Model.Groups)
+                        {
+                            <a href="#@group.Url">@group.Name</a>
+                        }
+                    </div>
+                    <div>
+                        @for (var i = 0; i < Model.Content.Count; i++)
+                        {
+                            var record = Model.Content[i];
+                            if (i == 0)
+                            {
+                                <h3 id="@record.GroupUrl">@record.GroupName</h3>
+                            }
+                            else if (Model.Content[i - 1].GroupUrl != record.GroupUrl)
+                            {
+                                <h3 id="@record.GroupUrl">@record.GroupName</h3>
+                            }
+                            <div style="border-top: 1px solid #E0E0E0; overflow: hidden; word-wrap: break-word; padding-bottom: 36px">
+                                <div style="padding-bottom: 10px">
+                                    <div style="float: right; width: 210px; margin: 0 0 5px 5px">
+                                        <a href="http://democratia2.ru/user/@("id" + record.AuthorId)" style="color: #0078D9; text-decoration: underline;">
+                                            <img class="icon" src="@record.AuthorAvatar&w=48&h=64" alt="" style="border: 0 none; margin: 0; padding: 0; outline: 0 none; text-decoration: none; margin-right: 10px; float: left"/>
+                                        </a>
+                                        <div style="padding-top: 6px; border-top: 5px solid #BBB;">
+                                            <a href="http://democratia2.ru/user/@("id" + record.AuthorId)" style="color: #0D7000; text-decoration: none; line-height: 1.3em">
+                                                <b>@record.AuthorSurname</b>
+                                                <br />
+                                                @record.AuthorFirstName
+                                                @record.AuthorPatronymic
+                                            </a>
+                                        </div>
+                                    </div>
+	                                <div>
+                                        @if (record.ContentType == SubscriptionContentType.GroupPetition || record.ContentType == SubscriptionContentType.GroupPost || record.ContentType == SubscriptionContentType.Poll || record.ContentType == SubscriptionContentType.Survey)
+                                        {
+                                            <a href="http://democratia2.ru/group/@record.GroupUrl" style="color: #00566B; text-decoration: underline">
+                                                <img src="@record.GroupLogo&w=48&h=64" alt="" style="border: 0 none; margin: 0; padding: 0; outline: 0 none; text-decoration: none; margin-right: 10px; float: left" />
+                                            </a>
+                                            <a href="http://democratia2.ru/group/@record.GroupUrl" style="color: #00566B; text-decoration: underline; margin: 5px 0 0 0; display: inline-block; font-size: 90%">
+                                                @record.GroupName
+                                            </a><text>&nbsp;&rarr;</text>
+                                        }
+                                        <span style="color: black">@record.ContentTypeName</span>
+                                    </div>
+                                    <div style="padding: 10px 20px 0 0">
+                                        <h3 style="margin: 0; padding: 0; color: #E06002; font-size: 100%; font-weight: normal; line-height: 20px">
+                                            <a href="@record.Url" style="color: #0078D9; font-size: 18px; text-decoration: underline; display: block; margin-bottom: 10px">@record.Title</a>
+                                        </h3>
+                                        <div>
+                                            <a href="@record.Url" style="overflow: hidden; word-wrap: break-word; color: #333; font-size: 13px; text-decoration: none">@record.Summary</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="overflow: auto; padding-top: 5px; padding-left: 16px; color: #6F6F6F; font-size: 13px">
+                                    <div style="float: left; margin-right: 25px;padding: 0px">
+                                        <a href="@record.Url#comments" style="text-decoration: underline; color: #6F6F6F">@record.CommentsCount</a>
+                                    </div>
+                                    <div style="float: left; margin-right: 25px">
+                                        @record.PostDate.ToString("dd MMMM yyyy, HH:mm") <a href="@record.Url" style="text-decoration: underline; color: #6F6F6F">#</a>
+                                    </div>
+                                    <div style="float: left; margin-right: 25px">
+                                        @if (!record.IsDiscussionClosed)
+                                        {
+                                            <a href="@record.Url#addcomment" style="text-decoration: underline; color: #6F6F6F">Обсудить</a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @if (Model.PollNotices.Count > 0)
+            {
+			    <h2 style="font-family: 'Times New Roman', times, serif; font-weight: normal; margin-bottom: 5px; font-size: 26px; color: #446644">Голосования</h2>
+			    <div>
+                    @foreach (var message in Model.PollNotices)
+                    {
+                        <div style="padding: 10px 20px; background: #FFf0e8; margin: 10px 0">
+                            <div style="color: #888; float: right; font-size: 12px">
+                                @if (message.Date.Date == DateTime.Now.Date)
+                                {
+                                    @message.Date.ToString("HH:mm")
+                                }
+                                else
+                                {
+                                    if (message.Date.Year == DateTime.Now.Year)
+                                    {
+                                        @message.Date.ToString("d MMM HH:mm")
+                                    }
+                                    else
+                                    {
+                                        @message.Date.ToString("dd.MM.yy")
+                                    }
+                                }
+                            </div>
+				            @message.Text
+                        </div>
+                    }
+			    </div>
+            }
+            @if (Model.SurveyNotices.Count > 0)
+            {
+			    <h2 style="font-family: 'Times New Roman', times, serif; font-weight: normal; margin-bottom: 5px; font-size: 26px; color: #446644">Опросы</h2>
+			    <div>
+                    @foreach (var message in Model.SurveyNotices)
+                    {
+                        <div style="padding: 10px 20px; background: #FFf0e8; margin: 10px 0">
+                            <div style="color: #888; float: right; font-size: 12px">
+                                @if (message.Date.Date == DateTime.Now.Date)
+                                {
+                                    @message.Date.ToString("HH:mm")
+                                }
+                                else
+                                {
+                                    if (message.Date.Year == DateTime.Now.Year)
+                                    {
+                                        @message.Date.ToString("d MMM HH:mm")
+                                    }
+                                    else
+                                    {
+                                        @message.Date.ToString("dd.MM.yy")
+                                    }
+                                }
+                            </div>
+				            @message.Text
+                        </div>
+                    }
+			    </div>
+            }
+            @if (Model.ElectionNotices.Count > 0)
+            {
+			    <h2 style="font-family: 'Times New Roman', times, serif; font-weight: normal; margin-bottom: 5px; font-size: 26px; color: #446644">Выборы</h2>
+			    <div>
+                    @foreach (var message in Model.ElectionNotices)
+                    {
+                        <div style="padding: 10px 20px; background: #FFf0e8; margin: 10px 0">
+                            <div style="color: #888; float: right; font-size: 12px">
+                                @if (message.Date.Date == DateTime.Now.Date)
+                                {
+                                    @message.Date.ToString("HH:mm")
+                                }
+                                else
+                                {
+                                    if (message.Date.Year == DateTime.Now.Year)
+                                    {
+                                        @message.Date.ToString("d MMM HH:mm")
+                                    }
+                                    else
+                                    {
+                                        @message.Date.ToString("dd.MM.yy")
+                                    }
+                                }
+                            </div>
+				            @message.Text
+                        </div>
+                    }
+			    </div>
+            }
+            @if (Model.PetitionNotices.Count > 0)
+            {
+			    <h2 style="font-family: 'Times New Roman', times, serif; font-weight: normal; margin-bottom: 5px; font-size: 26px; color: #446644">Петиции</h2>
+			    <div>
+                    @foreach (var message in Model.PetitionNotices)
+                    {
+                        <div style="padding: 10px 20px; background: #FFf0e8; margin: 10px 0">
+                            <div style="color: #888; float: right; font-size: 12px">
+                                @if (message.Date.Date == DateTime.Now.Date)
+                                {
+                                    @message.Date.ToString("HH:mm")
+                                }
+                                else
+                                {
+                                    if (message.Date.Year == DateTime.Now.Year)
+                                    {
+                                        @message.Date.ToString("d MMM HH:mm")
+                                    }
+                                    else
+                                    {
+                                        @message.Date.ToString("dd.MM.yy")
+                                    }
+                                }
+                            </div>
+				            @message.Text
+                        </div>
+                    }
+			    </div>
+            }
+            @if (Model.PrivateMessages.Count > 0)
+            {
+			    <h2 style="font-family: 'Times New Roman', times, serif; font-weight: normal; margin-bottom: 5px; font-size: 26px; color: #446644">Личные сообщения</h2>
+			    <div>
+                    @foreach (var message in Model.PrivateMessages)
+                    {
+                        <div style="padding: 10px 20px; background: #e8f8e8; margin: 10px 0">
+                            <div style="color: #888; float: right; font-size: 12px">
+                                @if (message.Date.Date == DateTime.Now.Date)
+                                {
+                                    @message.Date.ToString("HH:mm")
+                                }
+                                else
+                                {
+                                    if (message.Date.Year == DateTime.Now.Year)
+                                    {
+                                        @message.Date.ToString("d MMM HH:mm")
+                                    }
+                                    else
+                                    {
+                                        @message.Date.ToString("dd.MM.yy")
+                                    }
+                                }
+                            </div>
+                            <div style="float: left; margin-right: 10px">
+                                <img src="@message.AuthorAvatar&w=48&h=64" />
+                            </div>
+                            <div style="color: #888;">
+	                            <a href="@message.AuthorUrl">@message.AuthorName</a> написал вам личное сообщение:
+                            </div>
+                            <div style="margin-left: 0">
+	                            <p>
+	                            @message.Text
+	                            </p>
+                            </div>
+                            <div style="margin-left: 60px">
+	                            <a href="@message.AnswerUrl">&rarr; Ответить</a>
+                            </div>
+                        </div>
+                    }
+			    </div>
+            }
+            @if (Model.CommentNotices.Count > 0)
+            {
+			    <h2 style="font-family: 'Times New Roman', times, serif; font-weight: normal; margin-bottom: 5px; font-size: 26px; color: #446644">Комментарии</h2>
+			    <div>
+                    @foreach (var message in Model.CommentNotices)
+                    {
+                        <div style="padding: 10px 20px; background: #f0f0f8; margin: 10px 0">
+	                        <div style="color: #888; float: right; font-size: 12px">
+                                @if (message.Date.Date == DateTime.Now.Date)
+                                {
+                                    @message.Date.ToString("HH:mm")
+                                }
+                                else
+                                {
+                                    if (message.Date.Year == DateTime.Now.Year)
+                                    {
+                                        @message.Date.ToString("d MMM HH:mm")
+                                    }
+                                    else
+                                    {
+                                        @message.Date.ToString("dd.MM.yy")
+                                    }
+                                }
+                            </div>
+                            @message.Text
+                        </div>
+                    }
+			    </div>
+            }
+            @if (Model.GroupMemberNotices.Count > 0)
+            {
+			    <h2 style="font-family: 'Times New Roman', times, serif; font-weight: normal; margin-bottom: 5px; font-size: 26px; color: #446644">Сообщения в группах</h2>
+			    <div>
+                    @foreach (var message in Model.GroupMemberNotices)
+                    {
+                        <div style="padding: 10px 20px; background: #f0f0f8; margin: 10px 0">
+	                        <div style="color: #888; float: right; font-size: 12px">
+                                @if (message.Date.Date == DateTime.Now.Date)
+                                {
+                                    @message.Date.ToString("HH:mm")
+                                }
+                                else
+                                {
+                                    if (message.Date.Year == DateTime.Now.Year)
+                                    {
+                                        @message.Date.ToString("d MMM HH:mm")
+                                    }
+                                    else
+                                    {
+                                        @message.Date.ToString("dd.MM.yy")
+                                    }
+                                }
+                            </div>
+                            @message.Text
+                        </div>
+                    }
+			    </div>
+            }
+            @if (Model.GroupModeratorNotices.Count > 0)
+            {
+			    <h2 style="font-family: 'Times New Roman', times, serif; font-weight: normal; margin-bottom: 5px; font-size: 26px; color: #446644">Сообщения модератору</h2>
+			    <div>
+                    @foreach (var message in Model.GroupModeratorNotices)
+                    {
+                        <div style="padding: 10px 20px; background: #f0f0f8; margin: 10px 0">
+	                        <div style="color: #888; float: right; font-size: 12px">
+                                @if (message.Date.Date == DateTime.Now.Date)
+                                {
+                                    @message.Date.ToString("HH:mm")
+                                }
+                                else
+                                {
+                                    if (message.Date.Year == DateTime.Now.Year)
+                                    {
+                                        @message.Date.ToString("d MMM HH:mm")
+                                    }
+                                    else
+                                    {
+                                        @message.Date.ToString("dd.MM.yy")
+                                    }
+                                }
+                            </div>
+                            @message.Text
+                        </div>
+                    }
+			    </div>
+            }
+            @if (Model.SystemMessages.Count > 0)
+            {
+			    <h2 style="font-family: 'Times New Roman', times, serif; font-weight: normal; margin-bottom: 5px; font-size: 26px; color: #446644">Системные сообщения</h2>
+			    <div>
+                    @foreach (var message in Model.SystemMessages)
+                    {
+                        <div style="padding: 10px 20px; background: #f0f0f8; margin: 10px 0">
+                            <div style="color: #888; float: right; font-size: 12px">
+                                @if (message.Date.Date == DateTime.Now.Date)
+                                {
+                                    @message.Date.ToString("HH:mm")
+                                }
+                                else
+                                {
+                                    if (message.Date.Year == DateTime.Now.Year)
+                                    {
+                                        @message.Date.ToString("d MMM HH:mm")
+                                    }
+                                    else
+                                    {
+                                        @message.Date.ToString("dd.MM.yy")
+                                    }
+                                }
+                            </div>
+                            @message.Text
+                        </div>
+                    }
+			    </div>
+            }
+ 			<div style="margin: 15px 0 10px 0; text-align: right">
+				<strong>Демократия 2</strong> &copy; 2011 - @DateTime.Today.Year
+			</div>						
+		</div>
+	</div>
+	<div style="padding: 10px 20px">
+		<div style="color: #888; font-size: 11px">
+            Если вы больше не хотите получать письма, то вы можете отменить рассылку <a href="http://democratia2.ru/user/subscription">тут</a>. Не отвечайте на данное сообщение, оно было написано нашим роботом, который не умеет читать.
+		</div>
+	</div>
+</div>

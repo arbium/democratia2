@@ -1,0 +1,20 @@
+﻿@using Federation.Web.ViewModels
+@model HomeRssFeedViewModel
+<?xml version="1.0"?>
+<rss version="2.0">
+  <channel>
+    <title>@Model.Title</title>
+    <link>@Model.Link</link>
+    <description>@Model.Description</description>
+    @foreach (var item in Model.Items)
+    {
+        <item>
+          <title>@item.Title</title>
+          <link>@item.Link</link>
+          <description>@item.Description</description>
+          <pubDate>@item.PublishDate</pubDate>
+          <guid>@item.Link</guid>
+        </item>
+    }
+  </channel>
+</rss>

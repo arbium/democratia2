@@ -1,0 +1,65 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model UserDialogsViewModel
+@{
+    ViewBag.Title = "Диалоги";
+}
+
+<link href="../../Resources/themes/base/dialogs.css" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+<link href="../../Resources/themes/base/dialogs_ie.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(UserContext.Current.Id, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+            <li>
+                <a href="@Url.Action("trashmessages")">Корзина</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        @if (Model.Dialogs.Count == 0)
+        {
+            <p class="grey">Пока никто ничего не писал</p>
+        }
+        else
+        {
+            foreach (var dialog in Model.Dialogs)
+            {
+                <div class="dialog @(dialog.IsInbox ? "inbox" : "outbox") @(!dialog.IsRead ? "unread" : string.Empty)">
+                    @if (dialog.ContactId.HasValue)
+                    {
+                        <a href="@Url.Action("index", new { id = dialog.ContactId })" class="avatar">
+                            <img src="@dialog.ContactAvatar&w=30&h=40" alt="" />
+                        </a>
+                        <a href="@Url.Action("dialog", new { id = dialog.ContactId })" class="contact">@dialog.ContactName</a>
+                    }
+                    else
+                    {
+                        <img src="/favicon.ico" alt="" />
+                        <span class="contact system">Система</span>
+                    }
+                    <a href="@Url.Action("dialog", new { id = dialog.ContactId })" class="date">
+                        @dialog.DateTime.ToFormattedUserTime(UserContext.Current, "HH:mm")
+                    </a>
+                    <a href="@Url.Action("dialog", new { id = dialog.ContactId })" class="text">
+                        @if (!dialog.IsInbox)
+                        {
+                            <img src="@RoutesHelper.CurrentThemeFolder/images/outgoing-arrow.png" alt="←" />
+                        }
+                        @Html.Raw(dialog.MessageSummary)
+                    </a>
+                </div>
+            }
+        }
+    </div>
+</div>

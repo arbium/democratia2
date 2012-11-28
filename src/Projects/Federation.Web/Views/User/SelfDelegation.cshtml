@@ -1,0 +1,142 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model UserSelfDelegationViewModel
+@{
+    ViewBag.Title = "Делегирование";
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+     @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.Expert.UserId, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <div class="jqueryslidemenu servicebuttonmenu">
+            <ul>
+                <li>
+                    @Html.ActionLink("Перестать быть экспертом", "RemoveExpert", "user", new { id = Model.GroupUrl }, null)
+                </li>
+            </ul>
+        </div>
+        <ul class="lighttabs">
+            <li><a class="back">◄</a> </li>
+            <li><a class="selected">@ViewBag.Title</a> </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <div class="content_helper_control">
+            <img src="@Model.GroupLogo&w=15&h=20" alt="лого" />
+            <span>@Model.GroupName</span>
+        </div>
+        <div class="content_department">
+            <div style="overflow: auto">
+                <a class="link" style="float: left; margin: 0 10px 8px 0" href="@Url.Action("index", "user", new { id = Model.Expert.UserId })">
+                    <img src="@Model.Expert.Avatar&w=150&h=180" alt="лого" />
+                </a>
+                @Html.ActionLink(Model.Expert.Name, "index", "user", new { id = Model.Expert.UserId }, new { style = "font-size: 16px; text-decoration: none" })
+                <p>
+                    <i>@Model.Expert.Info</i>
+                </p>
+                <div style="float: right">
+                @if (String.IsNullOrWhiteSpace(Model.Expert.Info))
+                {
+                    @Html.ActionLink("Добавить информацию о себе", "editexpertinfo", "group", new { id = Model.GroupUrl }, null)
+                }
+                else
+                {
+                    @Html.ActionLink("Редактировать информацию", "editexpertinfo", "group", new { id = Model.GroupUrl }, null)
+                }
+                </div>
+            </div>
+            <div class="input_block separator">
+            </div>
+        </div>
+        <div class="content_helper_control">
+            <span>Экспертные темы</span>
+        </div>
+        <div class="content_department">
+            @if (Model.DelegatedTags.Count == 0 && Model.Tags.Count == 0 && Model.ExpertTags.Count == 0)
+            { 
+                <text>В группе нет ни одной темы</text>
+            }
+            @if (Model.ExpertTags.Count > 0)
+            {
+                <p class="grey">
+                    Теги, по которым вы уже явлеетесь эекспертом:
+                </p>
+                <div class="delegation_list">
+                    @foreach (var tag in Model.ExpertTags)
+                    {
+                        <div class="delegation_item">
+                            <div class="checkbox">
+                                <a href="@Url.Action("ceasetobeexpert", "user", new { id = tag.Id })">
+                                    <img alt="делегирован" class="checked" title='Перестать быть экспертом' src="@RoutesHelper.CurrentThemeFolder/images/_1px.png" />
+                                </a>
+                            </div>
+                            <div style="overflow: auto; margin: 10px 0 0 0">
+                                <h2>@tag.Title</h2>
+                            </div>
+                            <div style="overflow: auto">
+                                <p style="margin: 0 0 0 0">@tag.Description</p>
+                            </div>
+                            <div style="float: right">
+                                <p style="margin: 0 0 0 0; font-size: 12px; line-height: 24px" class="grey">
+                                    <img style="float: left; height: 24px; margin: 0 3px 0 0" src="/Resources/themes/base/images/votings.png" alt=""/>
+                                    @DeclinationService.OfNumber(Model.VotersCountForTag[tag.Id], "человек", "человека", "человек")
+                                    (@(Math.Round(Model.VotersCountForTag[tag.Id] * 100 / (float)Model.GroupMemberCount, 2).ToString("F"))%)
+                                </p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            @if (Model.Tags.Count > 0)
+            {
+                <p class="grey">
+                    Тэги, по которым вы можете стать экспертом:
+                </p>
+                <div class="delegation_list">
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <div class="delegation_item">
+                            <div class="checkbox">
+                                <a href="@Url.Action("becomeexpert", "user", new { id = tag.Id })">
+                                    <img alt="" title="Стать экспертом" class="unchecked" src="@RoutesHelper.CurrentThemeFolder/images/_1px.png" /></a>
+                            </div>
+                            <div style="overflow: auto; margin: 10px 0 0 0;">
+                                <h2>@tag.Title</h2>
+                            </div>
+                            <div style="overflow: auto;">
+                                <p style="margin: 0 0 0 0;">@tag.Description</p>
+                            </div>
+                        </div>
+                    }
+                </div>    
+            } 
+            @if (Model.DelegatedTags.Count > 0)
+            {
+                <p class="grey">
+                    Тэги, по которым вы делегировали свой голос другому эксперту:
+                </p>
+                <div class="delegation_list">
+                    @foreach (var tag in Model.DelegatedTags)
+                    {
+                        <div class="delegation_item">
+                            <div class="checkbox">
+                                <a href="@Url.Action("becomeexpert", "user", new { id = tag.Id })">
+                                    <img alt="делегирован" class="unchecked" title="Стать самому экспертом" src="@RoutesHelper.CurrentThemeFolder/images/_1px.png" /></a>
+                            </div>
+                            <div style="overflow: auto; margin: 10px 0 0 0">
+                                <h2>@tag.Title</h2>
+                            </div>
+                            <div style="overflow: auto">
+                                <p style="margin: 0 0 0 0">@tag.Description</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

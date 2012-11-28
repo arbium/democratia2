@@ -1,0 +1,223 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model Group_SurveyViewModel
+@{
+    var isMember = false;
+    if (Request.IsAuthenticated && Model.GroupId.HasValue)
+    {
+        isMember = UserContext.Current.IsUserInGroup(Model.GroupId.Value);
+    }
+}
+
+<script type="text/javascript">
+    $(function() {
+        $(".options input:submit").attr("disabled", "disabled");
+
+        var variantsCount = @Model.VariantsCount;
+
+        if (variantsCount > 1) {
+            $(".option input:checkbox").click(function() {
+                var checkedCount = $(".option input:checkbox:checked").length;
+                if (checkedCount >= variantsCount) {
+                    $(".option input:checkbox").not(":checked").each(function() {
+                        $(this).attr("disabled", "disabled");
+                    });
+                } else {
+                    $(".option input:checkbox").each(function() {
+                        $(this).removeAttr("disabled");
+                    });
+                }
+                $(".options input:submit").removeAttr("disabled");
+            });
+        } else {
+            $(".option input:radio").click(function() {
+                $(".options input:submit").removeAttr("disabled");
+            });
+        }
+
+        $(".show-description").click(function() {
+            var target = $(this).parent().children(".description");
+            var visible = target.css("display") != "none";
+            if (visible) {                
+                target.css("display", "none");
+                $(this).html("описание");
+            }
+            else {                
+                target.css("display", "block");
+                $(this).html("свернуть");
+            }
+        });
+    });
+</script>
+
+<div class="survey_view">
+    @if (Model.IsPrivate)
+    {
+        <small class="grey">только для членов группы</small>
+    }
+    @if (Model.State == ContentState.Approved)
+    {
+        <div class="timeline">
+            <div class="date">
+                <div class="start">
+                    <span>Дата начала:</span>
+                    @if (Model.StartDate.HasValue)
+                    {
+                        @Model.StartDate.Value.ToUserTime(UserContext.Current).ToString("dd.MM.yyyy HH:mm")
+                    }
+                </div>
+                <div class="finish">
+                    <span>Дата завершения:</span>
+                    @if (Model.EndDate.HasValue)
+                    {
+                        @Model.EndDate.Value.ToUserTime(UserContext.Current).ToString("dd.MM.yyyy HH:mm")
+                    }
+                    else
+                    {
+                        <text>бессрочно</text>
+                    }
+                </div>
+            </div>
+            <div class="remaining">
+                @if (Model.IsFinished)
+                {
+                    <div>Завершено</div>
+                }
+                else if (!string.IsNullOrEmpty(Model.TimeRemaining))
+                {
+                    <div>Осталось: @Model.TimeRemaining</div>
+                }
+                <span class="grey">
+                    @Model.VotedUsers
+                    <br />
+                    @Model.AbstainedUsers
+                </span>
+            </div>
+        </div>
+        <br />
+    }
+    <div class="body">
+        @Html.Raw(Model.Text)
+    </div>
+    <div class="options">
+        @if (Model.IsUserVoted)
+        {
+            foreach (var option in Model.Options)
+            {
+                var percents = 0;
+                if (Model.VotesCount != 0)
+                {
+                    percents = 100 * option.VotesCount / Model.VotesCount;
+                }
+                <table class="option">
+                    <tr>
+                        <td style="width: 1em">
+                            @if (option.IsChecked)
+                            {
+                                @*<span class="tick">✔</span>*@
+                                <img class="tick" alt="ваш выбор" src="@RoutesHelper.CurrentThemeFolder/images/tick.png"/>
+                            }
+                        </td>
+                        <td>
+                            <div class="bar_wrap">
+                                <div class="bar" style="width: @percents%"></div>
+                            </div>
+                            <span class="option_title">
+                                @option.Title <span class="value">@percents% (@option.VotesCountString)</span>
+                            </span>
+                            @if (!string.IsNullOrWhiteSpace(option.Description))
+                            {
+                                <a class="show-description">описание</a>
+                                <div class="description">@Html.Raw(option.Description)</div>
+                            }
+                        </td>
+                    </tr>
+                </table>
+            }
+        }
+        else
+        {
+            if (!Model.IsFinished && Model.State == ContentState.Approved && (Model.IsPrivate && isMember || !Model.IsPrivate))
+            {
+                using (Html.BeginForm("surveyvote", "group"))
+                {
+                    <span style="color: gray">@Model.VariantsCountString</span>
+                    @Html.HiddenFor(x => x.Id)
+                    for (var i = 0; i < Model.Options.Count; i++)
+                    {
+                        var option = Model.Options[i];
+                        <div class="option">
+                            @Html.HiddenFor(x => x.Options[i].Id)
+                            @if (Model.VariantsCount == 1)
+                            {
+                                @Html.RadioButtonFor(x => x.RadioOptionId, option.Id)
+                            }
+                            else
+                            {
+                                @Html.CheckBoxFor(x => x.Options[i].IsChecked)
+                            }
+                            <span>@option.Title</span>
+                            @if (!string.IsNullOrWhiteSpace(option.Description))
+                            {
+                                <a class="show-description">описание</a>
+                                <div class="description">@Html.Raw(option.Description)</div>
+                            }
+                        </div>
+                    }
+                    if (Request.IsAuthenticated)
+                    {
+                        <input type="submit" value="Проголосовать" class="sexy-button color-blue" />
+                        <a href="@Url.Action("surveynotvote", new { id = Model.Id })" style="color: gray; margin-left: 7px">Не хочу голосовать</a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("signin", "account", new SignInViewModel { ReturnUrl = Request.Url.ToString() })" style="text-decoration: none">
+                            <input type="submit" value="Проголосовать" class="sexy-button color-blue" />
+                        </a>
+                    }
+                }
+            }
+            else
+            {
+                foreach (var option in Model.Options)
+                {
+                    var percents = 0;
+                    <div class="option">
+                        @if (Model.VotesCount != 0)
+                        {
+                            percents = 100 * option.VotesCount / Model.VotesCount;
+                        }
+                        <div class="bar_wrap">
+                            <div class="bar" style="width: @percents%"></div>
+                        </div>                    
+                        <span class="option_title">
+                            @option.Title <span class="value">@percents% (@option.VotesCountString)</span>
+                        </span>
+                        @if (!string.IsNullOrWhiteSpace(option.Description))
+                        {
+                            <a class="show-description">описание</a>
+                            <div class="description">@Html.Raw(option.Description)</div>
+                        }
+                    </div>
+                }
+            }
+        }
+        <br />
+    </div>
+    @if (Model.HasOpenProtocol)
+    {
+        <div>
+            <span>@Html.ActionLink("Протокол", "surveyresults", new { id = Model.Id })</span>
+        </div>
+    }
+    else if(Model.IsFinished)
+    {
+        <div>
+            @if (Model.IsUserVoted)
+            {
+                <div class="grey">Ваш идентификатор бюлетеня: @Model.UserBulletinId</div>
+            }
+            <span>@Html.ActionLink("Протокол", "surveyresults", new { id = Model.Id })</span>
+        </div>
+    }
+</div>

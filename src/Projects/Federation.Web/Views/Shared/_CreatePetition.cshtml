@@ -1,0 +1,83 @@
+﻿@using Federation.Web.ViewModels
+@model _CreatePetitionViewModel
+
+<script src="../../Resources/scripts/jquery-ui.min.js" type="text/javascript"></script>
+<link href="../../Resources/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script src="../../Resources/tagsinput/jquery.tagsinput.js" type="text/javascript"></script>
+<link href="../../Resources/tagsinput/jquery.tagsinput.css" rel="stylesheet" type="text/css" />
+
+<script src="../../Resources/redactor/redactor.js" type="text/javascript"></script>
+<script src="../../Resources/redactor/langs/ru.js" type="text/javascript"></script>
+<link href="../../Resources/redactor/css/redactor.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    $(function () {
+        var albums;
+        if ('@Model.GroupId.HasValue') {
+            albums = '@Url.Action("albumsforeditor", "album", new { groupId = Model.GroupId })';
+        } else {
+            albums = '@Url.Action("albumsforeditor", "album")';
+        }
+
+        document.redactor = $("#Text").redactor({
+            buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|', 'image', 'video', 'table', 'link', '|', 'fontcolor', 'backcolor', '|', 'alignleft', 'aligncenter', 'alignright', 'justify', '|', 'horizontalrule', 'fullscreen'],
+            lang: 'ru', 
+            albums: albums
+        });
+
+        $('#TagTitles').tagsInput({
+            defaultText: 'добавьте тему',
+            width: '603px',
+            height: '33px',
+            autocomplete_url: '@Url.Action("findmatchingtags", "tag", new { id = Model.GroupIdString }, "http")',
+            autocomplete: { minLength: '3' }
+        });
+    });
+</script>
+
+<div class="styled_form">
+    @if (!string.IsNullOrEmpty(ViewBag.ValidationExceptionText))
+    {
+        <div class="validation_block">
+            @ViewBag.ValidationExceptionText
+        </div>
+    }
+    @using (Html.BeginForm("createpetition", "voting"))
+    {
+        <div class="form_block">
+            @Html.HiddenFor(m => m.GroupId)
+            <div class="input_block">
+                <div class="title">                    
+                    @Html.LabelFor(m => m.Title)<span class="required">*</span>
+                </div>
+                @Html.TextBoxFor(m => m.Title, new { autofocus = "" })
+                @Html.ValidationMessageFor(m => m.Title)
+            </div>
+            <div class="input_block redactor separator">
+                <div class="title">
+                    @Html.LabelFor(m => m.Text)<span class="required">*</span>
+                </div>                    
+                @Html.TextAreaFor(m => m.Text)
+                @Html.ValidationMessageFor(m => m.Text)
+            </div>
+            <div class="input_block separator">
+                <div class="title">
+                    @Html.LabelFor(m => m.IsPrivate)
+                </div>                    
+                @Html.CheckBoxFor(m => m.IsPrivate)
+                @Html.ValidationMessageFor(m => m.IsPrivate)
+            </div>
+            <div class="input_block separator">
+                <div class="title">
+                    @Html.LabelFor(m => m.TagTitles)
+                </div>                    
+                @Html.TextBoxFor(m => m.TagTitles, new { Class = "tags" })
+                @Html.ValidationMessageFor(m => m.TagTitles)
+            </div>
+        </div>
+        <div class="submit_block">
+            <input type="submit" value="Добавить" />
+        </div>
+    }
+</div>

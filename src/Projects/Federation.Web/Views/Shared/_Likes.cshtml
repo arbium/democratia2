@@ -1,0 +1,80 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model _LikesViewModel
+
+<style type="text/css">
+    span.comment-likes {
+        opacity: 0.75;
+    }
+
+    span.arrow {
+        width: 14px;
+        height: 14px;
+        margin-bottom: -1px;
+        margin-right: 1px;
+        display: inline-block;
+        background-image: url('@RoutesHelper.CurrentThemeFolder/images/likes.png');
+    }
+
+    span.up {
+        background-position: 0 0;
+    }
+    a:hover span.up {
+        background-position: 0 14px;
+    }
+
+    span.down {
+        background-position: 14px 0;
+    }
+    a:hover span.down {
+        background-position: 14px 14px;
+    }
+</style>
+
+@if (Request.IsAuthenticated)
+{
+    <span class="@(Model.TargetType == (byte)WtfLikes.Comment ? "comment-likes" : string.Empty)">
+        @if (Model.IsAuthor)
+        {
+            <span class="green">+@Model.LikesCount</span>
+            <span class="grey">/</span>
+            <span class="red">&minus;@Model.DislikesCount</span>
+        }
+        else
+        {
+            if (!Model.Vote.HasValue)
+            {
+                <a class="empty plus like" href="@Url.Action("apply", "like", new { id = Model.TargetId, val = true, type = Model.TargetType })">
+                    <span class="up arrow"></span><span class="green val">@Model.LikesCount</span>
+                </a>
+                <span class="grey">/</span>
+                <a class="empty minus like" href="@Url.Action("apply", "like", new { id = Model.TargetId, val = false, type = Model.TargetType })">
+                    <span class="down arrow"></span><span class="red val">@Model.DislikesCount</span>
+                </a>
+            }
+            else
+            {
+                if (Model.Vote.Value)
+                {
+                    <span class="green"><b>+@Model.LikesCount</b></span>
+                    <span class="grey">/</span>
+                    <span class="red">&minus;@Model.DislikesCount</span>
+                }
+                else
+                {
+                    <span class="green">+@Model.LikesCount</span>
+                    <span class="grey">/</span>
+                    <span class="red"><b>&minus;@Model.DislikesCount</b></span>
+                }
+            }
+        }
+    </span>
+}
+else
+{
+    <span class="@(Model.TargetType == (byte)WtfLikes.Comment ? "comment-likes" : string.Empty)">
+        <span class="green">+@Model.LikesCount</span>
+        <span class="grey">/</span>
+        <span class="red">&minus;@Model.DislikesCount</span>
+    </span>
+}

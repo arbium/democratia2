@@ -1,0 +1,148 @@
+﻿/* Blue line */
+.sitelist {
+    background: #4d6582;
+}
+.sitelist_container > a,
+.sitelist_container > span
+{
+    line-height: 30px;
+    color: #FFFFFF;
+    display: block;
+    float: left;
+    position: relative;
+    text-decoration: none;
+    margin-right: 5px;
+    padding: 4px 0;
+}
+.sitelist_container > a:link,
+.sitelist_container > a:visited
+ {
+ 	    text-decoration: underline;
+}
+.sitelist_container > a:hover {
+    text-decoration: none;
+}
+.sitelist_container > a:hover span {
+    background: none repeat scroll 0 0 #8899AA;
+}
+.sitelist_container > a > span , 
+.sitelist_container > span > span {
+    display: block;
+    font-size: 12px;
+    height: 28px;
+    line-height: 28px;
+    padding: 0 10px;
+}
+.sitelist_container > a.active > span {
+    background: none repeat scroll 0 0 #8899AA;
+}
+
+
+
+/* User area */
+.site_userarea_container {
+	float: right;
+	margin-right: -25px;
+}
+.site_userarea {
+    background: #edeff2 url(images/userpanel-bg.png) 0 -1px repeat-x;
+    border-radius: 6px 6px 0px 0px;
+    border-top: #2e3d50 1px solid;
+    height: 32px;
+    margin-top: 3px;
+}
+/*var1 - without float: left, the bug is space between elements*/
+/*
+.site_userarea a {
+    vertical-align: middle;
+    font-size: 12px;
+    font-family: Arial, Tahoma, Sans-Serif;
+    padding: 0 5px 0 8px;
+    line-height: 33px;
+    height: 33px;
+    display: inline-block;
+    background: url(images/userpanel-inter.png) top left no-repeat;
+}
+*/
+/*var2 - with float: left;*/
+.site_userarea a {
+    vertical-align: middle;
+    font-size: 12px;
+    font-family: Arial, Tahoma, Sans-Serif;
+    padding: 0 6px 0 6px;
+    line-height: 32px;
+    height: 32px;
+    display: block;
+    float: left;
+    background: url(images/userpanel-inter.png) 0 -1px no-repeat;
+}
+
+.site_userarea a:link, .site_userarea a:visited {
+    text-decoration: none;
+    color: #000;
+}
+.site_userarea a:hover, .site_userarea a:active {
+    text-decoration: none;
+    color: #0060B2;
+}
+.site_userarea a:hover span, .site_userarea a:active span
+{
+    text-decoration: underline;
+}
+.site_userarea a:first-child {
+    background: none;
+    padding: 0 8px;
+}
+
+.site_exit img {
+    width: 11px;
+    height: 11px;
+    margin-top: 11px;
+}
+.site_gazeta img {
+    width: 29px;
+    height: 18px;
+    margin-top: 6px;
+}
+.site_gazeta1 img {
+    width: 23px;
+    height: 19px;
+    margin-top: 6px;
+}
+.site_gazeta2 img {
+    width: 23px;
+    height: 19px;
+    margin-top: 6px;
+}
+.site_gazeta3 img {
+    width: 23px;
+    height: 19px;
+    margin-top: 6px;
+}
+
+.site_messages img {
+    width: 23px;
+    height: 17px;
+    margin-top: 6px;
+}
+.site_messages span 
+{
+    display: inline-block;
+    height: 18px;
+    line-height: 18px;
+    margin-top: 2px;
+    font-size: 11px;
+    
+}
+
+
+/* Logo */
+.d2 {
+	width: 35px;
+}
+.sitelist_container > a.d2,
+.sitelist_container > a.d2 span {
+	padding: 0;
+	height: 31px;
+	background: url(images/d2beta.png) no-repeat;
+}

@@ -1,0 +1,154 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model UserExpertsViewModel
+@{
+    ViewBag.Title = "Эксперты";
+    
+    var isFirst = true;
+}
+
+<style type="text/css">
+    .groups
+    {
+        width: 100%;
+    }
+    
+    .groups tr
+    {
+        border-bottom: #DDE2E7 solid 1px;
+    }
+    .groups td
+    {
+        padding: 10px 0;
+    }
+    
+    .groups .col1
+    {
+        min-width: 160px;
+        width: 20%;
+    }
+    .groups .col2
+    {       
+    }
+    .groups .col3
+    {
+        width: 25%;
+    }
+    .groups .col4
+    {
+        width: 20%;
+    }
+    .groups .link
+    {
+        text-decoration: none;
+        color: #4D6582;
+    }
+    .groups .link:hover {
+        color: #C00;
+    }
+    .groups .link > img
+    {
+        float: left;
+        margin: 0 10px 0 0;
+    }
+    .groups .link > span
+    {
+        vertical-align: top;
+        margin: 0 5px;
+        display: block;
+    }
+    
+    .groups .actions
+    {
+        float: right;
+    }
+    .groups .actions > a
+    {
+        font-size: 0.9em;
+    }
+    
+    .groups .tags > a
+    {
+        border: #DDDDDD solid 1px;
+        background-color: #F0F0F0;
+        color: #666666;
+        border-radius: 4px;
+        padding: 1px 5px;
+        font-size: 0.9em;
+        text-decoration: none;
+        vertical-align: top;
+        white-space: nowrap;
+        line-height: 24px;
+    }
+    
+    .groups .tags > a:hover
+    {
+        color: inherit;
+    }
+</style>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.UserId, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+            <li>
+                <a href="@Url.Action("voters")">Сторонники</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body" id="user_delegation">
+        @if (Model.Experts.Count == 0)
+        {
+            <h2>Вы никому не делегировали свой голос</h2>
+        }
+        else
+        {
+            <table class="groups">
+                @foreach (var expert in Model.Experts)
+                {
+                    foreach (var group in expert.Groups)
+                    {   
+                        <tr>
+                            @if (isFirst)
+                            {
+                                <td class="col1" rowspan="@expert.Groups.Count">
+                                    <a class="link" href="@Url.Action("delegation", "user", new { id = expert.Id, GroupUrl = group.Url })">
+                                        <img src="@expert.Avatar&w=48&h=64" alt="лого" />
+                                        <span><b>@expert.SurName</b></span><span> @expert.FirstName</span><span>@expert.Patronymic</span></a>
+                                </td>
+                            }
+                            @{ isFirst = false; }
+                            <td class="col2">
+                                <a class="link" href="@Url.Action("index", "Group", new { id = group.Url })"><span>@group.Name</span>
+                                </a>
+                            </td>
+                            <td class="col3">
+                                <span class="tags">
+                                    @foreach (var tag in group.Tags)
+                                    {
+                                        <a href="@Url.Action("Search", "group", new { id = group.Url, tag = tag.Id })">@tag.Title</a>
+                                    }
+                                </span>
+                            </td>
+@*                            <td class="col4">
+                                <div class="actions">
+                                    <a href="@Url.Action("delegation", "user", new { id = group.ExpertId })">Изменить</a>
+                                    <br />
+                                    <a href="@Url.ConfirmAction("Вы более не хотите делегировать данному эксперту?", Url.Action("DeleteDelegating", "user", new { id = group.ExpertId }))">Удалить</a>
+                                </div>
+                            </td>*@
+                        </tr>
+                    }
+                    isFirst = true;
+                }
+            </table>
+        }
+    </div>
+</div>

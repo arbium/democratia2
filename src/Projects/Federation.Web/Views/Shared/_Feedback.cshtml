@@ -1,0 +1,55 @@
+﻿<style type="text/css">
+    #feedback {
+        background-color: #4D6582;
+        padding: 3px 9px;
+        -moz-transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);        
+        writing-mode: tb-rl;
+        position: fixed;
+        bottom: 50%;
+        left: -50px;
+        z-index: 9;
+    }
+
+    #feedback.ie {
+        left: -99px;
+        padding: 9px 3px;
+        bottom: 29%;
+        -ms-transform: rotate(-180deg);
+    }
+    
+    #feedback-link {
+    	font-weight: bold;
+    	color: White;
+        text-decoration: none;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        if (navigator.appName == 'Microsoft Internet Explorer') {
+            @*var ie = navigator.appVersion.match(/MSIE (\d+\.\d+)/)[1];
+            if (parseInt(ie) < 10)
+                $("#feedback").addClass("ie");*@
+            $("#feedback").addClass("ie");
+        }
+
+        var link = $("#feedback-link").attr("href");
+        var isAuthenticated = $("#is-authenticated").attr("value");
+        var height = isAuthenticated == "True" ? 480 : 640;
+
+        $("#feedback-link").attr("href", "#");
+        $("#feedback-link").attr("target", "");
+
+        $("#feedback-link").click(function () {
+            window.open(link + "?isdialog=true", "_blank",
+                "width=640,height=" + height + ",toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,copyhistory=no,resizable=no");
+        });
+    });
+</script>
+
+<div id="feedback">
+    <a id="feedback-link" href="@Url.Action("index", "feedback")" target="_blank">Техподдержка</a>
+    <input type="hidden" id="is-authenticated" value="@Request.IsAuthenticated" />
+</div>

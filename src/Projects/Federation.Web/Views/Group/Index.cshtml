@@ -1,0 +1,285 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model GroupIndexViewModel
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<style type="text/css">
+    .topics {
+        margin: 12px 0 17px 35px;
+    }
+
+    .topics > a {
+        margin-right: 5px;
+        color: #4D6582 !important;
+        border-radius: 15px;
+    }
+
+    .topics > a.checked {
+        padding: 4px 15px;
+        background-color: #CCD3DB;        
+        color: #000 !important;
+        text-decoration: none;
+    }
+
+    .topics > a.all {
+        padding: 4px 15px;
+        border: 1px solid #BDF0A7;
+    }
+
+    .topics > a.all.checked {
+        background-color: #BDF0A7;
+    }
+</style>
+
+<div id="group_index">
+    <div class="layout_pageheader"></div>
+    <div class="layout_sidemenu">
+        <div id="group-info">
+            @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.GroupId, NavigationBoxType.Group))
+            <div class="actions">
+                @{
+                    var isApproved = false;
+                    var isMember = false;
+                    var isModer = false;
+
+                    if (UserContext.Current != null)
+                    {
+                        isMember = UserContext.Current.IsUserInGroup(Model.GroupId);
+                        isApproved = UserContext.Current.IsUserApprovedInGroup(Model.GroupId);
+                        isModer = UserContext.Current.IsUserModeratorInGroup(Model.GroupId);
+
+                        if (isModer & Model.IsCreateElectionEnabled)
+                        {
+                            <a href="@Url.ConfirmAction("Вы действительно хотите инициировать выборы модераторов в группе?",
+                                Url.Action("createelection", new { Id = Model.Url }))" class="action-button important">
+                                Инициировать выборы?</a>
+                        }
+                    }
+                }
+            </div>            
+        </div>
+        
+        @Html.Partial("_RecommendedGroups", new Group_RecommendedGroupsViewModel(Model.GroupId))
+        @Html.Partial("_FriendlyGroups", new Group_FriendlyGroupsViewModel(Model.GroupId))
+
+        <div class="moderators_list">
+            <h2>Модераторы</h2>
+            @Html.Partial("_Moders", Model.Moders)
+        </div>
+        @if (Model.IsExpertable)
+        {
+            <div class="experts_list">
+                <h2>Эксперты</h2>
+                @{
+                    var userId = UserContext.Current == null ? (Guid?)null : UserContext.Current.Id;
+                    @Html.Partial("_Experts", new Group_ExpertsViewModel(Model.GroupId, userId))
+                }
+            </div>
+        }
+    </div>    
+    <div class="layout_content">
+        <div class="lighttabs_container">
+            <div class="jqueryslidemenu servicebuttonmenu">
+                <ul>
+                    @if (!isMember)
+                    {
+                        <li>
+                            <a href="@Url.Action("join", new { id = Model.Url })">Вступить в группу</a>
+                        </li>
+                    }
+                    @if (isApproved && (Model.GroupId != ConstHelper.RootGroupId || isModer))
+                    {
+                        <li>
+                            <a href="@Url.Action("addpost", new { id = Model.Url })">Написать пост</a>
+                        </li>
+                    }
+                    <li class="servicemenu">
+                        <a href="#">
+                            <img src="@RoutesHelper.CurrentThemeFolder/images/buttcalc/button_setup.png" alt="меню" />
+                        </a>
+                        <ul>
+                            @if (isApproved && (Model.GroupId != ConstHelper.RootGroupId || (Model.GroupId == ConstHelper.RootGroupId && isModer)))
+                            {
+                                <li>
+                                    <a href="@Url.Action("createpoll", new { id = Model.Url })">Создать голосование</a>
+                                </li> 
+                            }
+                            @if (isApproved)
+                            {
+                                <li>
+                                    <a href="@Url.Action("createpetition", new { id = Model.Url })">Создать петицию</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("createsurvey", new { id = Model.Url })">Создать опрос</a>
+                                </li>  
+                            }
+                            @if (!isMember)
+                            {
+                                if (UserContext.Current != null && !UserContext.Current.SubscribedGroups.Contains(Model.GroupId))
+                                {
+                                    <li>
+                                        @Html.ActionLink("Подписаться на ленту", "subscribetogroup", "subscription", new { id = Model.Url }, null)
+                                    </li> 
+                                }
+                                if (UserContext.Current != null && UserContext.Current.SubscribedGroups.Contains(Model.GroupId))
+                                {
+                                    <li>
+                                        @Html.ConfirmActionLink("Отписаться от группы", "Вы действительно хотите удалить группу из своей подписки?",
+                                             Url.Action("unsubscribefromgroup", "subscription", new { id = Model.Url }))
+                                    </li>
+                                }
+                            }
+                            <li class="separator"></li>
+                            @if (isModer)
+                            {
+                                <li>
+                                    @Html.ConfirmActionLink("Снять полномочия модератора", "Вы действительно больше не хотите быть модератором?",
+                                         Url.Action("leave", new { id = Model.Url }))
+                                </li>
+                            }
+                            else if (isMember && !isApproved)
+                            {
+                                <li>
+                                    @Html.ConfirmActionLink("Отозвать заявку", "Вы действительно хотите отозвать заявку?",
+                                         Url.Action("leave", new { id = Model.Url }))
+                                </li>
+                            }
+                            else if (isMember && Model.GroupId != ConstHelper.RootGroupId)
+                            {
+                                <li>
+                                    @Html.ConfirmActionLink("Выйти из группы", "Вы действительно хотите выйти из группы?",
+                                         Url.Action("leave", new { id = Model.Url }))
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <ul class="lighttabs">
+                @if (Model.ByDate.HasValue && Model.ByDate.Value)
+                {
+                    <li>
+                        <a href="@Url.Action("index", new { id = Model.Url, topic = Model.TopicId })">Блог по рейтингу</a>
+                    </li>
+                    <li>
+                        <a class="selected">По дате</a>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a class="selected">Блог по рейтингу</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("index", new { id = Model.Url, topic = Model.TopicId, bydate = true })">По дате</a>
+                    </li>
+                }
+            </ul>
+            <div class="lighttabs_border"></div>
+        </div>
+        <div class="important_notices">
+            @if (isMember)
+            {
+                @*if (isCreateElectionNecessary)
+                {
+                    <div class="notice">
+                        <h3>Подошло время выборов модераторов группы</h3>
+				        <a href="@Url.ConfirmAction("Вы действительно хотите инициировать выборы модераторов в группе?",
+                            Url.Action("createelection", new { id = Model.GroupId }))">
+                            Инициировать выборы
+				        </a>
+                    </div>
+                }*@
+                if (isModer && Model.GroupTagsCount == 0)
+                {
+                    var topicsUrl = Url.Action("topics", new { id = Model.Url });
+                    <div class="notice">
+                        Внимание, не настроены темы группы, поэтому не будет работать делегирование.<br/>
+                        Мы рекомендуем вам уделить несколько минут и <a href="@topicsUrl">настроить темы группы</a>
+                    </div>
+                }
+                if (Model.IsInvisible)
+                {
+                    var joinUrl = Url.Action("join", "group", new { id = Model.Url }, "http");
+                    <div class="notice">
+                        Ваша группа является тайным сообществом. Для приглашения в группу используйте ссылку: <a href="@joinUrl">@joinUrl</a> 
+                    </div>
+                }
+                if (Model.State == GroupState.Blank && isModer && Model.RequiredModers > 0)
+                {
+                    <div class="notice">
+                        <h3>Группа еще не сформирована</h3>
+                        Вам нужно собрать совет модераторов.<br />
+                        Необходимо еще модераторов: @Model.RequiredModers.<br />
+                        Пришлите, указанную ниже ссылку, другим пользователям для того, чтобы пригласить
+                        их в группу: 
+                        <a href="@Url.Action("join", "group", new { id = Model.Url }, "http")">@Url.Action("join", "group", new { id = Model.Url }, "http")</a>.
+                        <p>
+                            Вы можете назначить недостающих модераторов из @Html.ActionLink("поданных заявок", "userrequests", new { id = Model.Url })
+                        </p>
+                    </div>
+                }
+                else if (Model.State == GroupState.Archive)
+                {
+                    <div class="notice">
+                        @if (Model.Moders.ModeratorList.Count == 0)
+                        {
+                            <p>
+                                В группе не осталось ни одного модератора!
+                                @Html.ConfirmActionLink("Стать модератором", "Вы уверены, что хотите стать модератором?",
+                                    Url.Action("approvemember", new { id = Model.MemberId }))
+                            </p>
+                        }
+                        else
+                        {  
+                            <h3>Группа заморожена в связи с нехваткой модераторов</h3>
+                            <span>
+                                Вам нужно собрать совет модераторов.<br />
+                                Необходимо еще модераторов: @Model.RequiredModers.
+                            </span>
+                            if (isModer)
+                            {
+                                <p>
+                                    Вы можете назначить недостающих модераторов из @Html.ActionLink("участников группы", "members", new { id = Model.Url })
+                                </p>
+                            }
+                            else
+                            {
+                                @Html.ConfirmActionLink("Стать модератором", "Вы уверены, что хотите стать модератором?",
+                                    Url.Action("approvemember", new { id = Model.MemberId }))
+                            }
+                        }
+                    </div>
+                }
+            }
+            else if (Model.State == GroupState.Blank)
+            {
+                <div class="notice">
+                    <h3>Группа находится в стадии формирования</h3>
+                    <span>
+                        Заявки на вступление проходят предварительную модерацию.<br />
+                        У вас есть шанс стать модератором этой группы!
+                    </span>
+                </div>
+            }
+        </div>
+        <div class="content_helper_control no_margin" style="float: left">
+            <a href="@Url.Action("rss", new { id = Model.Url })">
+                <img class="texticon" src="@RoutesHelper.CurrentThemeFolder/images/rss16.png" alt="rss" />
+            </a>
+        </div>
+        <div class="topics">
+            @{
+                var topicId = Context.Request.Params.Count == 0 ? string.Empty : Context.Request.Params["topic"];
+                <a href="@Url.Action("index")" class="all @(string.IsNullOrEmpty(topicId) ? "checked" : string.Empty)">ВСЕ</a>
+                foreach (var topic in Model.Topics)
+                {
+                    <a href="@Url.Action("index", new { topic = topic.Id })" class="@(topicId == topic.Id.ToString() ? "checked" : string.Empty)">@topic.Title</a>
+                }
+            }
+        </div>
+        @Html.Partial("_Feed", Model.Feed)
+    </div>
+</div>

@@ -1,0 +1,22 @@
+﻿@model HandleErrorInfo
+@{
+    ViewBag.Title = "Произошла ошибка";
+    ViewBag.ShowException = false;
+}
+
+<div id="error-page">
+    <h1>Произошла ошибка:</h1>
+    @if (ViewBag.ExceptionText != null)
+    {
+        @Html.Raw(ViewBag.ExceptionText)
+    }
+    @if (Request.Url != null && Request.Url.Host == "federation.ru" && Model != null)
+    {
+        @Model.Exception.Message
+        <br /><br />
+        @Model.Exception.InnerException
+        <br /><br />
+        @Model.Exception.StackTrace
+    }
+</div>
+

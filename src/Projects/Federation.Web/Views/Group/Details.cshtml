@@ -1,0 +1,158 @@
+﻿@using Federation.Web.ViewModels
+@model GroupDetailsViewModel
+@{
+    ViewBag.Title = Model.Name;
+
+    var isModerator = Request.IsAuthenticated && UserContext.Current.IsUserModeratorInGroup(Model.GroupId);
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    <div id="group-info">
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.GroupId, NavigationBoxType.Group))
+    </div>
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="selected">Профиль</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        @if (isModerator)
+        {
+            <div class="content_helper_control" >
+                <span>Управление</span>
+            </div>
+            <div class="actions">                
+                <table class="bio_actionbuttons">
+                    <tr>
+                        <td>
+                            <div class="actionbuttons_container">
+                                <a href="@Url.Action("editlogo")" class="action-button">Изменить логотип</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actionbuttons_container">
+                                <a href="@Url.Action("edit", new { Id = Model.Url })" class="action-button">Редактировать группу</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        }
+        <div class="content_helper_control">
+            <span>Награды</span>
+        </div>
+        <div class="content_department">
+            <div class="badges">
+                @Html.Partial("_Badges", Model.Badges)
+            </div>
+        </div>
+        <div class="content_helper_control">
+            <span>Приватность группы</span>
+            @if (isModerator)
+            {
+                <a href="@Url.Action("privacy", new { Id = Model.Url })">Редактировать</a>
+            }
+        </div>
+        <div class="content_department">
+            @if (Model.IsContentModeration && Model.IsMemberModeration)
+            {
+                <span>Контент и члены группы проходят премодерацию</span>
+            }
+            else if (Model.IsContentModeration)
+            {
+                <span>Контент группы проходит премодерацию</span>
+            }
+            else if (Model.IsMemberModeration)
+            {
+                <span>Члены группы проходят премодерацию</span>
+            }
+            else
+            {
+                <span>Премодерация не предусмотрена</span>
+            }
+            @if (Model.IsPrivateDiscussion)
+            {
+                <br />
+                <span>Комментирование доступно только для членов группы</span>
+            }            
+        </div>
+        <div class="content_helper_control">
+            <span>Информация о группе</span>
+            @if (isModerator)
+            {
+                <a href="@Url.Action("edit", new { id = Model.Url })">Редактировать</a>
+            }
+        </div>
+        <div class="content_department">
+            <p>
+                @Html.Raw(Model.Summary)
+                @if (string.IsNullOrWhiteSpace(Model.Summary))
+                {
+                    <text>Информация о группе не сообщена</text>
+                }
+            </p>
+            Кворум для голосований: @Model.PollQuorum%<br />
+            Кворум для выборов: @Model.ElectionQuorum%
+        </div>
+        <div class="content_helper_control">
+            <span>Категория группы</span>
+            @if (isModerator)
+            {
+                <a href="@Url.Action("edit", new { id = Model.Url })">Редактировать</a>
+            }
+        </div>
+        <div class="content_department">
+            <span>@Model.Category</span>
+            @if (string.IsNullOrWhiteSpace(Model.Category))
+            {
+                <text>Категория группы не указана</text>
+            }
+        </div>
+        <div class="content_helper_control">
+            <span>Участники группы</span>
+            <a href="@Url.Action("members", new { id = Model.Url })">Подробнее</a>
+            @if (isModerator)
+            {
+                <a href="@Url.Action("userrequests", new { id = Model.Url })">Заявки</a>
+            }
+        </div>
+        <div class="content_department">
+			<p>Модераторов: @Model.ModeratorList.ModeratorList.Count() из @Model.MaxModeratorsCount</p>
+            <p>Участников: @Model.MembersCount</p>
+        </div>
+        <div class="content_helper_control">
+            <span>Темы группы</span>
+            @Html.ActionLink("Подробнее", "topics", new { id = Model.Url })
+        </div>
+        <div class="content_department">
+            @foreach (var tag in Model.Topics)
+            {
+				<a href="@Url.Action("search", new { id = Model.Url, tag = tag.Title })">@tag.Title</a>
+            }
+            @if (Model.Topics.Count == 0)
+            {
+                <text>Темы группы не настроены</text>
+            }
+        </div>
+        <div class="content_helper_control">
+            <span>Темы наиболее часто используемые в группе</span>
+            @Html.ActionLink("Настроить рекомендованные темы", "tags", new { id = Model.Url })
+        </div>
+        <div class="content_department">
+            @foreach (var tag in Model.Tags)
+            {
+				<a href="@Url.Action("search", new { id = Model.Url, tag = tag.Title })">@tag.Title</a>
+            }
+            @if (Model.Tags.Count == 0)
+            {
+                <text>В публикациях группы не указаны темы или в группе еще нет контента</text>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model UserMessageViewModel
+@{
+    ViewBag.Title = (Model.IsInbox ? "Входящее" : "Исходящее") + " сообщение";
+}
+
+<style type="text/css">
+    .message {
+        background-color: #F9F9F9;
+    }
+
+    .message_info {
+        color: #777;
+        font-size: 13px;
+    }
+    .message_info > a {
+        color: #666;
+    }
+    .message_info > span {
+        float: right;
+        font-size: 12px;
+        color: #777;   
+    }
+    .message_text {
+        margin: 10px; 
+    }
+    .message_controlls {
+        background-color: #E4D3C2;
+        padding: 10px;
+        overflow: auto;
+    }
+    .message_controlls > a {
+        float: right;
+        width: 100%;
+        margin-left: 20px;
+    }
+</style>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(UserContext.Current.Id, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                @if (Request.UrlReferrer == null)
+                {
+                    <a href="@Url.Action("trashmessages")">◄</a>
+                }
+                else
+                {
+                    <a class="back">◄</a>
+                }
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body" id="user_inboxmessage">
+        <h2>@ViewBag.Title</h2>
+        <div class="message_controlls">
+            <div class="p20 message">
+                <div class="message_info">
+                    @if (Model.IsInbox)
+                    {
+                        if (Model.AuthorId.HasValue)
+                        {
+                            @Html.ActionLink(Model.AuthorFullName, "index", new { id = Model.AuthorId })
+                        }
+                        else
+                        {
+                            <span class="grey">Система</span>
+                        }
+                    }
+                    else
+                    {
+                        <text>Кому: </text>@Html.ActionLink(Model.RecipientFullName, "index", new { id = Model.RecipientId })
+                    }
+                    <span>@Model.Date.ToFormattedUserTime(UserContext.Current)</span>
+                </div>
+                <div class="message_text">
+                    @foreach (var line in Model.Text)
+                    {
+                        <text>@TextHelper.CleanTags(line, false, true)</text><br />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,116 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model GroupPollReportViewModel
+@{
+    ViewBag.Title = "Протокол голосования";
+}
+
+<style type="text/css">
+    .protocol
+    {
+        width: 100%;
+    }
+    
+    .protocol tr
+    {
+        border-bottom: #DDE2E7 solid 1px;
+    }
+    .protocol td
+    {
+        padding: 10px 0;
+    }
+    
+    .protocol .header
+    {
+        border-bottom: #333333 solid 1px;
+        font-weight: bold;      
+    }
+    .protocol .col1
+    {
+        min-width: 240px;
+        width: 70%;
+    }
+    .protocol .col2
+    {
+        width: 20%;
+    }
+    .protocol .col3
+    {
+        width: 10%;
+    }
+
+</style>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    <div class="author">
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.GroupId, NavigationBoxType.Group))
+    </div>
+</div>
+<div class="layout_content"> 
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li><a class="back">◄</a>   </li>
+            <li><a class="selected">@ViewBag.Title</a> </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    
+        <table class="protocol">
+            <tr>
+                <td class="header">
+                    Номер бюллетеня
+                </td>
+                <td class="header">
+                    Голос
+                </td>
+                <td class="header">
+                    Вес
+                </td>
+            </tr> 
+            @foreach (var bulletin in Model.Bulletins)
+            {
+                <tr>
+                    <td class="col1">
+                        @bulletin.Id
+                    </td>
+                    @if (bulletin.Weight.Equals(0))
+                    {
+                        <td class="col2">
+                            Голос делегирован
+                        </td>
+                        <td class="col3">
+                            -
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="col2">
+                            @switch (bulletin.Result)
+                            {
+                                case VoteOption.Yes:
+                                    <text>За</text>
+                                    break;
+                                case VoteOption.No:
+                                    <text>Против</text>
+                                    break;
+                                case VoteOption.NotVoted:
+                                    <text>Не голосовал</text>
+                                    break;
+                                case VoteOption.Refrained:
+                                    <text>Воздержался</text>
+                                    break;
+                                default:
+                                    <text>Неизвестно</text>
+                                    break;
+                            }
+                        </td>
+                        <td class="col3">
+                            @bulletin.Weight
+                        </td>
+                    }
+                </tr>
+            }
+        </table>
+    
+</div>

@@ -1,0 +1,109 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model _PetitionViewModel
+
+<style type="text/css">
+    .coauthors {
+        float: right;
+        text-align: right;
+    }
+    .coauthors span {
+        color: gray;
+    }
+    .coauthors div {
+        margin: 1px;
+    }
+
+    .date {
+        margin: 7px;
+        font-size: 12px;
+    }
+    .date span {
+        color: gray;        
+    }
+</style>
+
+@if (Model.Coauthors != null && Model.Coauthors.Count != 0)
+{
+    <div class="coauthors">
+        @if (Model.Coauthors.Count == 1)
+        {
+            <span>Соавтор:</span>
+        }
+        else
+        {
+            <span>Соавторы:</span>            
+        }
+        @foreach (var coauthor in Model.Coauthors)
+        {
+            <div>
+                <img src="@coauthor.Avatar&w=15&h=20" alt="" />
+                <a href="@Url.Action("index", "user", new { id = coauthor.UserId })">
+                    @coauthor.Name
+                </a>                
+            </div>
+        }
+    </div>
+}
+<div class="sign_info">
+    <div class="date">
+        <div class="start">
+            <span>Начало сбора подписей:</span>
+            @if (Model.StartDate.HasValue)
+            {
+                @Model.StartDate.Value.ToUserTime(UserContext.Current).ToString("dd.MM.yyyy HH:mm")
+            }
+        </div>
+        <div class="finish">
+            <span>Конец сбора подписей:</span>
+            @if (Model.EndDate.HasValue)
+            {
+                @Model.EndDate.Value.ToUserTime(UserContext.Current).ToString("dd.MM.yyyy HH:mm")
+            }
+            else
+            {
+                <text>бессрочно</text>
+            }
+        </div>
+    </div>
+    <div class="numsigned">
+        @if (Model.IsFinished)
+        {
+            <text>Сбор подписей завершен. Петицию подписали</text>
+        }
+        else
+        {
+            <text>Уже подписало</text>
+        }
+        @Html.ActionLink(Model.SignersCount, "petitionsigners", new { id = Model.Id })
+    </div>
+    @if (Request.IsAuthenticated)
+    {
+        if (Model.IsUserSigned)
+        {
+            <div class="yousigned">
+                Вы подписались под этой петицией
+            </div>
+        }
+        else
+        {
+            if (!Model.IsPrivate || Model.GroupId.HasValue && UserContext.Current.IsUserApprovedInGroup(Model.GroupId.Value))
+            {
+                if (Model.State == ContentState.Approved && !Model.IsFinished)
+                {
+                    <div class="sign">
+                        @Html.ActionLink("Подписываюсь!", "signpetition", "voting", new { id = Model.Id }, null)
+                    </div>
+                }
+            }
+            else
+            { 
+                @Model.Privacy
+            }
+        }
+    }
+    <br />
+</div>
+<div class="body">    
+    @Html.Raw(Model.Text)
+</div>

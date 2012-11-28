@@ -1,0 +1,53 @@
+﻿@using Federation.Web.ViewModels
+@model Home_PopularViewModel
+
+<div id="top">
+    <div class="top_groups">
+        <div class="searchbox">
+            @using(Html.BeginForm("group", "search", FormMethod.Get))
+            {
+                <input name="id" class="searchboxid-replace" type="text" placeholder="Найти группу" />
+                <input class="searchbuttonid-replace" type="image" src="@RoutesHelper.CurrentThemeFolder/images/searchbutton.png" />
+            }
+        </div>
+        <h1>Топ группы</h1>
+        <table>
+            <thead>
+                <tr>
+                    <td colspan="2">участников</td><td>постов</td>
+                </tr>
+            </thead>
+            @foreach (var group in Model.Groups)
+            {
+                <tr>
+                    <td class="group">
+                        <a href="@Url.Action("index", "group", new { id = group.Url })">@group.Name</a>
+                    </td>
+                    <td class="members">@group.MembersCount</td>
+                    <td class="posts">@group.PostsCount</td>
+                </tr>
+            }
+        </table> 
+        @Html.ActionLink("весь список...", "groups", "home", new { groupStateFilter = 1, orderByFilter = 0 }, new { Class = "more" })
+    </div>
+    <div class="top_users">
+        <h1>Топ пользователей</h1>
+        <table>
+            <thead>
+                <tr>
+                    <td colspan="2">подписчиков</td><td>постов</td>
+                </tr>
+            </thead>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td class="user">
+                        <a href="@Url.Action("index", "user", new { user.Id })">@user.DisplayName</a>
+                    </td>
+                    <td class="subscribers">@user.SubscribersCount</td>
+                    <td class="posts">@user.PostsCount</td>
+                </tr>
+            }
+        </table> 
+    </div>
+</div>

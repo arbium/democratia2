@@ -1,0 +1,62 @@
+﻿@using Federation.Web.ViewModels
+@using Federation.Core
+@model Group_PollStatusViewModel
+<div class="voting_progressbar">
+    <div class="timeline">
+        <div class="start date">
+            <span>Дата начала:</span> @Model.StartDate.ToUserTime(UserContext.Current).ToString("dd.MM.yyyy HH:mm")</div>
+        <div class="finish date">
+            <span>Дата завершения:</span> @Model.FinishDate.ToUserTime(UserContext.Current).ToString("dd.MM.yyyy HH:mm")</div>
+        @if (Model.IsFinished)
+        {        
+            <div class="voteresult">@Html.Raw(Model.VoteResult)</div>
+        }
+        else
+        {
+            <div class="remaining">
+                Осталось:<br />@Model.TimeRemaing</div>
+        }
+    </div>
+    <div class="progressbar">
+        <div style="width:@(Model.RelativePositiveVotes)%" class="bar yes">
+            <span></span>
+        </div>
+        <div style="width:@(Model.RelativeNegativeVotes)%" class="bar no">
+            <span></span>
+        </div>
+        <div style="width:@(Model.RelativeForefitVotes)%" class="bar forefit">
+            <span></span>
+        </div>
+        <div style="width:@(Model.RelativeNotVoted)%" class="bar not">
+            <span></span>
+        </div>
+    </div>
+    <div class="status">
+        <span class="black">Участвовало @Model.TookPart из @Model.ParticipantsCount, </span>
+        <span class="vote yes"><b>@Model.RelativePositiveVotes%</b> (@Model.PositiveVotes) -
+            ЗА,</span> <span class="vote no"><b>@Model.RelativeNegativeVotes%</b> (@Model.NegativeVotes)
+                - Против,</span> <span class="vote forefit"><b>@Model.RelativeForefitVotes%</b> (@Model.ForefitVotes)
+                    - воздержалось,</span> <span class="vote not"><b>@Model.RelativeNotVoted%</b> (@Model.NotVoted)
+                        - не проголосовало</span>
+    </div>
+    <div class="status">
+        <p>
+        @if (!string.IsNullOrEmpty(Model.PollBulletinId) && !Model.HasOpenProtocol)
+        {
+            <text>Ваш бюллетень: @Model.PollBulletinId &nbsp;</text>
+        }
+            
+        @if (Model.HasOpenProtocol)
+        {
+            <text> Протокол голосования:</text>
+            @Html.ActionLink("посмотреть", "openpollreport", new {id = Model.PollId})
+        }
+        else if (Model.IsFinished)
+        {
+            <text> Протокол голосования:</text>
+            @Html.ActionLink("посмотреть", "pollreport", new {id = Model.PollId})
+            <a href="@Model.ReportsUrl">скачать</a>
+        }
+        </p> 
+    </div>
+</div>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
+  <TopNode>[0-1000]D:\! ~ Federation ~\src\src\Projects\Federation.Core.Tests\Federation.Core.nunit</TopNode>
+  <SelectedNode>[0-1002]Federation.Core.Tests.Services.SheduleServiceTests</SelectedNode>
+  <ExcludeCategories>false</ExcludeCategories>
+  <Nodes>
+    <Node UniqueName="[0-1000]D:\! ~ Federation ~\src\src\Projects\Federation.Core.Tests\Federation.Core.nunit" Expanded="true" />
+    <Node UniqueName="[0-1004]D:\! ~ Federation ~\src\src\Projects\Federation.Core.Tests\bin\Debug\Federation.Core.Tests.exe" Expanded="true" />
+    <Node UniqueName="[0-1005]Federation" Expanded="true" />
+    <Node UniqueName="[0-1006]Federation.Core" Expanded="true" />
+    <Node UniqueName="[0-1001]Federation.Core.Tests.AssemblyInitializer" Expanded="true" />
+    <Node UniqueName="[0-1008]Federation.Core.Tests.Services" Expanded="true" />
+    <Node UniqueName="[0-1002]Federation.Core.Tests.Services.SheduleServiceTests" Expanded="true" />
+  </Nodes>
+</VisualState>

@@ -1,0 +1,66 @@
+﻿@using Federation.Web.ViewModels
+@model UserBlackListViewModel
+@{
+    ViewBag.Title = "Управление черным списком";
+}
+
+<style type="text/css">
+    .blacklist-item {
+        background-color: #FBFBFB;
+        margin-bottom: 11px;
+        padding: 3px;
+        overflow: hidden;
+    }
+
+    .blacklist-item img {
+        float: left;
+        margin-right: 7px;
+    }    
+
+    .blacklist-item a {
+        text-decoration: none;
+        margin: 1px;
+    }
+
+    .blacklist-item > * {
+        display: block;
+    }
+</style>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(UserContext.Current.Id, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <h2>Черный список</h2>
+        <p class="grey">Контент пользователей, содержащихся в списке, будет скрыт от вас.</p>
+        @if (Model.BlackList.Count == 0)
+        {
+            <span>Список пуст</span>
+        }
+        else
+        {
+            foreach (var user in Model.BlackList)
+            {
+                <div class="blacklist-item">
+                    <img src="@user.Avatar&w=48&h=64" alt="Фото" />
+                    <b>@Html.ActionLink(user.FullName, "index", new { id = user.Id })</b>
+                    @Html.ConfirmActionLink("[убрать из списка]", "Вы действительно хотите убрать пользователя из черного списка?",
+                        Url.Action("userinblacklist", new { id = user.Id, block = false }))
+                </div>
+            }
+        }
+    </div>
+</div>

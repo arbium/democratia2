@@ -1,0 +1,72 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model UserTrashMessagesViewModel
+@{
+    ViewBag.Title = "Корзина";
+}
+
+<link rel="stylesheet" type="text/css" href="@RoutesHelper.CurrentThemeFolder/table.css" />
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(UserContext.Current.Id, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a href="@Url.Action("dialogs")">Диалоги</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body" id="user_boxmessages">
+        <div class="messages_list">                                
+            @for(var i = 0; i < Model.Messages.Count; i++)
+            {
+                var message = Model.Messages[i];
+
+                if(i == 0 || Model.Messages[i - 1].Date.Date != message.Date.Date)
+                { 
+                    <div class="date_oneday">
+                        @message.Date.ToFormattedUserTime(UserContext.Current, string.Empty)
+                    </div>
+                }
+                <div class="message_item @(!message.IsRead ? "unread" : string.Empty)">
+                    <div class="message_time">
+                        <a href="@Url.Action("message", "user", new { id = message.Id })">
+                            @message.Date.ToFormattedUserTime(UserContext.Current, "HH:mm", true)
+                        </a>
+                    </div>
+                    <div class="message_summ">
+                        <a href="@Url.Action("message", "user", new { id = message.Id })">
+                            @if (message.IsInbox)
+                            {
+                                if(message.AuthorFullName != null)
+                                {
+                                    <h5>▼ @message.AuthorFullName</h5>
+                                }
+                                else
+                                {
+                                    <h5>Система</h5>
+                                }
+                            }
+                            else
+                            {
+                                <h5>▲ @message.RecipientFullName</h5>
+                            }
+                            @Html.Raw(message.Summary)
+                        </a>
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.Messages[i].Id)                                  
+            }
+        </div>
+        <div style="margin: 10px 0">
+            Итого: @Model.Messages.Count
+        </div>
+    </div>
+</div>

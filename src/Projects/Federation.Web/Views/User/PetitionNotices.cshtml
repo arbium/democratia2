@@ -1,0 +1,44 @@
+﻿@using Federation.Web.ViewModels
+@model UserPetitionNoticesViewModel
+@{
+    ViewBag.Title = "Приглашения к соавторству";
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(UserContext.Current.Id, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        @if (Model.Items.Count != 0)
+        {
+            foreach (var item in Model.Items)
+            {
+                <div>
+                    Приглашение на соавторство в петиции @Html.ActionLink(item.PetitionTitle, "petition", item.PetitionController, new { id = item.PetitionId }, null)                
+
+                    @Html.ActionLink("[принять]", "respondtopetitioninvite", "voting", new { id = item.CoauthorId, accept = true }, null)
+
+                    @Html.ConfirmActionLink("[отклонить]", "Вы действительно не хотите быть соавтором петиции?",
+                                  Url.Action("respondtopetitioninvite", "voting", new { id = item.CoauthorId, accept = false }))
+                </div>
+                <br />
+            }
+        }
+        else
+        {
+            <h2>На данный момент неотвеченных приглашений нет</h2>
+        }
+    </div>
+</div>

@@ -1,0 +1,496 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D7733F25-3ABE-42A0-A8FA-FC0880A28708}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Federation.Core</RootNamespace>
+    <AssemblyName>Federation.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Base_AA">
+      <HintPath>..\..\Utilites\Base_AA.dll</HintPath>
+    </Reference>
+    <Reference Include="Base_Common">
+      <HintPath>..\..\Utilites\Base_Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ImageResizer">
+      <HintPath>..\..\Utilites\ImageResizer.dll</HintPath>
+    </Reference>
+    <Reference Include="Kent.Boogaart.KBCsv">
+      <HintPath>..\..\Utilites\Kent.Boogaart.KBCsv.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Utilites\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common">
+      <HintPath>..\..\Solutions\Main\packages\EnterpriseLibrary.Common.5.0.505.0\lib\NET35\Microsoft.Practices.EnterpriseLibrary.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Logging">
+      <HintPath>..\..\Solutions\Main\packages\EnterpriseLibrary.Logging.5.0.505.1\lib\NET35\Microsoft.Practices.EnterpriseLibrary.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\..\Solutions\Main\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity">
+      <HintPath>..\..\Solutions\Main\packages\Unity.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration">
+      <HintPath>..\..\Solutions\Main\packages\Unity.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception">
+      <HintPath>..\..\Solutions\Main\packages\Unity.Interception.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.Interception.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception.Configuration">
+      <HintPath>..\..\Solutions\Main\packages\Unity.Interception.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="SgmlReaderDll">
+      <HintPath>..\..\Utilites\SgmlReaderDll.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Address.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Administrator.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Album.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AlbumItem.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Attach.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Badge.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BaseUser.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BlockedRecord.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Bulletin.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Candidate.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="City.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Coauthor.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Comment.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Containers\SurveyData.cs" />
+    <Compile Include="Containers\PollPublishDataContainer.cs" />
+    <Compile Include="Containers\PollContainer.cs" />
+    <Compile Include="Containers\GroupContainer.cs" />
+    <Compile Include="Containers\UserContainer.cs" />
+    <Compile Include="Containers\PetitionContainer.cs" />
+    <Compile Include="Containers\PetitionCoauthorContainer.cs" />
+    <Compile Include="Content.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Election.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ElectionBulletin.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ErrorText.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Exceptions\BusinessLogicException.cs" />
+    <Compile Include="Exceptions\AuthenticationException.cs" />
+    <Compile Include="Exceptions\ErrorsDictionary.cs" />
+    <Compile Include="Exceptions\MvcRedirectException.cs" />
+    <Compile Include="Exceptions\RedirectException.cs" />
+    <Compile Include="Exceptions\ValidationException.cs" />
+    <Compile Include="Expert.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ExpertVote.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Group.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GroupAd.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GroupCategory.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GroupMember.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GroupRating.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\AdminKeys.cs" />
+    <Compile Include="Helpers\ConstHelper.cs" />
+    <Compile Include="Helpers\ContentFilter.cs" />
+    <Compile Include="Helpers\ContentState.cs" />
+    <Compile Include="Helpers\CityType.cs" />
+    <Compile Include="Helpers\QuestProgress.cs" />
+    <Compile Include="Invite.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Like.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MailRecord.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Message.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SubscriptionSettings.cs" />
+    <Compile Include="Models\PayPalVerification.cs" />
+    <Compile Include="Models\SurveyBulletin.cs" />
+    <Compile Include="Models\Option.cs" />
+    <Compile Include="Models\GroupAd.cs" />
+    <Compile Include="Models\GroupCategory.cs" />
+    <Compile Include="Models\GroupRating.cs" />
+    <Compile Include="Models\UserAuthentificationLog.cs" />
+    <Compile Include="Models\UserAuthorizationLog.cs" />
+    <Compile Include="Models\UserPollVoteLog.cs" />
+    <Compile Include="Models\UserRegistrationLog.cs" />
+    <Compile Include="Option.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PayPalVerification.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Petition.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Poll.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PollBulletin.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Post.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProfileChangeRequest.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Region.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ScheduleExecutionInfo.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ScheduleJob.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Services\BadgeService\BadgeCollection.cs" />
+    <Compile Include="Helpers\CandidateStatus.cs" />
+    <Compile Include="Helpers\AlbumItemType.cs" />
+    <Compile Include="Models\ScheduleExecutionInfo.cs" />
+    <Compile Include="Services\BadgeService\BugCollectorBadge.cs" />
+    <Compile Include="Services\BadgeService\TicketVerifiedBadge.cs" />
+    <Compile Include="Services\BadgeService\QuestBadge.cs" />
+    <Compile Include="Services\BankCardValidationService\BankCardValidationService.cs" />
+    <Compile Include="Services\BlackListService\BlackListService.cs" />
+    <Compile Include="Services\CryptographyService\ICryptographyService.cs" />
+    <Compile Include="Services\CryptographyService\CryptographyServiceImpl.cs" />
+    <Compile Include="Services\MonitoringService\IMonitoringService.cs" />
+    <Compile Include="Services\MonitoringService\MonitoringService.cs" />
+    <Compile Include="Services\MonitoringService\MonitoringServiceImpl.cs" />
+    <Compile Include="Services\ReportExportService\ReportExportService.cs" />
+    <Compile Include="Services\QuestService\QuestService.cs" />
+    <Compile Include="Services\CryptographyService\CryptographyService.cs" />
+    <Compile Include="Services\DataService\EFDataSevicePerThreadImpl.cs" />
+    <Compile Include="Services\DelegationService\DelegationService.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\BannerRegenerateTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\SendCommentsToMailTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\UpdateGroupsRatingTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\TasksToCleanUp\ClearOutdatedContextTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\TasksToCleanUp\AdminKeysClearTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\TasksToCleanUp\ConfirmationClearTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\TasksToCleanUp\WasteGroupsClearTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\TasksToCleanUp\ServiceMsgsClearTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\TasksToCleanUp\SecretCodesClearTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\TasksToCleanUp\EmailVerificationCodesClearTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\TasksToCleanUp\PasswordRecoveriesClearTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\VotingsTasks\FinishPetitionTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\VotingsTasks\UnbindElectionTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\VotingsTasks\FinishPollTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\UserOutdatingTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\UpdateTagsWeightTask.cs" />
+    <Compile Include="Services\ServiceLogger.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\ActionScheduleTask.cs" />
+    <Compile Include="Services\BadgeService\AlphaBadge.cs" />
+    <Compile Include="Services\ScheduleService\IScheduleTask.cs" />
+    <Compile Include="Services\ScheduleService\JobState.cs" />
+    <Compile Include="Helpers\CryptographyHelper.cs" />
+    <Compile Include="Helpers\ValueAnalizer.cs" />
+    <Compile Include="Helpers\GroupPrivacy.cs" />
+    <Compile Include="Services\ScheduleService\ScheduleNotInitializeException.cs" />
+    <Compile Include="Services\ScheduleService\ScheduleTaskState.cs" />
+    <Compile Include="Helpers\WtfLikes.cs" />
+    <Compile Include="Helpers\GroupType.cs" />
+    <Compile Include="Helpers\DateTimeExtension.cs" />
+    <Compile Include="Helpers\ElectionStage.cs" />
+    <Compile Include="Helpers\MessageFilter.cs" />
+    <Compile Include="Helpers\UrlHelper.cs" />
+    <Compile Include="Helpers\TagsHelper.cs" />
+    <Compile Include="Helpers\TextHelper.cs" />
+    <Compile Include="Helpers\MessageType.cs" />
+    <Compile Include="Helpers\XssCleanHelper.cs" />
+    <Compile Include="Helpers\GroupMessageRecipientType.cs" />
+    <Compile Include="Infrastructure\AbstractBootstrapper.cs" />
+    <Compile Include="Infrastructure\IServiceLocator.cs" />
+    <Compile Include="Infrastructure\MefServiceLocator.cs" />
+    <Compile Include="Infrastructure\ServiceLocator.cs" />
+    <Compile Include="Models\Address.cs" />
+    <Compile Include="Models\BaseUser.cs" />
+    <Compile Include="Models\BlockedRecord.cs" />
+    <Compile Include="Models\Bulletin.cs" />
+    <Compile Include="Models\Candidate.cs" />
+    <Compile Include="Models\City.cs" />
+    <Compile Include="Models\Album.cs" />
+    <Compile Include="Models\AlbumItem.cs" />
+    <Compile Include="Models\SocialType.cs" />
+    <Compile Include="Models\ScheduleJob.cs" />
+    <Compile Include="Models\Coauthor.cs" />
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\Content.cs" />
+    <Compile Include="Models\Badge.cs" />
+    <Compile Include="Models\Attach.cs" />
+    <Compile Include="Models\Election.cs" />
+    <Compile Include="Models\Poll.cs" />
+    <Compile Include="Models\Expert.cs" />
+    <Compile Include="Models\ExpertVote.cs" />
+    <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\GroupMember.cs" />
+    <Compile Include="Models\Like.cs" />
+    <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\Region.cs" />
+    <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\Invite.cs" />
+    <Compile Include="Models\MailRecord.cs" />
+    <Compile Include="Models\ProfileChangeRequest.cs" />
+    <Compile Include="Services\AccountService\PasswordRecoverInfo.cs" />
+    <Compile Include="Services\AccountService\SecretInfo.cs" />
+    <Compile Include="Services\BadgeService\BadgeService.cs" />
+    <Compile Include="Services\CachService\CacheHelper.cs" />
+    <Compile Include="Services\CachService\CacheService.cs" />
+    <Compile Include="Services\CachService\ICachedViewModel.cs" />
+    <Compile Include="Services\CachService\ICacheService.cs" />
+    <Compile Include="Services\CommentService\CommentService.cs" />
+    <Compile Include="Services\ConfirmationService\ConfirmationService.cs" />
+    <Compile Include="Services\ContentService\ContentService.cs" />
+    <Compile Include="Services\ContentService\ContentServiceImpl.cs" />
+    <Compile Include="Services\ContentService\IContentService.cs" />
+    <Compile Include="Services\AlbumService\AlbumService.cs" />
+    <Compile Include="Services\ContentTransferService\ContentTransferService.cs" />
+    <Compile Include="Services\FeedbackService\FeedbackService.cs" />
+    <Compile Include="Services\DeclinationService\DeclinationService.cs" />
+    <Compile Include="Services\ErrorService\ErrorServiceImpl.cs" />
+    <Compile Include="Services\ErrorService\ErrorService.cs" />
+    <Compile Include="Services\ErrorService\IErrorService.cs" />
+    <Compile Include="Services\GroupService\GroupPrivacyStruct.cs" />
+    <Compile Include="Services\MessageService\IMessageService.cs" />
+    <Compile Include="Services\MessageService\MessageComposer.cs" />
+    <Compile Include="Services\MessageService\MessageService.cs" />
+    <Compile Include="Services\MessageService\MessageServiceImpl.cs" />
+    <Compile Include="Services\MessageService\MessageStruct.cs" />
+    <Compile Include="Services\ScheduleService\IScheduleService.cs" />
+    <Compile Include="Services\ScheduleService\ScheduleService.cs" />
+    <Compile Include="Services\ScheduleService\ScheduleServiceImpl.cs" />
+    <Compile Include="Services\ScheduleService\ScheduleTaskExtension.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\VotingsTasks\CheckNotFinishedPollsTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\VotingsTasks\FinishElectionTask.cs" />
+    <Compile Include="Services\ScheduleService\Tasks\VotingsTasks\FinishSurveyTask.cs" />
+    <Compile Include="Services\SmsService\ISmsService.cs" />
+    <Compile Include="Services\SmsService\SmsService.cs" />
+    <Compile Include="Services\SmsService\SmsServiceImpl.cs" />
+    <Compile Include="Services\SubscriptionService\ISubscriptionService.cs" />
+    <Compile Include="Services\SubscriptionService\SubscriptionService.cs" />
+    <Compile Include="Services\SubscriptionService\SubscriptionServiceImpl.cs" />
+    <Compile Include="Services\SearchService\SearchService.cs" />
+    <Compile Include="Services\SearchService\SearchServiceImpl.cs" />
+    <Compile Include="Services\SearchService\ISearchService.cs" />
+    <Compile Include="Services\GroupService\AddGroupStruct.cs" />
+    <Compile Include="Services\GroupService\GroupMemberState.cs" />
+    <Compile Include="Helpers\GroupState.cs" />
+    <Compile Include="Helpers\ValidationHelper.cs" />
+    <Compile Include="Services\AccountService\AccountService.cs" />
+    <Compile Include="Services\AccountService\AccountServiceImpl.cs" />
+    <Compile Include="Services\AuthenticationService.cs" />
+    <Compile Include="Services\GroupService\GroupService.cs" />
+    <Compile Include="Services\GroupService\GroupServiceImpl.cs" />
+    <Compile Include="Services\GroupService\IGroupService.cs" />
+    <Compile Include="Services\GroupService\EditGroupStruct.cs" />
+    <Compile Include="Services\IAuthenticationService.cs" />
+    <Compile Include="Services\DataService\DataBox.cs" />
+    <Compile Include="EFModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EFModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModel.Designer.cs">
+      <DependentUpon>EntityModel.edmx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Services\ImageService\IImageService.cs" />
+    <Compile Include="Services\ImageService\ImageService.cs" />
+    <Compile Include="Services\ImageService\ImageServiceImpl.cs" />
+    <Compile Include="Services\InviteService\InviteDataStruct.cs" />
+    <Compile Include="Services\InviteService\IInviteService.cs" />
+    <Compile Include="Services\InviteService\InviteService.cs" />
+    <Compile Include="Services\InviteService\InviteServiceImpl.cs" />
+    <Compile Include="Services\InviteService\InviteState.cs" />
+    <Compile Include="Services\SecurityService\SecurityService.cs" />
+    <Compile Include="Services\SecurityService\SecurityServiceImpl.cs" />
+    <Compile Include="Services\SecurityService\ISecurityService.cs" />
+    <Compile Include="Services\TagService\TagService.cs" />
+    <Compile Include="Services\TagService\TopicState.cs" />
+    <Compile Include="Services\TransliterationService\TransliterationService.cs" />
+    <Compile Include="Services\UserContextService\UserContextService.cs" />
+    <Compile Include="Services\UserService\UserService.cs" />
+    <Compile Include="Services\UserService\IUserService.cs" />
+    <Compile Include="Services\AccountService\IAccountService.cs" />
+    <Compile Include="Services\DataService\IDataBox.cs" />
+    <Compile Include="Services\DataService\DataService.cs" />
+    <Compile Include="Services\DataService\IDataService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\UserService\UserServiceImpl.cs" />
+    <Compile Include="Services\VotingService\IVotingService.cs" />
+    <Compile Include="Helpers\VoteOption.cs" />
+    <Compile Include="Services\VotingService\VotingService.cs" />
+    <Compile Include="Services\VotingService\VotingServiceImpl.cs" />
+    <Compile Include="SmsInfo.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SocialAccount.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SubscriptionSettings.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Survey.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SurveyBulletin.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tag.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="User.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserAuthentificationLog.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserAuthorizationLog.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserPollVoteLog.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserRegistrationLog.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Voting.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
+    <EntityDeploy Include="EntityModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EntityModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="EFModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EFModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="EFModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EFModel.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AxonInformer\AxonInformer.csproj">
+      <Project>{3DAE4F52-E172-4906-A755-FC382E7F580C}</Project>
+      <Name>AxonInformer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LJService\LJService.csproj">
+      <Project>{C4567FB5-5C7B-4437-A03E-FFD89170D8C3}</Project>
+      <Name>LJService</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="GetOrderedByRatingGroupContent.sql" />
+    <Content Include="EntityModel.edmx.sql" />
+    <Content Include="FullTextSearch.sql" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

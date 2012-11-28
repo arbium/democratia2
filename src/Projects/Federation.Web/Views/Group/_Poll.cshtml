@@ -1,0 +1,45 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model Group_PollViewModel
+@{
+    var isMember = false;
+    if (UserContext.Current != null)
+    {
+        isMember = UserContext.Current.IsUserApprovedInGroup(Model.GroupId);
+    }
+}
+@if (Model.IsCreationInProccess)
+{
+    <div class="info">
+        @if (!Model.IsCreationFailed)
+        {
+            <h3>Идет процесс создания бюллетений для голосования</h3>
+        }
+        else
+        {
+            <h3>
+                Запуск голосования прервался с ошибкой!
+                <a href="@Url.Action("startpoll", new { id = Model.Id })">Перезапустить?</a>
+            </h3>
+        }
+    </div>
+}
+@if (Model.State == ContentState.Approved)
+{
+    @Html.Partial("_PollVoteStatus", Model.PollStatus)
+}
+<div class="body">
+    @Html.Raw(Model.Text)
+</div>
+
+@if (!Model.IsFinished && Model.State == ContentState.Approved && isMember)
+{
+    @Html.Partial("_PollVotePanel", new Group_PollVotePanelViewModel(Model.Id, UserContext.Current.Id))
+}
+else if (!Model.IsFinished && Model.State == ContentState.Approved && !isMember)
+{
+    <div class="action_panel" style="background: #F8F8F8; padding: 5px 10px; border-radius: 10px; border: 1px solid #aaa">
+        Вы еще не принимаете участие в данном голосовании, т.к. не состоите в этой группе
+        @Html.ActionLink("Вступить в группу", "join", new { id = Model.GroupId }, new { style = "color:#0078D9; float: right" })
+    </div>
+}

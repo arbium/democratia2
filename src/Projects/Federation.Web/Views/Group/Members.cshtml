@@ -1,0 +1,152 @@
+﻿@using Federation.Web.ViewModels
+@model GroupMembersViewModel
+@{
+    ViewBag.Title = "Участники";
+
+    var isModerator = Request.IsAuthenticated && UserContext.Current.IsUserModeratorInGroup(Model.GroupId);
+}
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    <div id="group-info">
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.GroupId, NavigationBoxType.Group))
+    </div>
+    <h2>Модераторы</h2>
+    @Html.Partial("_Moders", Model.Moderators)
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <div class="jqueryslidemenu servicebuttonmenu">
+            <ul>
+                <li>
+                    @using (Html.BeginForm())
+                    {
+                        @Html.HiddenFor(x => x.GroupId)
+                        <input name="query" class="searchboxid-replace" type="text" placeholder="Найти пользователя" />
+                        <input class="searchbuttonid-replace" type="image" src="@RoutesHelper.CurrentThemeFolder/images/searchbutton.png" />
+                    }
+                </li>
+            </ul>
+        </div>
+        <ul class="lighttabs">
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+            @if (Request.IsAuthenticated && UserContext.Current.IsUserModeratorInGroup(Model.GroupId))
+            {
+                <li>
+                    <a href="@Url.Action("userrequests")">Заявки</a>
+                </li>    
+            }
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body groups_members_content">
+        <div class="members">
+            <script type="text/javascript">
+                function ToggleMembersName() {
+                    switch (jQuery('#a_shownames').text()) {
+                    case "Показать имена":
+                        jQuery(".members").addClass("shownames");
+                        jQuery('#a_shownames').text("Скрыть имена");
+                        break;
+                    case "Скрыть имена":
+                        jQuery(".members").removeClass("shownames");
+                        jQuery('#a_shownames').text("Показать имена");
+                        break;
+                    }
+                }
+            </script>
+            <a id="a_shownames" href="javascript:ToggleMembersName()" class="fl_r" style="text-decoration: none; border-bottom: #0078D9 1px dashed">Показать имена</a>
+            @{
+                if (string.IsNullOrEmpty(Model.Query))
+                {
+                    <h2>Участники</h2>
+                }
+                else
+                {
+                    <h2>@Model.Query <a href="@Url.Action("members")" style="text-decoration: none"><sup>✖</sup></a></h2>
+                }
+
+                var itemN = 0;
+                if (Model.Members.Count + Model.NoPhotoCount > 0)
+                {
+                    foreach (var member in Model.Members)
+                    {
+                        itemN++;
+                        <div id="@("item" + itemN)" class="record">
+                            <div class="usericon">
+                                <img src="@member.Avatar&w=120&h=160" alt="@member.FullName" />
+                            </div>
+                            <div class="username">
+                                <div class="bg"></div>
+                                <div class="field">
+                                    @Html.ActionLink(member.FullName, "index", "user", new { id = member.Id }, null)
+                                </div>
+                            </div>
+                            <div class="controls">
+                                @if (isModerator && Model.Moderators.ModeratorList.Count < Model.MaxModers)
+                                {
+                                    @Html.ConfirmActionLink("[назначить модератором]", "Вы действительно хотите сделать пользователя модератором?",
+                                        Url.Action("approvemember", new { id = member.GroupMemberId }))
+                                }
+                            </div>
+                        </div>
+                    }
+                    <div class="clear"></div>
+                    if (!string.IsNullOrEmpty(Model.Query))
+                    {
+                        if (Model.Members.Count == Model.ShowCount)
+                        {
+                            <span>Показаны первые @Model.ShowCount</span>
+                        }
+                    }
+                    else
+                    {
+                        if (Model.Members.Count == Model.MembersTotalCount - Model.NoPhotoCount - Model.Moderators.ModeratorList.Count)
+                        {
+                            <span>Показаны @Model.Members.Count из @Model.MembersTotalCount</span>                            
+                        }
+                        else
+                        {
+                            <span>Показаны случайные @Model.Members.Count из @Model.MembersTotalCount</span>
+                        }
+                        if (Model.NoPhotoCount > 0)
+                        {
+                            <div style="margin-top: 10px">
+                                <big>И ещё @Model.NoPhotoCount участников без фото.</big>
+                            </div>
+                        }
+                    }
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(Model.Query))
+                    {
+                        <h3>Пока ни одного пользователя в группе нет</h3>
+                    }
+                    else
+                    {
+                        <h3>Ничего не найдено</h3>
+                    }
+                }
+            }
+        </div>
+        @if (Model.IsMemberModeration || (Model.IsBlank && isModerator))
+        {
+            <div class="requests">
+                @if (!isModerator)
+                {
+                    <span>Количество заявок на вступление в группу: @Model.RequestsCount</span>
+                }
+                else
+                {
+                    <span>
+                        Количество заявок на вступление в группу: 
+                        @Html.ActionLink(Model.RequestsCount.ToString(), "userrequests", new { id = Model.GroupUrl })
+                    </span>
+                }
+            </div>
+        }
+    </div>
+</div>

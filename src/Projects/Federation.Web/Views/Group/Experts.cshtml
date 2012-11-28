@@ -1,0 +1,158 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model GroupExpertsViewModel
+@{
+    ViewBag.Title = "Эксперты";
+}
+
+<style type="text/css">
+    .groups
+    {
+        width: 100%;
+    }
+    
+    .groups tr
+    {
+        border-bottom: #DDE2E7 solid 1px;
+    }
+    .groups td
+    {
+        padding: 10px 0;
+    }
+    
+    .groups .col1
+    {
+        min-width: 160px;
+        width: 20%;
+    }
+    .groups .col2
+    {
+    }
+    .groups .col3
+    {
+        width: 30%;
+    }
+    .groups .link
+    {
+        text-decoration: none;
+        color: #4D6582;
+    }
+    .groups .link:hover {
+        color: #C00;
+    }
+    .groups .link > img
+    {
+        float: left;
+        margin: 0 10px 0 0;
+    }
+    .groups .link > span
+    {
+        vertical-align: top;
+        margin: 0 5px;
+        display: block;
+    }
+    
+    .groups .actions
+    {
+        float: right;
+    }
+    .groups .actions > a
+    {
+        font-size: 0.9em;
+    }
+    
+    .groups .tags > a
+    {
+        border: #DDDDDD solid 1px;
+        background-color: #F0F0F0;
+        color: #666666;
+        border-radius: 4px;
+        padding: 1px 5px;
+        font-size: 0.9em;
+        text-decoration: none;
+        vertical-align: top;
+        white-space: nowrap;
+        line-height: 24px;
+    }
+    
+    .groups .tags > a:hover
+    {
+        color: inherit;
+    }
+</style>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    <div class="author">
+        @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.GroupId, NavigationBoxType.Group))
+    </div>
+</div>
+<div class="layout_content"> 
+    <div class="lighttabs_container">
+        @if (UserContext.Current != null && UserContext.Current.IsUserInGroup(Model.GroupId) && !Model.IsExpert)
+        {
+            <div class="jqueryslidemenu servicebuttonmenu">
+                <ul>
+                    <li>
+                        @Html.ActionLink("Стать экспертом", "delegation", "user", new { groupurl = Model.GroupUrl }, null)
+                    </li>
+                </ul>
+            </div>
+        }
+        <ul class="lighttabs">
+            <li><a href="@Url.Action("Topics")">Темы</a> </li>
+            <li><a class="selected">@ViewBag.Title</a> </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div id="user_delegation">
+        @if (Model.FilterTagId != null)
+        {
+            <div class="content_helper_control no_margin">
+                <span>@Model.FilterTagTitle</span>
+            </div>
+        }
+        @if (Model.Experts.Count == 0)
+        {
+            if (Model.FilterTagId != null)
+            {
+                <h2>В группе по тегу "@Model.FilterTagTitle" нет экспертов</h2>
+            }
+            else
+            {
+                <h2>В группе еще нет экспертов</h2>
+            }
+        }
+        else
+        {
+            <table class="groups">
+                @foreach (var expert in Model.Experts)
+                {
+                    <tr>
+                        <td class="col1">
+                            <a class="link" href="@Url.Action("delegation", "user", new { id = expert.UserId, groupurl = Model.GroupUrl })">
+                                <img src="@expert.Avatar&w=48&h=64" alt="лого" />
+                                <span><b>@expert.SurName</b></span><span> @expert.FirstName</span><span>@expert.Patronymic</span></a>
+                        </td>
+                        <td class="col2">
+                            <span class="tags">
+                                @foreach (var tag in expert.Tags)
+                                {
+                                    <a>@tag.Title</a>
+                                }
+                            </span>
+                        </td>
+                        @*<td class="col3">
+                            @if (UserContext.Current != null && UserContext.Current.Id != expert.UserId)
+                            {
+                                <div class="actions">
+                                    <a href="@Url.Action("delegation", "user", new {id = expert.Id})">Делегировать</a>
+                                </div>
+                            }
+                        </td>*@
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+</div>

@@ -1,0 +1,232 @@
+﻿@using Federation.Core
+@using Federation.Web.ViewModels
+@model UserIndexViewModel
+@{
+    ViewBag.Title = "Рабочий стол - Подписки";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $(".vnotice-body a").click(function () {
+            $.ajax({
+                url: '@Url.Action("markasread")',
+                data: { id: $(this).parents(".vnotice-body").attr("msg-id") }
+            });
+        });
+    });
+</script>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    @Html.Partial("_NavigationBox", new _NavigationBoxViewModel(Model.UserId, NavigationBoxType.User))
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <div class="jqueryslidemenu servicebuttonmenu">
+            <ul>
+                <li>
+                    <a href="@Url.Action("editsubscription")">Управление подпиской</a>
+                </li>
+                <li class="servicemenu">
+                    <a href="#"><img src="@RoutesHelper.CurrentThemeFolder/images/buttcalc/button_setup.png" alt="Меню" /></a>
+                    <ul>
+                        <li>
+                            <a href="@Url.Action("addpost")">Написать пост</a>
+                        </li> 
+                        <li>
+                            <a href="@Url.Action("createpetition")">Создать петицию</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("blacklist")">Черный список</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <ul class="lighttabs">
+            <li>
+                <a class="selected">Подписка</a>
+            </li>
+            <li>
+                <a href="@Url.Action("blog")">Ваш блог</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        <div class="important_notices">
+            @if (Model.ShowQuest)
+            {
+                <div class="notice">
+                    <div style="display: inline-block">                        
+                        @if (Model.QuestProgress == QuestProgress.None)
+                        {
+                            <h3>Добро пожаловать в Демократию!</h3>
+                            <p>Предлагаем вам пройти квест для знакомства с системой. Будет весело!<big>☺</big></p>
+                            <div style="text-align: center">
+                                <a href="@Url.Action("quest")" class="f_button">Приступить</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="display: inline-block">
+                                <h3>Знакомство с системой</h3>
+                                <div class="bar_wrap">
+                                    <div class="bar" style="width:@Model.QuestProgress.Percents()%"></div>
+                                </div>
+                            </div>
+                            <a href="@Url.Action("quest")" class="f_button" style="margin-left: 10px; vertical-align: bottom">Продолжить</a>
+                        }
+                    </div>
+                    <a href="@Url.ConfirmAction("Вы действительно хотите отказаться от прохождения ознакомительного квеста?", Url.Action("rejectquest"))" style="float: right">
+                        <img src="@RoutesHelper.CurrentThemeFolder/images/close.png" title="больше не предлагать" alt="[x]" />
+                    </a>
+                </div>
+            }
+            @if (Model.VotingMessages.Count != 0)
+            {
+                <div class="voting_notices">
+                    <span class="grey">Новые активности</span>
+                    @foreach (var msg in Model.VotingMessages)
+                    {
+                        <div class="@((MessageType)msg.Type)">
+                            <a class="killcross" href="@Url.Action("markasread", new { id = msg.Id })">
+                                <img src="@RoutesHelper.CurrentThemeFolder/images/close.png" alt="[x]" />
+                            </a>
+                            <span class="vnotice-body" msg-id="@msg.Id">
+                                @Html.Raw(msg.Html)
+                            </span>
+                        </div>
+                    }
+                </div>
+            }
+            @* for debug purpose, just comment when not need / equa 2012-03-11 *@
+            @*<div class="voting_notices">
+                <span class="grey">Новые активности</span>
+                <div class="CommentNotice">
+                    <a class="killcross" href="@Url.Action("markasread")">
+                        <img src="@RoutesHelper.CurrentThemeFolder/images/close.png" alt="[x]" />
+                    </a>
+                    <div style="margin-left: 0px;">
+	                    <div style="float: left; margin-right: 10px;"><img src="http://democratia2.ru/MediaContent/GroupLogos/_48x64_/federation.png"></div>
+	                    <div style="color: #888;">
+		                    <a href="{1}">{2}</a> добавил комментарий в "<a href="{3}">{4}</a>"
+	                    </div>
+	                    <p>
+		                    {5}
+	                    </p>
+	                    <div style="margin-left: 60px;">
+		                    <a href="{6}">&rarr; Ответить на комментарий</a>
+	                    </div>
+                    </div>
+                </div>
+                <div class="GroupModeratorNotice">
+                    <a class="killcross" href="@Url.Action("markasread")">
+                        <img src="@RoutesHelper.CurrentThemeFolder/images/close.png" alt="[x]" />
+                    </a>
+                    <div style="float: left; margin-right: 10px;"><img src="http://democratia2.ru/MediaContent/GroupLogos/_48x64_/federation.png"></div>
+                    <div style="color: #888;">
+	                    В группе <a href="{1}">{2}</a>:
+                    </div>
+                    <div style="margin-left: 0px;">
+	                    <p>
+	                    {3}
+	                    </p>
+                    </div>
+                </div>
+                <div class="PetitionNotice">
+                    <a class="killcross" href="@Url.Action("markasread")">
+                        <img src="../../Resources/themes/base/images/close.png" alt="[x]" />
+                    </a>
+                    <div style="margin-left: 0px;">
+	                    <div style="float: left; margin-right: 10px;"><img src="http://democratia2.ru/MediaContent/GroupLogos/_48x64_/federation.png"></div>
+	                    <div style="color: #888;">
+		                    Петиция "<a href="{1}" target="_blank">{2}</a>":
+	                    </div>
+	                    <p>
+		                    {3}
+	                    </p>
+                    </div>
+                </div>
+                <div class="PollNotice">
+                    <a class="killcross" href="@Url.Action("markasread")">
+                        <img src="../../Resources/themes/base/images/close.png" alt="[x]" />
+                    </a>
+                    <div style="margin-left: 0px;">
+	                    <div style="float: left; margin-right: 10px;"><img src="http://democratia2.ru/MediaContent/GroupLogos/_48x64_/federation.png"></div>
+	                    <div style="color: #888;">
+		                    В группе <a href="{1}">{2}</a>{7}:
+	                    </div>
+	                    <p><big>
+		                    <a href="{3}">{4}</a>
+	                    </big></p>
+                        <p>
+                            {5}
+                        </p>
+                        <p><big>
+                            {6}
+                        </big></p>
+	                    <div style="margin-left: 60px;">
+		                    <a href="{3}">&rarr; {8}</a>
+	                    </div>
+                    </div>
+                </div>
+                <div class="ElectionNotice">
+                    <a class="killcross" href="@Url.Action("markasread")">
+                        <img src="../../Resources/themes/base/images/close.png" alt="[x]" />
+                    </a>
+                    <div style="margin-left: 0px;">
+	                    <div style="float: left; margin-right: 10px;"><img src="http://democratia2.ru/MediaContent/GroupLogos/_48x64_/federation.png"></div>
+	                    <div style="color: #888;">
+		                    В группе <a href="{1}">{2}</a>{7}:
+	                    </div>
+	                    <p><big>
+		                    <a href="{3}">{4}</a>
+	                    </big></p>
+                        <p>
+                            {5}
+                        </p>
+                        <p><big>
+                            {6}
+                        </big></p>
+	                    <div style="margin-left: 60px;">
+		                    <a href="{3}">&rarr; {8}</a>
+	                    </div>
+                    </div>
+                </div>
+                <div class="SurveyNotice">
+                    <a class="killcross" href="@Url.Action("markasread")">
+                        <img src="../../Resources/themes/base/images/close.png" alt="[x]" />
+                    </a>
+                    <div style="margin-left: 0px;">
+	                    <div style="float: left; margin-right: 10px;"><img src="http://democratia2.ru/MediaContent/GroupLogos/_48x64_/federation.png"></div>
+	                    <div style="color: #888;">
+		                    В группе <a href="{1}">{2}</a>{7}:
+	                    </div>
+	                    <p><big>
+		                    <a href="{3}">{4}</a>
+	                    </big></p>
+                        <p>
+                            {5}
+                        </p>
+                        <p><big>
+                            {6}
+                        </big></p>
+	                    <div style="margin-left: 60px;">
+		                    <a href="{3}">&rarr; {8}</a>
+	                    </div>
+                    </div>
+                </div>
+            </div>*@
+            @* end of debug area *@
+        </div>
+        <div class="content_helper_control no_margin">
+            <a href="@Url.Action("rsssubscribtion", "user", new { id = Model.UserId })"><img class="texticon" src="@RoutesHelper.CurrentThemeFolder/images/rss16.png" alt="rss" /></a>
+        </div>
+        @Html.Partial("_ContentFeed", Model.Subscription.LastContents)
+    </div>
+</div>
+
+
+
+

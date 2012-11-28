@@ -1,0 +1,229 @@
+﻿@using Federation.Web.ViewModels
+@model GroupCreateEditSurveyViewModel
+@{
+    ViewBag.Title = "Создание опроса";
+}
+
+<script src="../../Resources/scripts/jquery.validate.min.js" type="text/javascript"></script>
+<script src="../../Resources/scripts/date.format.js" type="text/javascript"></script>
+
+<script src="../../Resources/scripts/jquery-ui.min.js" type="text/javascript"></script>
+<link href="../../Resources/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script src="../../Resources/tagsinput/jquery.tagsinput.js" type="text/javascript"></script>
+<link href="../../Resources/tagsinput/jquery.tagsinput.css" rel="stylesheet" type="text/css" />
+
+<script src="../../Resources/redactor/redactor.js" type="text/javascript"></script>
+<script src="../../Resources/redactor/langs/ru.js" type="text/javascript"></script>
+<link href="../../Resources/redactor/css/redactor.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    $(function () {
+        document.redactor = $('#Text').redactor({
+            buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|', 'image', 'video', 'table', 'link', '|', 'fontcolor', 'backcolor', '|', 'alignleft', 'aligncenter', 'alignright', 'justify', '|', 'horizontalrule', 'fullscreen'], 
+            lang: 'ru',             
+            albums: '@Url.Action("albumsforeditor", "album", new { groupId = Model.GroupId })'
+        });
+
+        $('#TagTitles').tagsInput({
+            defaultText: 'добавьте тему',
+            width: '603px',
+            height: '33px',
+            autocomplete_url: '@Url.Action("findmatchingtags", "tag", new { id = Model.GroupId }, "http")',  
+            autocomplete: { minLength: '3' }
+        });
+
+        $("#duration small").html("(Бессрочно)");
+
+        var today = new Date();        
+
+        $("#duration input:text").keyup(function () {
+            if ($(this).val()) {
+                var endDate = new Date().setDate(parseInt(today.getDate()) + parseInt($(this).val()));
+                $("#duration small").html("(Дата завершения: " + dateFormat(endDate, "d mmmm yyyy HH:MM") + ")");
+            } else
+                $("#duration small").html("(Бессрочно)");
+        });
+
+        var optCount = $("#options p").length;
+
+        $("#add-option").click(function () {
+            var optN = optCount.toString();
+            optCount++;
+
+            $("#options").append(
+                "<p n=" + optN + ">" +
+                "<label for='Options_" + optN + "__Title'>Название</label>" +
+                "<span class='required'>*</span>" +
+                "<input data-val='true' data-val-required='Обязательное поле' id='Options_" + optN + "__Title' name='Options[" + optN + "].Title' type='text' /> " +
+                "<span class='field-validation-valid' data-valmsg-for='Options[" + optN + "].Title' data-valmsg-replace='true' />" +
+                "<br />" +
+                "<span class='description'>" +
+                "<a class='action-link' onclick='expandDesc(this)'>" +
+                "<label for='Options_" + optN + "__Description'>Описание</label>" +
+                "</a>" +
+                "<textarea cols='20' id='Options_" + optN + "__Description' name='Options[" + optN + "].Description' rows='5' /> " +
+                "<small>(Разрешен html)</small>" +
+                "</span>" +
+                "</p>");
+
+            return false;
+        });
+
+        $("#delete-option").click(function () {
+            if (optCount > 2) {
+                optCount--;
+                $("#options p[n=" + optCount + "]").remove();
+            }
+            return false;
+        });
+    });
+    
+    function expandDesc(sender) {
+        var target = $(sender).parent().children("textarea");
+        var visible = target.css("display") != "none";
+
+        if (visible) {
+            target.css("display", "none");
+        } else {
+            target.css("display", "inline");
+        }
+        return false;
+    }
+</script>
+
+<div class="layout_pageheader"></div>
+<div class="layout_sidemenu">
+    <div class="form_help">
+        <h3>
+            Создание опроса<br/>
+            @Html.ActionLink(Model.GroupName, "index", "group", new { id = Model.GroupUrl })
+        </h3>
+        <p>Здесь вы можете создать голосование по какому-либо вопросу.</p>
+        <p>
+            <b>Черновик</b> - вы можете сохранить свою публикацию как черновик. Это позволит вам вернутся и дописать ее позже.<br/>
+            Также можно скинуть ссылку на черновик знакомым и обсудить ее до момента публикации.
+        </p>
+    </div>
+</div>
+<div class="layout_content">
+    <div class="lighttabs_container">
+        <ul class="lighttabs">
+            <li>
+                <a class="back">◄</a>
+            </li>
+            <li>
+                <a class="selected">@ViewBag.Title</a>
+            </li>
+        </ul>
+        <div class="lighttabs_border"></div>
+    </div>
+    <div class="body">
+        @if (Model.IsContentModeration && Request.IsAuthenticated && !UserContext.Current.IsUserModeratorInGroup(Model.GroupId))
+        {
+            <p style="color: orange">
+                В соответствии с настройками группы, новый контент проходит премодерацию
+            </p>            
+        }
+        <div class="styled_form">
+            @if (!string.IsNullOrEmpty(ViewBag.ValidationExceptionText))
+            {
+                <div class="validation_block">
+                    @ViewBag.ValidationExceptionText
+                </div>
+            }
+            @using (Html.BeginForm())
+            {
+                <div class="form_block">
+                    @Html.HiddenFor(m => m.GroupId)
+                    @Html.HiddenFor(m => m.GroupName)
+                    @Html.HiddenFor(m => m.GroupUrl)
+                    <div class="input_block">
+                        <div class="title">                    
+                            @Html.LabelFor(m => m.Title)<span class="required">*</span>
+                        </div>
+                        @Html.TextBoxFor(m => m.Title, new { autofocus = "" })
+                        @Html.ValidationMessageFor(m => m.Title)
+                    </div>
+                    <div class="input_block redactor separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.Text)<span class="required">*</span>
+                        </div>                    
+                        @Html.TextAreaFor(m => m.Text)
+                        @Html.ValidationMessageFor(m => m.Text)
+                    </div>
+                    <div class="input_block separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.IsPrivate)
+                        </div>                    
+                        @Html.CheckBoxFor(m => m.IsPrivate)
+                    </div>
+                    <div class="input_block separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.Duration)
+                        </div>                    
+                        @Html.TextBoxFor(m => m.Duration, new { placeholder = "по умолчанию: ∞" })
+                        @Html.ValidationMessageFor(m => m.Duration)
+                    </div>
+                    <div class="input_block separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.TagTitles)
+                        </div>                    
+                        @Html.TextBoxFor(m => m.TagTitles, new { Class = "tags" })
+                        @Html.ValidationMessageFor(m => m.TagTitles)
+                    </div>
+                    <div class="input_block separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.Options)<span class="required">*</span>
+                        </div>
+                        <div class="options_block">
+                            <div id="options">
+                                @for (var i = 0; i < Model.Options.Count; i++)
+                                {
+                                    <p n="@i">
+                                        @Html.LabelFor(x => x.Options[i].Title)<span class="required">*</span>
+                                        @Html.TextBoxFor(x => x.Options[i].Title)
+                                        @Html.ValidationMessageFor(x => x.Options[i].Title)
+                                        <br />
+                                        <span class="description">
+                                            <a class="action-link" onclick="expandDesc(this)">
+                                                @Html.LabelFor(x => x.Options[i].Description)
+                                            </a>
+                                            @Html.TextAreaFor(x => x.Options[i].Description, new { rows = 5 })
+                                            <small>(Разрешен html)</small>
+                                        </span>
+                                    </p>
+                                }
+                            </div>
+                            <a id="add-option" class="action-link">добавить</a>
+                            <a id="delete-option" class="action-link">удалить</a>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Options)
+                    </div>
+                    <div class="input_block separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.VariantsCount)
+                        </div>                    
+                        @Html.TextBoxFor(m => m.VariantsCount)
+                        @Html.ValidationMessageFor(m => m.VariantsCount)
+                    </div>
+                    <div class="input_block separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.HasOpenProtocol)
+                        </div>                    
+                        @Html.CheckBoxFor(m => m.HasOpenProtocol)
+                    </div>
+                    <div class="input_block separator">
+                        <div class="title">
+                            @Html.LabelFor(m => m.IsDraft)
+                        </div>                    
+                        @Html.CheckBoxFor(m => m.IsDraft)
+                    </div>
+                </div>
+                <div class="submit_block">
+                    <input type="submit" value="Добавить" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
